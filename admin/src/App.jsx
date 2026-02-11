@@ -1,0 +1,218 @@
+import { useEffect, useState } from 'react'
+import ApiEndpointCard from './components/ApiEndpointCard.jsx'
+import SectionHeader from './components/SectionHeader.jsx'
+import tabs from './constants/tabs.js'
+import StatsGrid from './features/dashboard/StatsGrid.jsx'
+import ProductForm from './features/products/ProductForm.jsx'
+import ProductList from './features/products/ProductList.jsx'
+import CollectionList from './features/collections/CollectionList.jsx'
+import BlogList from './features/blogs/BlogList.jsx'
+import RecipeList from './features/recipes/RecipeList.jsx'
+import ReviewList from './features/reviews/ReviewList.jsx'
+import CouponList from './features/discounts/CouponList.jsx'
+import useProducts from './hooks/useProducts.js'
+import useCollections from './hooks/useCollections.js'
+import useBlogs from './hooks/useBlogs.js'
+import useRecipes from './hooks/useRecipes.js'
+import useReviews from './hooks/useReviews.js'
+import useCoupons from './hooks/useCoupons.js'
+import AdminLayout from './layout/AdminLayout.jsx'
+
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000'
+
+const AdminApp = () => {
+  const [activeTab, setActiveTab] = useState('dashboard')
+  const {
+    products,
+    loading,
+    error,
+    fetchProducts,
+    fetchProductById,
+    createProduct,
+    updateProduct,
+    updateStock,
+    deleteProduct,
+    toggleActive,
+  } = useProducts(API_BASE)
+
+  const {
+    collections,
+    loading: collectionsLoading,
+    error: collectionsError,
+    fetchCollections,
+    fetchCollectionById,
+    createCollection,
+    updateCollection,
+    deleteCollection,
+  } = useCollections(API_BASE)
+
+  const {
+    blogs,
+    loading: blogsLoading,
+    error: blogsError,
+    fetchBlogs,
+    fetchBlogById,
+    createBlog,
+    updateBlog,
+    deleteBlog,
+  } = useBlogs(API_BASE)
+
+  const {
+    recipes,
+    loading: recipesLoading,
+    error: recipesError,
+    fetchRecipes,
+    fetchRecipeById,
+    createRecipe,
+    updateRecipe,
+    deleteRecipe,
+  } = useRecipes(API_BASE)
+
+  const {
+    reviews,
+    loading: reviewsLoading,
+    error: reviewsError,
+    fetchReviews,
+    updateReview,
+  } = useReviews(API_BASE)
+
+  const {
+    coupons,
+    loading: couponsLoading,
+    error: couponsError,
+    fetchCoupons,
+    fetchCouponById,
+    createCoupon,
+    updateCoupon,
+    deleteCoupon,
+  } = useCoupons(API_BASE)
+
+  useEffect(() => {
+    if (activeTab === 'products' || activeTab === 'dashboard') {
+      fetchProducts()
+    }
+    if (activeTab === 'collections') {
+      fetchProducts()
+      fetchCollections()
+    }
+    if (activeTab === 'blogs') {
+      fetchBlogs()
+    }
+    if (activeTab === 'recipes') {
+      fetchRecipes()
+      fetchProducts()
+    }
+    if (activeTab === 'reviews') {
+      fetchReviews()
+    }
+    if (activeTab === 'discounts') {
+      fetchCoupons()
+    }
+  }, [activeTab])
+
+  return (
+    <AdminLayout tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab}>
+      <SectionHeader
+        title={tabs.find((tab) => tab.id === activeTab)?.label}
+        description="Manage products, orders, inventory, and customers in real time."
+      />
+
+      {activeTab === 'products' ? (
+        <ProductList
+          products={products}
+          loading={loading}
+          error={error}
+          onRefresh={fetchProducts}
+          onFetchForEdit={fetchProductById}
+          onCreate={createProduct}
+          onUpdate={updateProduct}
+          onUpdateStock={updateStock}
+          onDelete={deleteProduct}
+          onToggleActive={toggleActive}
+          apiBase={API_BASE}
+        />
+      ) : null}
+
+      {activeTab === 'collections' ? (
+        <CollectionList
+          collections={collections}
+          products={products}
+          loading={collectionsLoading}
+          error={collectionsError}
+          onRefresh={fetchCollections}
+          onFetchForEdit={fetchCollectionById}
+          onCreate={createCollection}
+          onUpdate={updateCollection}
+          onDelete={deleteCollection}
+          apiBase={API_BASE}
+        />
+      ) : null}
+
+      {activeTab === 'blogs' ? (
+        <BlogList
+          blogs={blogs}
+          loading={blogsLoading}
+          error={blogsError}
+          onRefresh={fetchBlogs}
+          onFetchForEdit={fetchBlogById}
+          onCreate={createBlog}
+          onUpdate={updateBlog}
+          onDelete={deleteBlog}
+          apiBase={API_BASE}
+        />
+      ) : null}
+
+      {activeTab === 'recipes' ? (
+        <RecipeList
+          recipes={recipes}
+          products={products}
+          loading={recipesLoading}
+          error={recipesError}
+          onRefresh={fetchRecipes}
+          onFetchForEdit={fetchRecipeById}
+          onCreate={createRecipe}
+          onUpdate={updateRecipe}
+          onDelete={deleteRecipe}
+          apiBase={API_BASE}
+        />
+      ) : null}
+
+      {activeTab === 'reviews' ? (
+        <ReviewList
+          reviews={reviews}
+          loading={reviewsLoading}
+          error={reviewsError}
+          onRefresh={fetchReviews}
+          onUpdate={updateReview}
+          apiBase={API_BASE}
+        />
+      ) : null}
+
+      {activeTab === 'discounts' ? (
+        <CouponList
+          coupons={coupons}
+          loading={couponsLoading}
+          error={couponsError}
+          onRefresh={fetchCoupons}
+          onFetchForEdit={fetchCouponById}
+          onCreate={createCoupon}
+          onUpdate={updateCoupon}
+          onDelete={deleteCoupon}
+        />
+      ) : null}
+
+      {activeTab !== 'products' &&
+      activeTab !== 'collections' &&
+      activeTab !== 'blogs' &&
+      activeTab !== 'recipes' &&
+      activeTab !== 'reviews' &&
+      activeTab !== 'discounts' ? (
+        <StatsGrid products={products} />
+      ) : null}
+
+      <ApiEndpointCard apiBase={API_BASE} />
+    </AdminLayout>
+  )
+}
+
+export default AdminApp
