@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { getAdminAuthHeaders } from '../utils/adminAuth.js'
 
 const useRecipes = (apiBase) => {
   const [recipes, setRecipes] = useState([])
@@ -40,7 +41,7 @@ const useRecipes = (apiBase) => {
     try {
       const res = await fetch(`${apiBase}/api/recipes`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
         body: JSON.stringify(form),
       })
       if (!res.ok) throw new Error('Create failed')
@@ -58,7 +59,7 @@ const useRecipes = (apiBase) => {
     try {
       const res = await fetch(`${apiBase}/api/recipes/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
         body: JSON.stringify(form),
       })
       if (!res.ok) throw new Error('Update failed')
@@ -76,6 +77,7 @@ const useRecipes = (apiBase) => {
     try {
       const res = await fetch(`${apiBase}/api/recipes/${id}`, {
         method: 'DELETE',
+        headers: getAdminAuthHeaders(),
       })
       if (!res.ok) throw new Error('Delete failed')
       await fetchRecipes()

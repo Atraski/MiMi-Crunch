@@ -9,7 +9,15 @@ import {
 import generateOtp from '../utils/otp.js'
 import { sendVerificationEmail } from '../utils/email.js'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'mimi-crunch-secret-change-in-production'
+const JWT_SECRET =
+  process.env.JWT_SECRET ||
+  (process.env.NODE_ENV !== 'production'
+    ? 'mimi-crunch-secret-change-in-production'
+    : '')
+
+if (!JWT_SECRET) {
+  throw new Error('Missing JWT_SECRET in environment.')
+}
 const SALT_ROUNDS = 10
 const OTP_EXPIRY_MS = 10 * 60 * 1000 // 10 minutes
 

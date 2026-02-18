@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import RichTextEditor from '../../components/RichTextEditor.jsx'
+import { getAdminAuthHeaders } from '../../utils/adminAuth.js'
 
 const BlogList = ({
   blogs,
@@ -70,7 +71,7 @@ const BlogList = ({
             <h3 className="text-base font-semibold text-stone-900">Blog posts</h3>
             <p className="mt-0.5 text-xs text-stone-500">Manage articles</p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
             <button
               className="btn btn-outline rounded-lg px-3 py-1.5 text-xs"
               type="button"
@@ -93,13 +94,13 @@ const BlogList = ({
       {loading ? (
         <p className="px-5 py-8 text-center text-sm text-stone-500 sm:px-6">Loading...</p>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[720px] text-left text-sm">
+        <div className="overflow-hidden">
+          <table className="w-full table-fixed text-left text-sm">
             <thead>
               <tr className="border-b border-stone-200 bg-stone-50/80 text-xs font-medium uppercase tracking-wider text-stone-500">
                 <th className="px-5 py-3 sm:px-6">Title</th>
-                <th className="px-5 py-3 sm:px-6">Slug</th>
-                <th className="px-5 py-3 sm:px-6">Status</th>
+                <th className="hidden px-5 py-3 sm:px-6 md:table-cell">Slug</th>
+                <th className="hidden px-5 py-3 sm:px-6 sm:table-cell">Status</th>
                 <th className="px-5 py-3 text-right sm:px-6">Actions</th>
               </tr>
             </thead>
@@ -132,10 +133,10 @@ const BlogList = ({
                       </div>
                     </div>
                   </td>
-                  <td className="px-5 py-3.5 text-xs text-stone-500 sm:px-6">
+                  <td className="hidden px-5 py-3.5 text-xs text-stone-500 sm:px-6 md:table-cell">
                     {blog.slug}
                   </td>
-                  <td className="px-5 py-3.5 sm:px-6">
+                  <td className="hidden px-5 py-3.5 sm:px-6 sm:table-cell">
                     <button
                       type="button"
                       role="switch"
@@ -362,7 +363,7 @@ const BlogEditorModal = ({ title, apiBase, initialData, onClose, onSubmit }) => 
     setUploadError('')
     const res = await fetch(`${apiBase}/api/uploads/signature`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
       body: JSON.stringify({ folder: 'blogs' }),
     })
     if (!res.ok) {

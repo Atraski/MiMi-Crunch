@@ -1,5 +1,5 @@
 const AdminSidebar = ({ tabs, activeTab, onTabChange }) => (
-  <aside className="sticky top-6 h-fit rounded-2xl border border-stone-200/80 bg-white p-3 shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+  <aside className="h-fit rounded-2xl border border-stone-200/80 bg-white p-2 shadow-[0_1px_3px_rgba(0,0,0,0.04)] lg:sticky lg:top-6 lg:p-3">
     <nav className="space-y-0.5 text-sm">
       {tabs.map((tab) => (
         <button

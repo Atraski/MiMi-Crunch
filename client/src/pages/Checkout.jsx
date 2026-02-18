@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import BackButton from '../components/BackButton'
 import MapSelector from '../components/MapSelector'
 import axios from 'axios'
-import { useAuth } from '../context/AuthContext' // AuthContext ko import kiya
+import { useAuth } from '../context/AuthContext' 
 
 const Checkout = ({
   cart = [],
@@ -11,9 +11,10 @@ const Checkout = ({
   deliveryFee = 0,
   discountAmount = 0,
   total = 0,
+  onOrderSuccess,
 }) => {
   const navigate = useNavigate()
-  const { user, token, loading } = useAuth() // Context se data uthaya
+  const { user, token, loading } = useAuth() 
   
   const [form, setForm] = useState({
     fullName: '',
@@ -29,10 +30,12 @@ const Checkout = ({
   const [touched, setTouched] = useState({})
   const [placing, setPlacing] = useState(false)
   const [showMap, setShowMap] = useState(false)
+  
+  // COD default payment method rakha hai
+  const [paymentMethod, setPaymentMethod] = useState('COD') 
 
   // --- useEffect: Auto-fill Form from Context ---
   useEffect(() => {
-    // Jaise hi user data load ho, form fill kar do
     if (user) {
       setForm((prev) => ({
         ...prev,
@@ -92,52 +95,58 @@ const Checkout = ({
 
   const isValid = required.every((key) => form[key]?.trim()) && !errors.pincode
 
+  // --- Submit Order Logic (Step 2 Implementation) ---
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setTouched({ fullName: true, phone: true, email: true, addressLine1: true, city: true, state: true, pincode: true })
-    
-    if (!isValid) return
-    setPlacing(true)
-    
-    try {
-      const orderPayload = {
-        userId: user?._id || null, 
-        items: cart.map(item => ({
-          productId: item.id || item._id, 
-          name: item.name,
-          qty: item.qty,
-          price: item.price,
-          image: item.image
-        })),
-        shippingAddress: form,
-        subtotal,
-        deliveryFee,
-        discountAmount,
-        total,
-        paymentMethod: 'COD'
-      }
-
-      // Token header mein bhej rahe hain
-      const response = await axios.post('/api/orders', orderPayload, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {}
-      })
-
-      if (response.data.success) {
-        navigate('/order-success', { state: { orderId: response.data.orderId } })
-      }
-    } catch (err) {
-      console.error("Order placement error:", err)
-      alert(err.response?.data?.error || "Failed to place order. Please try again.")
-    } finally {
-      setPlacing(false)
+  e.preventDefault()
+  setTouched({ fullName: true, phone: true, email: true, addressLine1: true, city: true, state: true, pincode: true })
+  
+  if (!isValid) return
+  setPlacing(true)
+  
+  try {
+    const orderPayload = {
+      items: cart.map(item => ({
+        // FIX: productId key ko explicitly define karo
+        productId: item._id || item.productId || item.id, 
+        name: item.name,
+        qty: item.qty,
+        price: item.price,
+        image: item.image,
+        // Ensure weight exact match ho DB variant se
+        weight: item.size || item.weight 
+      })),
+      shippingAddress: form,
+      subtotal,
+      deliveryFee,
+      discountAmount,
+      total,
+      paymentMethod: paymentMethod 
     }
-  }
 
-  // Refresh ke waqt loading state handle karo
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_BASE || 'http://localhost:5000'}/api/orders`, 
+      orderPayload, 
+      { headers: token ? { Authorization: `Bearer ${token}` } : {} }
+    );
+
+    if (response.data.success) {
+      if (onOrderSuccess) onOrderSuccess(); 
+      navigate('/order-success', { 
+        state: { orderId: response.data.orderId, totalAmount: total } 
+      });
+    }
+  } catch (err) {
+    console.error("Order placement error:", err)
+    alert(err.response?.data?.error || "Failed to place order. Please try again.")
+  } finally {
+    setPlacing(false)
+  }
+}
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <p className="text-lg font-medium text-stone-600">Loading your details...</p>
+        <p className="text-lg font-medium text-stone-600 animate-pulse">Loading your details...</p>
       </div>
     )
   }
@@ -166,12 +175,13 @@ const Checkout = ({
         <h1 className="text-3xl font-bold text-stone-900 md:text-4xl">Checkout</h1>
 
         <form onSubmit={handleSubmit} className="mt-10 lg:flex lg:gap-12">
+          {/* Left: Shipping Form */}
           <div className="lg:w-[55%]">
             <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm md:p-8">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-lg font-semibold text-stone-900">Delivery details</h2>
-                  <p className="text-sm text-stone-500">Auto-filled from your profile.</p>
+                  <p className="text-sm text-stone-500">Confirm where you want your crunch!</p>
                 </div>
                 <button type="button" onClick={() => setShowMap(!showMap)} className="text-xs font-bold text-stone-900 underline">
                   {showMap ? "Hide Map" : "Select on Map"}
@@ -205,7 +215,7 @@ const Checkout = ({
 
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-stone-700">Address *</label>
-                  <input name="addressLine1" type="text" value={form.addressLine1} onChange={handleChange} onBlur={handleBlur} placeholder="House / flat no., building, street" className={inputClass('addressLine1')} />
+                  <input name="addressLine1" type="text" value={form.addressLine1} onChange={handleChange} onBlur={handleBlur} placeholder="House no., Building, Area" className={inputClass('addressLine1')} />
                   {touched.addressLine1 && errors.addressLine1 && <p className="mt-1 text-xs text-red-600">{errors.addressLine1}</p>}
                 </div>
 
@@ -220,33 +230,61 @@ const Checkout = ({
                 </div>
               </div>
             </div>
+
+            {/* Payment Method Selection UI */}
+            <div className="mt-8 rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-stone-900">Payment method</h2>
+              <div className="mt-4 space-y-3">
+                <label className="flex items-center gap-3 p-4 border border-stone-900 rounded-xl cursor-pointer bg-stone-50">
+                  <input type="radio" checked={paymentMethod === 'COD'} onChange={() => setPaymentMethod('COD')} className="accent-stone-900 h-4 w-4" />
+                  <div className="flex-1">
+                    <p className="text-sm font-bold">Cash on Delivery (COD)</p>
+                    <p className="text-xs text-stone-500">Pay when you receive the order.</p>
+                  </div>
+                </label>
+                <div className="flex items-center gap-3 p-4 border border-stone-200 rounded-xl opacity-50 cursor-not-allowed">
+                  <input type="radio" disabled className="h-4 w-4" />
+                  <div className="flex-1">
+                    <p className="text-sm font-bold">Online Payment / Cards</p>
+                    <p className="text-xs text-stone-500">Coming soon...</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
+          {/* Right: Summary & Action */}
           <div className="mt-10 lg:mt-0 lg:w-[45%]">
             <div className="sticky top-24 rounded-2xl border border-stone-200 bg-white p-6 shadow-sm md:p-8">
-              <h2 className="text-lg font-semibold text-stone-900">Order summary</h2>
-              <div className="mt-4 space-y-3 border-t border-stone-200 pt-4">
+              <h2 className="text-lg font-semibold text-stone-900 border-b pb-4">Order summary</h2>
+              <div className="mt-4 space-y-4 max-h-[300px] overflow-y-auto pr-2">
                 {cart.map((item) => (
                   <div key={item.id} className="flex gap-4 text-sm text-stone-900">
                     <img src={item.image} alt="" className="h-14 w-14 rounded-lg border object-cover" />
                     <div className="flex-1">
                       <p className="font-medium">{item.name}</p>
-                      <p className="text-stone-600">Qty: {item.qty} × ₹{item.price}</p>
+                      <p className="text-xs text-stone-500">Qty: {item.qty} × ₹{item.price}</p>
                     </div>
-                    <p className="font-semibold">₹{item.price * item.qty}</p>
+                    <p className="font-bold">₹{item.price * item.qty}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-6 space-y-2 border-t pt-4 text-sm">
+              <div className="mt-6 space-y-3 border-t pt-6 text-sm">
                 <div className="flex justify-between text-stone-600"><span>Subtotal</span><span>₹{Math.round(subtotal)}</span></div>
-                <div className="flex justify-between text-stone-600"><span>Delivery</span><span>{deliveryFee === 0 ? 'Free' : `₹${Math.round(deliveryFee)}`}</span></div>
-                <div className="flex justify-between border-t pt-3 text-base font-bold text-stone-900"><span>Total</span><span>₹{Math.round(total)}</span></div>
+                <div className="flex justify-between text-stone-600"><span>Delivery Charges</span><span>{deliveryFee === 0 ? <span className="text-emerald-600 font-bold">Free</span> : `₹${Math.round(deliveryFee)}`}</span></div>
+                {discountAmount > 0 && <div className="flex justify-between text-emerald-600"><span>Discount</span><span>-₹{Math.round(discountAmount)}</span></div>}
+                <div className="flex justify-between border-t border-stone-100 pt-4 text-xl font-black text-stone-900"><span>Total</span><span>₹{Math.round(total)}</span></div>
               </div>
 
-              <button type="submit" disabled={!isValid || placing} className="mt-6 w-full rounded-xl bg-stone-900 py-3.5 text-sm font-semibold text-white disabled:opacity-50">
-                {placing ? 'Placing order…' : 'Place order'}
+              <button 
+                type="submit" 
+                disabled={!isValid || placing} 
+                className="mt-8 w-full rounded-xl bg-stone-900 py-4 text-sm font-bold text-white transition-all active:scale-95 disabled:opacity-50 disabled:bg-stone-400"
+              >
+                {placing ? 'Processing Order...' : `Confirm Order (COD)`}
               </button>
+              <p className="mt-4 text-center text-[10px] text-stone-400">By placing order, you agree to our Terms and Conditions.</p>
             </div>
           </div>
         </form>

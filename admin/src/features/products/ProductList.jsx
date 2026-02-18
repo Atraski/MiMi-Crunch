@@ -3,14 +3,13 @@ import { useMemo } from 'react'
 import ProductForm from './ProductForm.jsx'
 
 const ProductList = ({
-  products,
+  products = [],
   loading,
   error,
   onRefresh,
   onFetchForEdit,
   onCreate,
   onUpdate,
-  onUpdateStock,
   onDelete,
   onToggleActive,
   apiBase,
@@ -19,6 +18,9 @@ const ProductList = ({
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [editingProduct, setEditingProduct] = useState(null)
   const [editLoading, setEditLoading] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+
+  // Collections filter logic
   const collections = useMemo(
     () =>
       Array.from(
@@ -31,18 +33,37 @@ const ProductList = ({
     [products],
   )
 
+  // Stats calculation based on variants stock
+  const stats = useMemo(() => {
+    const total = products.length
+    const live = products.filter((p) => p.isActive !== false).length
+    const archived = total - live
+    
+    // Check if any variant is out of stock
+    const outOfStock = products.filter((p) => {
+      if (p.variants && p.variants.length > 0) {
+        return p.variants.every(v => (v.stock ?? 0) === 0)
+      }
+      return (p.inventory?.stock ?? 0) === 0
+    }).length
+
+    return { total, live, archived, outOfStock }
+  }, [products])
+
+  const filteredProducts = useMemo(() => {
+    return products.filter(p => 
+      (p.name || p.title || '').toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  }, [products, searchQuery])
+
   const handleCreate = async (form) => {
     const success = await onCreate(form)
-    if (success) {
-      setIsCreateOpen(false)
-    }
+    if (success) setIsCreateOpen(false)
     return success
   }
 
   const handleEdit = async (form) => {
-    if (!editingProduct) {
-      return false
-    }
+    if (!editingProduct) return false
     const success = await onUpdate(editingProduct._id, form)
     if (success) {
       setIsEditOpen(false)
@@ -51,317 +72,197 @@ const ProductList = ({
     return success
   }
 
-  const stats = useMemo(() => {
-    const total = products.length
-    const live = products.filter((p) => p.isActive !== false).length
-    const archived = total - live
-    const outOfStock = products.filter(
-      (p) => (p.inventory?.stock ?? 0) === 0,
-    ).length
-    return { total, live, archived, outOfStock }
-  }, [products])
-
   return (
     <div className="space-y-6">
+      {/* --- Top Stats Section --- */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <div className="rounded-2xl border border-stone-200/80 bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-          <p className="text-xs font-medium uppercase tracking-wider text-stone-500">Total</p>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-stone-900">{stats.total}</p>
-        </div>
-        <div className="rounded-2xl border border-stone-200/80 bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-          <p className="text-xs font-medium uppercase tracking-wider text-stone-500">Live</p>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-emerald-600">{stats.live}</p>
-        </div>
-        <div className="rounded-2xl border border-stone-200/80 bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-          <p className="text-xs font-medium uppercase tracking-wider text-stone-500">Archived</p>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-stone-600">{stats.archived}</p>
-        </div>
-        <div className="rounded-2xl border border-stone-200/80 bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-          <p className="text-xs font-medium uppercase tracking-wider text-stone-500">Out of stock</p>
-          <p className="mt-1 text-2xl font-semibold tracking-tight text-amber-600">{stats.outOfStock}</p>
-        </div>
+        {[
+          { label: 'Total Products', val: stats.total, color: 'text-stone-900' },
+          { label: 'Live on Site', val: stats.live, color: 'text-emerald-600' },
+          { label: 'Archived', val: stats.archived, color: 'text-stone-500' },
+          { label: 'Completely Out of Stock', val: stats.outOfStock, color: 'text-amber-600' },
+        ].map((s, i) => (
+          <div key={i} className="rounded-2xl border border-stone-200 bg-white p-5 shadow-sm">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">{s.label}</p>
+            <p className={`mt-2 text-3xl font-bold ${s.color}`}>{s.val}</p>
+          </div>
+        ))}
       </div>
 
-    <div className="card overflow-hidden">
-    <div className="border-b border-stone-200/60 bg-stone-50/50 px-5 py-4 sm:px-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h3 className="text-base font-semibold text-stone-900">Product catalog</h3>
-          <p className="mt-0.5 text-xs text-stone-500">Products & inventory</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="btn btn-outline rounded-lg px-3 py-1.5 text-xs" type="button">
-            Export
-          </button>
-          <button className="btn btn-outline rounded-lg px-3 py-1.5 text-xs" type="button">
-            Import
-          </button>
-          <button
-            className="btn btn-primary rounded-lg px-4 py-1.5 text-sm"
-            type="button"
-            onClick={() => setIsCreateOpen(true)}
-          >
-            Add product
-          </button>
-        </div>
-      </div>
-
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-1.5">
-          {['All', 'Active', 'Draft', 'Archived'].map((tab) => (
-            <button
-              key={tab}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-                tab === 'All'
-                  ? 'bg-stone-800 text-white'
-                  : 'bg-white text-stone-600 hover:bg-stone-100'
-              }`}
-              type="button"
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-        <div className="flex items-center gap-2">
-          <input
-            className="w-40 rounded-lg border border-stone-200 bg-white px-3 py-1.5 text-xs text-stone-700 placeholder:text-stone-400 focus:border-stone-300 focus:outline-none"
-            placeholder="Search"
-          />
-          <button
-            className="btn btn-outline rounded-lg px-3 py-1.5 text-xs"
-            onClick={onRefresh}
-            type="button"
-          >
-            Refresh
-          </button>
-        </div>
-      </div>
-    </div>
-
-    {error ? <p className="px-5 pt-4 text-sm text-red-600 sm:px-6">{error}</p> : null}
-    {loading ? (
-      <p className="px-5 py-8 text-center text-sm text-stone-500 sm:px-6">Loading...</p>
-    ) : (
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[720px] text-left text-sm">
-          <thead>
-            <tr className="border-b border-stone-200 bg-stone-50/80 text-xs font-medium uppercase tracking-wider text-stone-500">
-              <th className="px-5 py-3 sm:px-6">Product</th>
-              <th className="px-5 py-3 sm:px-6">Status</th>
-              <th className="px-5 py-3 sm:px-6">Inventory</th>
-              <th className="px-5 py-3 sm:px-6">Category</th>
-              <th className="px-5 py-3 text-right sm:px-6">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((item) => {
-              const stock = item.inventory?.stock ?? 0
-              const isLow = stock <= 5
-              const isActive = item.isActive !== false
-              const primaryImage =
-                item.images?.[0] ||
-                (item.variants?.[0]?.images && item.variants[0].images[0]) ||
-                ''
-              return (
-                <tr
-                  key={item._id}
-                  className="border-b border-stone-100 transition-colors last:border-b-0 hover:bg-stone-50/50"
-                >
-                  <td className="px-5 py-3.5 sm:px-6">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 overflow-hidden rounded-xl border border-stone-200/70 bg-stone-100">
-                        {primaryImage ? (
-                          <img
-                            src={primaryImage}
-                            alt={item.title || item.name}
-                            className="h-full w-full object-cover"
-                          />
-                        ) : null}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-stone-900">
-                          {item.title || item.name}
-                        </p>
-                        {/* <p className="text-xs text-stone-500">
-                          {item.slug} • {item.weight}
-                        </p> */}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <span
-                        className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-                          isActive
-                            ? 'bg-emerald-100 text-emerald-700'
-                            : 'bg-stone-200 text-stone-600'
-                        }`}
-                      >
-                        {isActive ? 'Active' : 'Inactive'}
-                      </span>
-                      <label className="relative inline-flex cursor-pointer items-center">
-                        <input
-                          className="sr-only"
-                          type="checkbox"
-                          checked={isActive}
-                          onChange={(event) =>
-                            onToggleActive?.(item._id, event.target.checked)
-                          }
-                        />
-                        <span
-                          className={`h-5 w-9 rounded-full transition ${
-                            isActive ? 'bg-emerald-400' : 'bg-stone-300'
-                          }`}
-                        />
-                        <span
-                          className={`absolute left-0.5 top-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition ${
-                            isActive ? 'translate-x-4' : ''
-                          }`}
-                        />
-                      </label>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`text-xs font-semibold ${
-                          isLow ? 'text-amber-700' : 'text-stone-700'
-                        }`}
-                      >
-                        {/* {stock} in stock */}
-                      </span>
-                      <input
-                        className="w-12 rounded-lg border border-stone-200 bg-white px-2 py-1 text-xs"
-                        defaultValue={stock}
-                        type="number"
-                        min="0"
-                        onBlur={(event) =>
-                          onUpdateStock(item._id, event.target.value)
-                        }
-                      />
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-xs text-stone-600">
-                    {item.category || 'Uncategorized'}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="inline-flex items-center gap-1">
-                      <button
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
-                        disabled={editLoading}
-                        onClick={async () => {
-                          setEditLoading(true)
-                          try {
-                            const full = onFetchForEdit ? await onFetchForEdit(item._id) : item
-                            setEditingProduct(full || item)
-                            setIsEditOpen(true)
-                          } finally {
-                            setEditLoading(false)
-                          }
-                        }}
-                        type="button"
-                        aria-label="Edit product"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          className="h-4 w-4"
-                        >
-                          <path d="M13.586 3.586a2 2 0 0 1 2.828 2.828l-.793.793-2.828-2.828.793-.793Z" />
-                          <path d="M11.379 5.793 4 13.172V16h2.828l7.38-7.379-2.83-2.828Z" />
-                        </svg>
-                      </button>
-                      <button
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-stone-200 bg-white text-red-600 hover:bg-red-50"
-                        onClick={() => onDelete(item._id)}
-                        type="button"
-                        aria-label="Delete product"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          className="h-4 w-4"
-                        >
-                          <path d="M8.5 3a1.5 1.5 0 0 0-1.415 1H5a.75.75 0 0 0 0 1.5h10a.75.75 0 0 0 0-1.5h-2.085A1.5 1.5 0 0 0 11.5 3h-3Z" />
-                          <path d="M6.5 7.25A.75.75 0 0 1 7.25 8v6a.75.75 0 0 1-1.5 0V8a.75.75 0 0 1 .75-.75Zm3.25 0a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0V8a.75.75 0 0 1 .75-.75Zm4 .75a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0V8Z" />
-                          <path d="M5.5 6.5h9v8.25A2.25 2.25 0 0 1 12.25 17h-4.5A2.25 2.25 0 0 1 5.5 14.75V6.5Z" />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              )
-            })}
-            {!products.length ? (
-              <tr>
-                <td className="px-6 py-6 text-sm text-stone-600" colSpan="5">
-                  No products yet.
-                </td>
-              </tr>
-            ) : null}
-          </tbody>
-        </table>
-      </div>
-    )}
-    {isCreateOpen ? (
-      <div className="fixed inset-0 z-50 grid place-items-center bg-stone-900/40 px-4">
-        <div className="w-full max-w-3xl">
-          <div className="card max-h-[85vh] overflow-y-auto p-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-stone-900">
-                Add Product
-              </h3>
+      <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
+        {/* --- Header & Search --- */}
+        <div className="border-b border-stone-100 bg-stone-50/40 px-4 py-4 sm:px-6 sm:py-5">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h3 className="text-lg font-bold text-stone-900">Catalog Management</h3>
+              <p className="text-xs text-stone-500">Manage products, variants, and live inventory</p>
+            </div>
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+              <input
+                className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2 text-sm transition-all focus:border-stone-400 focus:outline-none focus:ring-4 focus:ring-stone-100 sm:w-64"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
               <button
-                className="btn btn-soft px-3 py-1 text-xs"
-                type="button"
-                onClick={() => setIsCreateOpen(false)}
+                className="w-full rounded-xl bg-stone-900 px-5 py-2.5 text-sm font-bold text-white transition-all active:scale-95 hover:bg-stone-800 sm:w-auto"
+                onClick={() => setIsCreateOpen(true)}
               >
-                Close
+                + Add Product
               </button>
             </div>
-            <ProductForm
-              onCreate={handleCreate}
-              collections={collections}
-              apiBase={apiBase}
-            />
           </div>
         </div>
+
+        {/* --- Table Section --- */}
+        {error ? <p className="p-6 text-sm text-red-600 font-medium bg-red-50">{error}</p> : null}
+        
+        {loading ? (
+          <div className="py-20 text-center text-stone-400 animate-pulse">Fetching inventory...</div>
+        ) : (
+          <div className="overflow-hidden">
+            <table className="w-full table-fixed text-left">
+              <thead>
+                <tr className="border-b border-stone-100 bg-stone-50/30 text-[11px] font-bold uppercase tracking-wider text-stone-500">
+                  <th className="px-4 py-4 sm:px-6">Product Info</th>
+                  <th className="px-4 py-4 sm:px-6">Status</th>
+                  <th className="hidden px-4 py-4 sm:px-6 md:table-cell">Available Variants</th>
+                  <th className="hidden px-4 py-4 sm:px-6 lg:table-cell">Collection</th>
+                  <th className="px-4 py-4 text-right sm:px-6">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-stone-50">
+                {filteredProducts.map((item) => {
+                  const isActive = item.isActive !== false
+                  const primaryImage = item.images?.[0] || item.variants?.[0]?.images?.[0] || ''
+                  
+                  return (
+                    <tr key={item._id} className="hover:bg-stone-50/50 transition-colors">
+                      <td className="px-4 py-4 sm:px-6">
+                        <div className="flex items-center gap-4">
+                          <img 
+                            src={primaryImage || 'https://via.placeholder.com/150'} 
+                            className="h-12 w-12 rounded-xl border object-cover bg-stone-100" 
+                            alt="" 
+                          />
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-bold text-stone-900">{item.title || item.name}</p>
+                            <p className="text-[10px] text-stone-400 font-medium">ID: {item._id.slice(-6).toUpperCase()}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="hidden px-4 py-4 sm:px-6 md:table-cell">
+                        <label className="relative inline-flex cursor-pointer items-center">
+                          <input
+                            type="checkbox"
+                            className="sr-only"
+                            checked={isActive}
+                            onChange={(e) => onToggleActive?.(item._id, e.target.checked)}
+                          />
+                          <div className={`h-5 w-10 rounded-full transition-all ${isActive ? 'bg-emerald-500' : 'bg-stone-300'}`}>
+                            <div className={`absolute top-1 h-3 w-3 rounded-full bg-white transition-all ${isActive ? 'left-6' : 'left-1'}`} />
+                          </div>
+                          <span className={`ml-3 text-xs font-bold ${isActive ? 'text-emerald-600' : 'text-stone-400'}`}>
+                            {isActive ? 'LIVE' : 'DRAFT'}
+                          </span>
+                        </label>
+                      </td>
+                      <td className="px-4 py-4 sm:px-6">
+  <div className="flex flex-wrap gap-2">
+    {item.variants && item.variants.length > 0 ? (
+      item.variants.map((v, idx) => (
+        <div 
+          key={idx} 
+          className={`rounded-lg border px-2 py-1 text-[10px] font-bold ${
+            (v.stock || 0) <= 5 
+              ? 'bg-amber-50 border-amber-200 text-amber-700' 
+              : 'bg-stone-50 border-stone-100 text-stone-600'
+          }`}
+        >
+          {/* Yahan weight ke baad se ":" hata diya aur v.stock ensure kiya */}
+          {v.weight} <span className="text-stone-900 ml-1">{v.stock ?? 0}</span>
+        </div>
+      ))
+    ) : (
+      <span className="text-xs text-stone-400 font-medium">No variants found</span>
+    )}
+  </div>
+</td>
+                      <td className="hidden px-4 py-4 sm:px-6 lg:table-cell">
+                        <span className="inline-block rounded-md bg-stone-100 px-2 py-1 text-[10px] font-bold text-stone-500">
+                          {item.collection || 'General'}
+                        </span>
+                      </td>
+                      <td className="px-4 py-4 text-right sm:px-6">
+                        <div className="flex justify-end gap-2">
+                          <button
+                            className="h-9 w-9 flex items-center justify-center rounded-xl border border-stone-200 text-stone-600 hover:bg-stone-900 hover:text-white transition-all shadow-sm"
+                            onClick={async () => {
+                              setEditLoading(true)
+                              const full = onFetchForEdit ? await onFetchForEdit(item._id) : item
+                              setEditingProduct(full || item)
+                              setIsEditOpen(true)
+                              setEditLoading(false)
+                            }}
+                          >
+                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                          </button>
+                          <button
+                            className="h-9 w-9 flex items-center justify-center rounded-xl border border-red-100 text-red-500 hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                            onClick={() => window.confirm('Delete this product?') && onDelete(item._id)}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
-    ) : null}
-    {isEditOpen && editingProduct ? (
-      <div className="fixed inset-0 z-50 grid place-items-center bg-stone-900/40 px-4">
-        <div className="w-full max-w-3xl">
-          <div className="card max-h-[85vh] overflow-y-auto p-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-stone-900">
-                Edit Product
+
+      {/* --- Modals Section --- */}
+      {(isCreateOpen || isEditOpen) && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-stone-900/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-3xl bg-white shadow-2xl flex flex-col">
+            <div className="flex items-center justify-between border-b p-6">
+              <h3 className="text-xl font-bold text-stone-900">
+                {isCreateOpen ? 'Add New Munchy' : 'Refine Product'}
               </h3>
               <button
-                className="btn btn-soft px-3 py-1 text-xs"
-                type="button"
+                className="rounded-full bg-stone-100 p-2 hover:bg-stone-200 transition-colors"
                 onClick={() => {
+                  setIsCreateOpen(false)
                   setIsEditOpen(false)
                   setEditingProduct(null)
                 }}
               >
-                Close
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
-            <ProductForm
-              key={editingProduct._id}
-              onUpdate={handleEdit}
-              initialProduct={editingProduct}
-              collections={collections}
-              apiBase={apiBase}
-            />
+            <div className="overflow-y-auto p-6 flex-1">
+              <ProductForm
+                key={isCreateOpen ? 'create' : editingProduct?._id}
+                onCreate={isCreateOpen ? handleCreate : undefined}
+                onUpdate={isEditOpen ? handleEdit : undefined}
+                initialProduct={isEditOpen ? editingProduct : null}
+                collections={collections}
+                apiBase={apiBase}
+              />
+            </div>
           </div>
         </div>
-      </div>
-    ) : null}
+      )}
     </div>
-  </div>
   )
 }
 

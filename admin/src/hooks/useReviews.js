@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { getAdminAuthHeaders } from '../utils/adminAuth.js'
 
 const useReviews = (apiBase) => {
   const [reviews, setReviews] = useState([])
@@ -27,7 +28,7 @@ const useReviews = (apiBase) => {
       try {
         const res = await fetch(`${apiBase}/api/reviews/${id}`, {
           method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
           body: JSON.stringify(payload),
         })
         if (!res.ok) throw new Error('Update failed')

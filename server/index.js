@@ -1,7 +1,8 @@
 import './config/env.js'
 import app from './app.js'
 import connectDB from './config/db.js'
-import { connectRedis } from './config/redis.js'
+import mongoose from 'mongoose'
+import { closeRedis, connectRedis } from './config/redis.js'
 
 const PORT = Number(process.env.PORT) || 5000
 const MONGODB_URI =
@@ -9,7 +10,7 @@ const MONGODB_URI =
 
 // Start HTTP server first so client gets a response instead of connection refused.
 // DB/Redis connect in background; auth and data routes will fail until DB is up.
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)
 })
 
@@ -25,3 +26,21 @@ connectDB(MONGODB_URI)
     }
     // Don't exit – server stays up; fix DB and restart to use auth/data
   })
+
+const gracefulShutdown = async (signal) => {
+  console.log(`Received ${signal}. Shutting down gracefully...`)
+  server.close(async () => {
+    try {
+      await closeRedis()
+      await mongoose.connection.close()
+      console.log('HTTP server, Redis, and MongoDB connections closed.')
+      process.exit(0)
+    } catch (err) {
+      console.error('Graceful shutdown failed:', err.message)
+      process.exit(1)
+    }
+  })
+}
+
+process.on('SIGINT', () => gracefulShutdown('SIGINT'))
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'))

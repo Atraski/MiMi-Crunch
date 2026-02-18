@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { getAdminAuthHeaders } from '../utils/adminAuth.js'
 
 const useProducts = (apiBase) => {
   const [products, setProducts] = useState([])
@@ -69,7 +70,7 @@ const useProducts = (apiBase) => {
       const payload = buildPayload(form)
       const res = await fetch(`${apiBase}/api/products`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
         body: JSON.stringify(payload),
       })
       if (!res.ok) {
@@ -89,7 +90,7 @@ const useProducts = (apiBase) => {
       const payload = buildPayload(form)
       const res = await fetch(`${apiBase}/api/products/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
         body: JSON.stringify(payload),
       })
       if (!res.ok) {
@@ -108,7 +109,7 @@ const useProducts = (apiBase) => {
     try {
       const res = await fetch(`${apiBase}/api/products/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
         body: JSON.stringify({ inventory: { stock: Number(stock) } }),
       })
       if (!res.ok) {
@@ -125,6 +126,7 @@ const useProducts = (apiBase) => {
     try {
       const res = await fetch(`${apiBase}/api/products/${id}`, {
         method: 'DELETE',
+        headers: getAdminAuthHeaders(),
       })
       if (!res.ok) {
         throw new Error('Delete failed')
@@ -140,7 +142,7 @@ const useProducts = (apiBase) => {
     try {
       const res = await fetch(`${apiBase}/api/products/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
         body: JSON.stringify({ isActive }),
       })
       if (!res.ok) {

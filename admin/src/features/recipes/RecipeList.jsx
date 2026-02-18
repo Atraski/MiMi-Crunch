@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import RichTextEditor from '../../components/RichTextEditor.jsx'
+import { getAdminAuthHeaders } from '../../utils/adminAuth.js'
 
 const RecipeList = ({
   recipes,
@@ -81,7 +82,7 @@ const RecipeList = ({
                 Add recipes and link them to products.
               </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
               <button
                 className="btn btn-outline rounded-lg px-3 py-1.5 text-xs"
                 type="button"
@@ -108,13 +109,13 @@ const RecipeList = ({
             Loading...
           </p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px] text-left text-sm">
+          <div className="overflow-hidden">
+            <table className="w-full table-fixed text-left text-sm">
               <thead>
                 <tr className="border-b border-stone-200 bg-stone-50/80 text-xs font-medium uppercase tracking-wider text-stone-500">
                   <th className="px-5 py-3 sm:px-6">Title</th>
-                  <th className="px-5 py-3 sm:px-6">Slug</th>
-                  <th className="px-5 py-3 sm:px-6">Product</th>
+                  <th className="hidden px-5 py-3 sm:px-6 md:table-cell">Slug</th>
+                  <th className="hidden px-5 py-3 sm:px-6 sm:table-cell">Product</th>
                   <th className="px-5 py-3 text-right sm:px-6">Actions</th>
                 </tr>
               </thead>
@@ -147,10 +148,10 @@ const RecipeList = ({
                         </div>
                       </div>
                     </td>
-                    <td className="px-5 py-3.5 text-xs text-stone-500 sm:px-6">
+                    <td className="hidden px-5 py-3.5 text-xs text-stone-500 sm:px-6 md:table-cell">
                       {recipe.slug}
                     </td>
-                    <td className="px-5 py-3.5 text-xs text-stone-500 sm:px-6">
+                    <td className="hidden px-5 py-3.5 text-xs text-stone-500 sm:px-6 sm:table-cell">
                       {recipe.productSlug || '—'}
                     </td>
                     <td className="px-5 py-3.5 text-right sm:px-6">
@@ -366,7 +367,7 @@ const RecipeEditorModal = ({
     setUploadError('')
     const res = await fetch(`${apiBase}/api/uploads/signature`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
       body: JSON.stringify({ folder: 'recipes' }),
     })
     if (!res.ok) {
@@ -406,7 +407,7 @@ const RecipeEditorModal = ({
     setUploadError('')
     const res = await fetch(`${apiBase}/api/uploads/signature`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
       body: JSON.stringify({ folder: 'recipes' }),
     })
     if (!res.ok) {

@@ -14,9 +14,28 @@ const orderSchema = new mongoose.Schema({
     city: String,
     pincode: String
   },
+  subtotal: { type: Number, default: 0 },
+  discountAmount: { type: Number, default: 0 },
+  deliveryFee: { type: Number, default: 0 },
+  shipmentId: { type: String, default: '' },
   totalAmount: Number,
+  paymentMethod: { type: String, default: 'COD' },
   status: { type: String, default: 'Pending' }, // Pending, Shipped, Delivered
-  paymentStatus: { type: String, default: 'COD' } 
+  paymentStatus: { type: String, default: 'COD' },
+  shippingPartner: {
+    partner: { type: String, default: '' },
+    synced: { type: Boolean, default: false },
+    syncedAt: Date,
+    shiprocketOrderId: String,
+    shipmentId: String,
+    awbCode: String,
+    courierName: String,
+    pickupRequested: { type: Boolean, default: false },
+    pickupRequestedAt: Date,
+    pickupStatus: String,
+    pickupToken: String,
+    lastError: String
+  }
 }, { timestamps: true });
 
 const Order = mongoose.model('Order', orderSchema);

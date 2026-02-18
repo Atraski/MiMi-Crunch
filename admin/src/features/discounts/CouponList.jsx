@@ -71,7 +71,7 @@ const CouponList = ({
               <h3 className="text-base font-semibold text-stone-900">Discounts & Coupons</h3>
               <p className="mt-0.5 text-xs text-stone-500">Create and manage coupon codes for your store</p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
               <button
                 className="btn btn-outline rounded-lg px-3 py-1.5 text-xs"
                 type="button"
@@ -94,16 +94,16 @@ const CouponList = ({
         {loading ? (
           <p className="px-5 py-8 text-center text-sm text-stone-500 sm:px-6">Loading...</p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px] text-left text-sm">
+          <div className="overflow-hidden">
+            <table className="w-full table-fixed text-left text-sm">
               <thead>
                 <tr className="border-b border-stone-200 bg-stone-50/80 text-xs font-medium uppercase tracking-wider text-stone-500">
                   <th className="px-5 py-3 sm:px-6">Code</th>
-                  <th className="px-5 py-3 sm:px-6">Type</th>
                   <th className="px-5 py-3 sm:px-6">Value</th>
-                  <th className="px-5 py-3 sm:px-6">Min order</th>
-                  <th className="px-5 py-3 sm:px-6">Uses</th>
-                  <th className="px-5 py-3 sm:px-6">Valid until</th>
+                  <th className="hidden px-5 py-3 sm:px-6 md:table-cell">Type</th>
+                  <th className="hidden px-5 py-3 sm:px-6 lg:table-cell">Min order</th>
+                  <th className="hidden px-5 py-3 sm:px-6 lg:table-cell">Uses</th>
+                  <th className="hidden px-5 py-3 sm:px-6 md:table-cell">Valid until</th>
                   <th className="px-5 py-3 sm:px-6">Status</th>
                   <th className="px-5 py-3 text-right sm:px-6">Actions</th>
                 </tr>
@@ -117,20 +117,20 @@ const CouponList = ({
                     <td className="px-6 py-4 font-mono font-semibold text-stone-900">
                       {coupon.code}
                     </td>
-                    <td className="px-6 py-4 text-stone-600">
+                    <td className="hidden px-6 py-4 text-stone-600 md:table-cell">
                       {coupon.type === 'fixed' ? 'Fixed (₹)' : 'Percentage (%)'}
                     </td>
                     <td className="px-6 py-4 text-stone-600">
                       {coupon.type === 'fixed' ? `₹${coupon.value}` : `${coupon.value}%`}
                     </td>
-                    <td className="px-6 py-4 text-stone-600">
+                    <td className="hidden px-6 py-4 text-stone-600 lg:table-cell">
                       {coupon.minOrder != null ? `₹${coupon.minOrder}` : '—'}
                     </td>
-                    <td className="px-6 py-4 text-stone-600">
+                    <td className="hidden px-6 py-4 text-stone-600 lg:table-cell">
                       {coupon.usedCount ?? 0}
                       {coupon.maxUses != null ? ` / ${coupon.maxUses}` : ''}
                     </td>
-                    <td className="px-6 py-4 text-stone-600">
+                    <td className="hidden px-6 py-4 text-stone-600 md:table-cell">
                       {formatDate(coupon.validUntil)}
                     </td>
                     <td className="px-6 py-4">

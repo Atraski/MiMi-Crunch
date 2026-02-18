@@ -7,15 +7,16 @@ import {
   listBlogs,
   updateBlog,
 } from '../controllers/blogController.js'
+import { adminAuthMiddleware } from '../middleware/adminAuth.js'
 
 const router = Router()
 
-router.post('/blogs', createBlog)
+router.post('/blogs', adminAuthMiddleware, createBlog)
 router.get('/blogs', listBlogs)
 router.get('/blogs/:id', getBlogById)
 router.get('/blogs/slug/:slug', getBlogBySlug)
-router.patch('/blogs/:id', updateBlog)
-router.delete('/blogs/:id', deleteBlog)
+router.patch('/blogs/:id', adminAuthMiddleware, updateBlog)
+router.delete('/blogs/:id', adminAuthMiddleware, deleteBlog)
 
 export default router
 

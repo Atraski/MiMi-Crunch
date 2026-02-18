@@ -58,3 +58,14 @@ export const deleteCachedUser = async (userId) => {
     // ignore
   }
 }
+
+export const closeRedis = async () => {
+  if (!redisClient) return
+  try {
+    await redisClient.quit()
+  } catch {
+    // ignore shutdown errors
+  } finally {
+    redisClient = null
+  }
+}

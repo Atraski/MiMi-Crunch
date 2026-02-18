@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { getAdminAuthHeaders } from '../utils/adminAuth.js'
 
 const useCollections = (apiBase) => {
   const [collections, setCollections] = useState([])
@@ -37,7 +38,7 @@ const useCollections = (apiBase) => {
     try {
       const res = await fetch(`${apiBase}/api/collections`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
         body: JSON.stringify(form),
       })
       if (!res.ok) {
@@ -56,7 +57,7 @@ const useCollections = (apiBase) => {
     try {
       const res = await fetch(`${apiBase}/api/collections/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
         body: JSON.stringify(form),
       })
       if (!res.ok) {
@@ -75,6 +76,7 @@ const useCollections = (apiBase) => {
     try {
       const res = await fetch(`${apiBase}/api/collections/${id}`, {
         method: 'DELETE',
+        headers: getAdminAuthHeaders(),
       })
       if (!res.ok) {
         throw new Error('Delete failed')

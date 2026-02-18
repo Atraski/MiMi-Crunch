@@ -53,6 +53,7 @@ const CartDrawer = ({
   const [couponsLoading, setCouponsLoading] = useState(false)
   const couponInputRef = useRef(null)
   const couponsSectionRef = useRef(null)
+  const asideRef = useRef(null)
 
   useEffect(() => {
     if (!open || !apiBase || cart.length === 0) {
@@ -74,6 +75,39 @@ const CartDrawer = ({
       })
     return () => { cancelled = true }
   }, [open, apiBase, cart.length])
+
+  // Robust page scroll lock while cart is open. Uses position:fixed to lock
+  // page scroll and restores scroll position on close. This approach works
+  // for desktop wheel and mobile touch scrolling while allowing the cart
+  // drawer (asideRef) to scroll internally.
+  useEffect(() => {
+    if (!open) return
+
+    const scrollY = window.scrollY || window.pageYOffset || 0
+
+    // Save original inline styles to restore later
+    const origBodyPosition = document.body.style.position
+    const origBodyTop = document.body.style.top
+    const origBodyWidth = document.body.style.width
+    const origDocOverflow = document.documentElement.style.overflow
+
+    // Lock scroll
+    document.body.style.position = 'fixed'
+    document.body.style.top = `-${scrollY}px`
+    document.body.style.width = '100%'
+    document.documentElement.style.overflow = 'hidden'
+
+    return () => {
+      // Restore
+      document.body.style.position = origBodyPosition || ''
+      document.body.style.top = origBodyTop || ''
+      document.body.style.width = origBodyWidth || ''
+      document.documentElement.style.overflow = origDocOverflow || ''
+
+      // Restore scroll to previous position
+      window.scrollTo(0, scrollY)
+    }
+  }, [open])
 
   const handleApply = async (e) => {
     e?.preventDefault()
@@ -104,15 +138,15 @@ const CartDrawer = ({
   }
 
   return (
-    <div className="fixed inset-0 z-30">
+    <div className="fixed inset-0 z-50 overflow-hidden">
       <button
         className="absolute inset-0 bg-black/30"
         onClick={onClose}
         aria-label="Close cart"
         type="button"
       />
-      <aside className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-white shadow-2xl">
-        <div className="flex items-center justify-between border-b border-stone-200 px-5 py-4">
+      <aside ref={asideRef} className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-white shadow-2xl z-40">
+        <div className="flex items-center justify-between border-b border-stone-200 px-5 py-4 shrink-0">
           <h2 className="text-lg font-bold uppercase tracking-wide text-stone-900">
             Your Cart ({cartItemCount})
           </h2>
@@ -128,13 +162,13 @@ const CartDrawer = ({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4">
           {cart.length === 0 ? (
             <div className="px-5 py-8">
               <p className="text-sm text-stone-600">Your cart is empty. Add products to see them here.</p>
             </div>
           ) : (
-            <div className="space-y-0">
+            <div className="space-y-4">
               <div className="bg-stone-900 px-4 py-2.5 text-center text-sm font-medium text-white">
                 Delivery in 2–5 days
               </div>
@@ -234,7 +268,7 @@ const CartDrawer = ({
                   </div>
                 ))}
 
-              <div ref={couponsSectionRef} className="border-t border-stone-200 pt-4 px-5">
+              <div ref={couponsSectionRef} className="border-t border-stone-200 pt-4 px-5 shrink-0">
                 <div className="mb-2 flex items-center gap-2">
                   <span className="text-lg">🎟️</span>
                   <h3 className="text-sm font-bold text-stone-900">Apply Coupon</h3>

@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import { getAdminAuthHeaders } from '../utils/adminAuth.js'
 
 const useCoupons = (apiBase) => {
   const [coupons, setCoupons] = useState([])
@@ -9,7 +10,9 @@ const useCoupons = (apiBase) => {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch(`${apiBase}/api/coupons`)
+      const res = await fetch(`${apiBase}/api/coupons`, {
+        headers: getAdminAuthHeaders(),
+      })
       const data = await res.json()
       setCoupons(Array.isArray(data) ? data : [])
     } catch (err) {
@@ -22,7 +25,9 @@ const useCoupons = (apiBase) => {
   const fetchCouponById = useCallback(
     async (id) => {
       try {
-        const res = await fetch(`${apiBase}/api/coupons/${id}`)
+        const res = await fetch(`${apiBase}/api/coupons/${id}`, {
+          headers: getAdminAuthHeaders(),
+        })
         if (!res.ok) return null
         return await res.json()
       } catch {
@@ -37,7 +42,7 @@ const useCoupons = (apiBase) => {
     try {
       const res = await fetch(`${apiBase}/api/coupons`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
         body: JSON.stringify(form),
       })
       if (!res.ok) {
@@ -57,7 +62,7 @@ const useCoupons = (apiBase) => {
     try {
       const res = await fetch(`${apiBase}/api/coupons/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
         body: JSON.stringify(form),
       })
       if (!res.ok) {
@@ -77,6 +82,7 @@ const useCoupons = (apiBase) => {
     try {
       const res = await fetch(`${apiBase}/api/coupons/${id}`, {
         method: 'DELETE',
+        headers: getAdminAuthHeaders(),
       })
       if (!res.ok) throw new Error('Delete failed')
       await fetchCoupons()

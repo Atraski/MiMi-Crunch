@@ -1,29 +1,59 @@
+import mongoose from 'mongoose'
 import Product from '../models/Product.js'
 import productEvents from '../utils/productEvents.js'
 import seedProductsIfEmpty from '../utils/seedProducts.js'
 
 /**
- * Naya Function: Order hone par stock minus karne ke liye
- * Ye function orderController se call hoga.
+ * Naya Function: Order hone par variant-specific stock minus karne ke liye.
+ * Logic: Matches productId and the specific variant weight to decrement stock.
  */
 const updateStock = async (items) => {
   try {
-    const stockUpdates = items.map((item) => {
-      return Product.findByIdAndUpdate(
-        item.productId,
-        { $inc: { "inventory.stock": -item.qty } },
-        { new: true }
-      );
+    const stockUpdates = items.map(async (item) => {
+      console.log(`--- Processing Stock for: ${item.productId} (${item.weight}) ---`);
+
+      // 1. Validation: Basic check (24-char limit hata di hai kyunki teri ID custom string hai)
+      if (!item.productId) {
+        console.warn("Skipping: Product ID is missing in item");
+        return Promise.resolve();
+      }
+
+      // 2. Logic: Variant match karke stock minus karna
+      // Support either an ObjectId `_id`, a `slug`, or a compound `slug:weight` productId
+      let filter = { 'variants.weight': item.weight };
+
+      if (mongoose.isValidObjectId(item.productId)) {
+        filter._id = item.productId;
+      } else if (typeof item.productId === 'string' && item.productId.includes(':')) {
+        const [slugPart] = item.productId.split(':');
+        filter.slug = slugPart;
+      } else {
+        // treat productId as slug fallback
+        filter.slug = item.productId;
+      }
+
+      const result = await Product.updateOne(filter, {
+        $inc: { 'variants.$.stock': -Number(item.qty) },
+      });
+
+      // 3. Match Check: Dekho document mila ya nahi
+      if (result.matchedCount === 0) {
+        console.error(`❌ No match found for ID: ${item.productId} and Weight: ${item.weight}`);
+      } else {
+        console.log(`✅ Stock updated for ${item.productId} (${item.weight})`);
+      }
+      
+      return result;
     });
 
     await Promise.all(stockUpdates);
     
-    // SSE trigger karega taaki frontend pe stock live update ho jaye
+    // Real-time UI update trigger (SSE)
     productEvents.emit('updated'); 
     return { success: true };
   } catch (err) {
     console.error('Stock update error:', err);
-    throw new Error('Failed to update product inventory.');
+    throw new Error('Failed to update variant inventory.');
   }
 };
 
@@ -189,6 +219,7 @@ const streamProducts = (req, res) => {
   })
 }
 
+// Saare exports ek hi block mein
 export {
   createProduct,
   listProducts,
@@ -197,5 +228,5 @@ export {
   updateProduct,
   deleteProduct,
   streamProducts,
-  updateStock, // Isko export karna zaroori tha
+  updateStock, 
 }

@@ -5,6 +5,7 @@ import {
   listAll,
   updateReview,
 } from '../controllers/reviewController.js'
+import { adminAuthMiddleware } from '../middleware/adminAuth.js'
 
 const router = Router()
 
@@ -14,6 +15,6 @@ router.get('/reviews', (req, res, next) => {
   if (req.query.all === 'true') return listAll(req, res, next)
   return res.status(400).json({ error: 'Use productSlug or all=true' })
 })
-router.patch('/reviews/:id', updateReview)
+router.patch('/reviews/:id', adminAuthMiddleware, updateReview)
 
 export default router

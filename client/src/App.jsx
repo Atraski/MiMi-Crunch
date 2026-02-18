@@ -24,6 +24,7 @@ import Signup from './pages/Signup'
 import NotFound from './pages/NotFound'
 import Checkout from './pages/Checkout'
 import Lenis from 'lenis'
+import OrderSuccess from './pages/OrderSuccess'
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000'
 
@@ -273,6 +274,12 @@ function App() {
     setCart((prev) => prev.filter((i) => i.id !== item.id))
   }
 
+  // App.js mein ye naya function add karein
+const handleClearCart = () => {
+  setCart([]); // State khali karne ke liye
+  localStorage.removeItem('mimi_cart'); // LocalStorage saaf karne ke liye
+};
+
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0)
   const subtotal = useMemo(
     () => cart.reduce((sum, item) => sum + item.price * item.qty, 0),
@@ -430,9 +437,11 @@ function App() {
               deliveryFee={deliveryFee}
               discountAmount={discountAmount}
               total={total}
+              onOrderSuccess={handleClearCart}
             />
           }
         />
+        <Route path="/order-success" element={<OrderSuccess />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

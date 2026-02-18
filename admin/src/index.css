@@ -12,6 +12,7 @@
     font-family: 'DM Sans', system-ui, sans-serif;
     background: #f5f5f4;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   button {

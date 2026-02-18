@@ -1,137 +1,93 @@
-import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
+import React from 'react'
 
 const Footer = () => {
-  const rootRef = useRef(null)
-  const lineRef = useRef(null)
-  const footerRef = useRef(null)
-
-  useEffect(() => {
-    if (!rootRef.current) return
-
-    const ctx = gsap.context(() => {
-      // Infinite horizontal scroll on the wheat strip
-      if (lineRef.current) {
-        gsap.set(lineRef.current, { xPercent: 0 })
-        gsap.to(lineRef.current, {
-          xPercent: -50,
-          duration: 28,
-          ease: 'none',
-          repeat: -1,
-        })
-      }
-
-      // Gentle breeze / sway effect on the wheat stalks
-      gsap.to('.wheat-sway', {
-        y: -3,
-        skewY: 2,
-        duration: 4,
-        ease: 'sine.inOut',
-        yoyo: true,
-        repeat: -1,
-        transformOrigin: '50% 100%',
-      })
-
-      // Soft float / glow blobs in the footer background
-      gsap.to('.footer-glow', {
-        y: -10,
-        scale: 1.05,
-        duration: 8,
-        ease: 'sine.inOut',
-        yoyo: true,
-        repeat: -1,
-      })
-
-      // Subtle footer content reveal
-      if (footerRef.current) {
-        const cols = footerRef.current.querySelectorAll('[data-footer-col]')
-        gsap.from(cols, {
-          opacity: 0,
-          y: 24,
-          duration: 0.8,
-          ease: 'power2.out',
-          stagger: 0.15,
-        })
-      }
-    }, rootRef)
-
-    return () => ctx.revert()
-  }, [])
-
   return (
-    <div ref={rootRef} className="relative mt-16">
-      {/* GSAP-animated line-art strip above footer */}
-      <div className="pointer-events-none absolute inset-x-0 -top-10 h-16 overflow-hidden">
-        <svg
-          ref={lineRef}
-          className="h-full w-[200%] text-amber-700"
-          viewBox="0 0 400 40"
-          preserveAspectRatio="xMidYMid slice"
-        >
-          <defs>
-            <pattern
-              id="wheat-pattern"
-              x="0"
-              y="0"
-              width="40"
-              height="40"
-              patternUnits="userSpaceOnUse"
-            >
-              {/* simple millet / wheat-like stalks */}
-              <g className="wheat-sway" stroke="currentColor" strokeWidth="1.2" fill="none">
-                <path d="M8 40 V18" />
-                <path d="M8 20 L5 16" />
-                <path d="M8 22 L11 18" />
-
-                <path d="M20 40 V16" />
-                <path d="M20 18 L17 14" />
-                <path d="M20 20 L23 16" />
-                <path d="M20 22 L17 18" />
-
-                <path d="M32 40 V20" />
-                <path d="M32 22 L29 18" />
-                <path d="M32 24 L35 20" />
-              </g>
-            </pattern>
-          </defs>
-          <rect x="0" y="0" width="400" height="40" fill="url(#wheat-pattern)" />
-        </svg>
-      </div>
-
-      <footer
-        ref={footerRef}
-        className="relative overflow-hidden bg-gradient-to-tr from-stone-950 via-stone-900 to-emerald-950 py-12 text-stone-300"
-      >
-        {/* soft animated glow shapes */}
-        <div className="footer-glow pointer-events-none absolute -left-10 top-0 h-40 w-40 rounded-full bg-emerald-400/15 blur-3xl" />
-        <div className="footer-glow pointer-events-none absolute right-0 bottom-0 h-40 w-40 rounded-full bg-amber-400/10 blur-3xl" />
-
-        <div className="relative mx-auto grid max-w-6xl gap-8 px-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div data-footer-col>
-            <h3 className="text-lg font-semibold text-white">Mimi Crunch</h3>
-            <p className="mt-2 text-sm">Healthy millet foods crafted with care.</p>
+    <div className="relative mt-20 bg-emerald-950 text-emerald-50">
+      <footer className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
+          
+          {/* Brand Section */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold text-white tracking-tight">Mimi Crunch</h3>
+            <p className="text-sm leading-6 text-emerald-200/80">
+              Healthy millet foods crafted with care for a better lifestyle.
+              Savor the crunch of nature.
+            </p>
           </div>
-          <div className="flex flex-col gap-2" data-footer-col>
-            <p className="text-sm font-semibold text-white">Quick Links</p>
-            <a className="text-sm" href="/shipping-returns">
-              Shipping & Returns
-            </a>
-            <a className="text-sm" href="/privacy-policy">
-              Privacy Policy
-            </a>
-            <a className="text-sm" href="/terms-conditions">
-              Terms & Conditions
-            </a>
+
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-emerald-400">Company</h3>
+            <ul className="mt-4 space-y-3">
+              <li>
+                <a href="/about" className="text-sm hover:text-white transition-colors">About Us</a>
+              </li>
+              <li>
+                <a href="/shop" className="text-sm hover:text-white transition-colors">Our Products</a>
+              </li>
+              <li>
+                <a href="/contact" className="text-sm hover:text-white transition-colors">Contact Us</a>
+              </li>
+            </ul>
           </div>
-          <div data-footer-col>
-            <p className="text-sm font-semibold text-white">Contact</p>
-            <p>support@mimicrunch.com</p>
-            <p>+91 90000 00000</p>
-            <p>Gujrat, India</p>
+
+          {/* Support Links */}
+          <div>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-emerald-400">Support</h3>
+            <ul className="mt-4 space-y-3">
+              <li>
+                <a href="/shipping-returns" className="text-sm hover:text-white transition-colors">Shipping & Returns</a>
+              </li>
+              <li>
+                <a href="/privacy-policy" className="text-sm hover:text-white transition-colors">Privacy Policy</a>
+              </li>
+              <li>
+                <a href="/terms-conditions" className="text-sm hover:text-white transition-colors">Terms & Conditions</a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Contact Section */}
+          <div>
+            <h3 className="text-sm font-bold uppercase tracking-wider text-emerald-400">Get in Touch</h3>
+            <ul className="mt-4 space-y-3 text-sm">
+              <li className="flex items-center gap-2 text-emerald-200/80">
+                <span className="text-emerald-400">📧</span> support@mimicrunch.com
+              </li>
+              <li className="flex items-center gap-2 text-emerald-200/80">
+                <span className="text-emerald-400">📞</span> +91 90000 00000
+              </li>
+              <li className="flex items-center gap-2 text-emerald-200/80">
+                <span className="text-emerald-400">📍</span> Gujarat, India
+              </li>
+            </ul>
           </div>
         </div>
-        <div className="mx-auto mt-8 max-w-6xl border-t border-white/10 px-4 pt-4 text-xs text-stone-400">
-          <p>© 2026 Mimi Crunch. All rights reserved.</p>
+
+        {/* Bottom Bar */}
+        <div className="mt-12 border-t border-emerald-900/50 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-xs text-emerald-500">
+            © 2026 Mimi Crunch. All rights reserved.
+          </p>
+          
+          {/* Social Icons Section */}
+          <div className="flex items-center gap-6">
+            {/* Instagram Icon */}
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-white transition-all transform hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </a>
+            
+            {/* Facebook Icon */}
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-white transition-all transform hover:scale-110">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+              </svg>
+            </a>
+          </div>
         </div>
       </footer>
     </div>

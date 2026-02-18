@@ -1,6 +1,8 @@
 import './config/env.js'
 import cors from 'cors'
 import express from 'express'
+import helmet from 'helmet'
+import rateLimit from 'express-rate-limit'
 import errorHandler from './middleware/errorHandler.js'
 
 // Route Imports
@@ -14,17 +16,58 @@ import couponRoutes from './routes/coupons.js'
 import uploadRoutes from './routes/uploads.js'
 import userRoutes from './routes/users.js'
 import authRoutes from './routes/auth.js'
+import adminRoutes from './routes/admin.js'
 import orderRoutes from './routes/orders.js' // <--- Naya Order Route Import
 
 const app = express()
+app.set('trust proxy', 1)
 
 // Standard Middlewares
-app.use(cors())
-app.use(express.json()) // req.body parse karne ke liye zaroori hai
+const allowedOriginsFromEnv = String(process.env.CORS_ORIGIN || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean)
+
+const defaultAllowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'http://localhost:5174',
+  'http://127.0.0.1:5174',
+]
+
+const allowedOrigins = new Set([
+  ...defaultAllowedOrigins,
+  ...allowedOriginsFromEnv,
+])
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow non-browser tools (curl/postman) where origin can be undefined
+      if (!origin) return callback(null, true)
+      if (allowedOrigins.has(origin)) return callback(null, true)
+      return callback(new Error(`CORS blocked for origin: ${origin}`))
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }),
+)
+app.use(helmet())
+app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: Number(process.env.RATE_LIMIT_MAX || 500),
+    standardHeaders: true,
+    legacyHeaders: false,
+  }),
+)
+app.use(express.json({ limit: '1mb' })) // req.body parse karne ke liye zaroori hai
 
 // API Routes Registration
 app.use(healthRoutes)
 app.use('/api', authRoutes)
+app.use('/api', adminRoutes)
 app.use('/api', userRoutes)
 app.use('/api', productRoutes)
 app.use('/api', collectionRoutes)

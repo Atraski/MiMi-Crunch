@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { getAdminAuthHeaders } from '../../utils/adminAuth.js'
 
 const defaultForm = {
   title: '',
@@ -16,6 +17,8 @@ const createVariant = () => ({
   weight: '',
   price: '',
   compareAtPrice: '',
+  stock: 0,
+  sku: '',
   images: [],
   usePrimaryImages: false,
 })
@@ -150,6 +153,8 @@ const ProductForm = ({
       seedVariants.map((variant) => ({
         weight: variant.weight || '',
         price: variant.price ? String(variant.price) : '',
+        stock: variant.stock ? String(variant.stock) : '0', // Load stock
+    sku: variant.sku || '',                             // Load SKU
         compareAtPrice: variant.compareAtPrice ? String(variant.compareAtPrice) : '',
         images: (variant.images || []).map((url) => ({ url })),
         usePrimaryImages: false,
@@ -164,7 +169,7 @@ const ProductForm = ({
     }
     const res = await fetch(`${apiBase}/api/uploads/signature`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...getAdminAuthHeaders() },
       body: JSON.stringify({ folder: 'products' }),
     })
     if (!res.ok) {
@@ -243,6 +248,8 @@ const ProductForm = ({
         payloadVariants.push({
           weight: variant.weight.trim(),
           price: Number(variant.price),
+          stock: Number(variant.stock || 0), // Naya field
+    sku: variant.sku || '',             // Naya field
           compareAtPrice: variant.compareAtPrice
             ? Number(variant.compareAtPrice)
             : undefined,
@@ -338,7 +345,7 @@ const ProductForm = ({
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      {/* <div className="grid gap-4 md:grid-cols-3">
         <div>
           <p className="label">Stock</p>
           <input
@@ -350,7 +357,7 @@ const ProductForm = ({
             required
           />
         </div>
-      </div>
+      </div> */}
 
       <div className="grid gap-4 md:grid-cols-2">
         <div>
@@ -448,6 +455,28 @@ const ProductForm = ({
                   required
                 />
               </div>
+
+              {/* Stock for this specific variant */}
+    <div>
+      <label className="block text-xs font-bold mb-1 text-orange-600">Stock</label>
+      <input 
+        type="number" 
+        value={variant.stock} 
+        onChange={(e) => handleVariantChange(index, 'stock', e.target.value)}
+        className="w-full p-2 border border-orange-200 rounded focus:ring-orange-500" 
+      />
+    </div>
+
+    {/* SKU/ID (Optional) */}
+    <div>
+      <label className="block text-xs font-bold mb-1">SKU</label>
+      <input 
+        type="text" 
+        value={variant.sku || ''} 
+        onChange={(e) => handleVariantChange(index, 'sku', e.target.value)}
+        className="w-full p-2 border rounded" 
+      />
+    </div>
               <div>
                 <p className="label">Compare at</p>
                 <input
