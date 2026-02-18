@@ -34,6 +34,8 @@ const defaultAllowedOrigins = [
   'http://localhost:5174',
   'http://127.0.0.1:5174',
   'https://www.mimicrunch.com',
+  'https://mimicrunch.netlify.app',
+  'https://mimi-control.netlify.app'
 ]
 
 const allowedOrigins = new Set([
