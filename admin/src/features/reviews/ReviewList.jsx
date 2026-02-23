@@ -86,7 +86,11 @@ const ReviewList = ({
                   {items.length} review(s)
                 </p>
                 <ul className="mt-4 space-y-4">
-                  {items.map((r) => (
+                  {items.map((r) => {
+                    const profileImg = r.profileImage || null
+                    const productImg = r.productImage || r.imageUrl || null
+                    const displayName = r.authorName || 'Anonymous'
+                    return (
                     <li
                       key={r._id}
                       className={`rounded-xl border border-stone-200 bg-white p-4 ${
@@ -94,46 +98,62 @@ const ReviewList = ({
                       } ${r.isPinned ? 'ring-1 ring-amber-300' : ''}`}
                     >
                       <div className="flex flex-wrap items-start justify-between gap-2">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <div className="flex gap-0.5" aria-label={`${r.rating} stars`}>
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <span
-                                key={star}
-                                className={
-                                  star <= r.rating ? 'text-amber-500' : 'text-stone-300'
-                                }
-                              >
-                                ★
-                              </span>
-                            ))}
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <div className="h-9 w-9 flex-shrink-0 overflow-hidden rounded-full border border-stone-200 bg-stone-100">
+                            {profileImg ? (
+                              <img
+                                src={profileImg}
+                                alt=""
+                                className="h-full w-full object-cover"
+                              />
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center text-xs font-semibold text-stone-400">
+                                {displayName.charAt(0).toUpperCase()}
+                              </div>
+                            )}
                           </div>
-                          {r.authorName ? (
+                          <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-sm font-medium text-stone-600">
-                              {r.authorName}
+                              {displayName}
                             </span>
-                          ) : null}
-                          {r.isPinned && (
-                            <span className="rounded bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
-                              Pinned
-                            </span>
-                          )}
-                          {r.isDeleted && (
-                            <span className="rounded bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
-                              Deleted
-                            </span>
-                          )}
+                            <div className="flex gap-0.5" aria-label={`${r.rating} stars`}>
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <span
+                                  key={star}
+                                  className={
+                                    star <= r.rating ? 'text-amber-500' : 'text-stone-300'
+                                  }
+                                >
+                                  ★
+                                </span>
+                              ))}
+                            </div>
+                            {r.isPinned && (
+                              <span className="rounded bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
+                                Pinned
+                              </span>
+                            )}
+                            {r.isDeleted && (
+                              <span className="rounded bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
+                                Deleted
+                              </span>
+                            )}
+                          </div>
                         </div>
                         <time className="text-xs text-stone-500" dateTime={r.createdAt}>
                           {formatDate(r.createdAt)}
                         </time>
                       </div>
-                      <p className="mt-2 text-sm text-stone-700">{r.content}</p>
-                      {r.imageUrl ? (
+                      {r.content ? (
+                        <p className="mt-2 text-sm text-stone-700">{r.content}</p>
+                      ) : null}
+                      {productImg ? (
                         <div className="mt-2">
+                          <span className="text-[10px] font-medium uppercase text-stone-500">Product photo</span>
                           <img
-                            src={r.imageUrl}
-                            alt="Review"
-                            className="h-20 w-20 rounded-lg border border-stone-200 object-cover"
+                            src={productImg}
+                            alt="Product"
+                            className="mt-1 h-20 w-20 rounded-lg border border-stone-200 object-cover"
                           />
                         </div>
                       ) : null}
@@ -208,7 +228,8 @@ const ReviewList = ({
                         </div>
                       )}
                     </li>
-                  ))}
+                    )
+                  })}
                 </ul>
               </div>
             ))}

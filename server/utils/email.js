@@ -1,7 +1,7 @@
 import { mailTransport, nodemailer } from '../config/mailer.js'
 
 /**
- * User registration/OTP ke waqt verification code bhejne ke liye
+ * Send verification code for user registration/OTP
  */
 export const sendVerificationEmail = async ({ to, code }) => {
   try {
@@ -35,11 +35,11 @@ export const sendVerificationEmail = async ({ to, code }) => {
 }
 
 /**
- * Order place hone par confirmation details bhejne ke liye
+ * Send order confirmation email after order is placed
  */
 export const sendOrderConfirmationEmail = async ({ to, orderData }) => {
   try {
-    // Items list ka HTML generate karna
+    // Build items list HTML
     const itemsHtml = orderData.items.map(item => `
       <tr>
         <td style="padding: 12px; border-bottom: 1px solid #eee; font-size: 14px;">
@@ -108,6 +108,6 @@ export const sendOrderConfirmationEmail = async ({ to, orderData }) => {
     return info
   } catch (error) {
     console.error("Order Confirmation Email Error:", error)
-    // Hum error throw nahi kar rahe taaki order creation process na rukey
+    // Don't throw so order creation is not blocked
   }
 }

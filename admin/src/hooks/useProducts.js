@@ -74,12 +74,14 @@ const useProducts = (apiBase) => {
         body: JSON.stringify(payload),
       })
       if (!res.ok) {
-        throw new Error('Create failed')
+        const data = await res.json().catch(() => ({}))
+        const message = data?.error || 'Failed to create product.'
+        throw new Error(message)
       }
       await fetchProducts()
       return true
     } catch (err) {
-      setError('Failed to create product.')
+      setError(err.message || 'Failed to create product.')
       return false
     }
   }

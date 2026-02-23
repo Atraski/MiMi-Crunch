@@ -19,7 +19,7 @@ const OrderSuccess = () => {
   }
 
   return (
-    <main className="min-h-screen bg-stone-50 flex items-center justify-center px-4 py-20">
+    <main className="min-h-screen bg-stone-50 flex items-center justify-center px-2 py-20">
       <div className="max-w-lg w-full bg-white rounded-[2.5rem] p-10 shadow-sm border border-stone-100 text-center">
         
         {/* Animated Checkmark Icon */}

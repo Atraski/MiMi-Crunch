@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import BackButton from '../components/BackButton'
 import MapSelector from '../components/MapSelector'
 import axios from 'axios'
-import { useAuth } from '../context/AuthContext' 
+import { useAuth } from '../context/AuthContext'
+import { getProductSlugFromCartItem, getCartWeightKgForProduct, parseWeightToKg, MAX_WEIGHT_PER_PRODUCT_KG } from '../utils/cartUtils'
 
 const Checkout = ({
   cart = [],
+  products = [],
   subtotal = 0,
   deliveryFee = 0,
   discountAmount = 0,
@@ -32,7 +34,32 @@ const Checkout = ({
   const [showMap, setShowMap] = useState(false)
   
   // COD default payment method rakha hai
-  const [paymentMethod, setPaymentMethod] = useState('COD') 
+  const [paymentMethod, setPaymentMethod] = useState('COD')
+
+  // --- Out of stock & weight limit validation (using latest products) ---
+  const { outOfStockItemIds, overLimitProductSlugs, canPlaceOrder } = useMemo(() => {
+    const outIds = new Set()
+    const overSlugs = new Set()
+    const productBySlug = new Map((products || []).map((p) => [p.slug, p]))
+    for (const item of cart) {
+      const slug = getProductSlugFromCartItem(item)
+      const product = productBySlug.get(slug)
+      const weightStr = item.size || item.weight || ''
+      const weightKg = parseWeightToKg(weightStr)
+      const totalWeightForProduct = getCartWeightKgForProduct(cart, slug)
+      if (totalWeightForProduct > MAX_WEIGHT_PER_PRODUCT_KG) overSlugs.add(slug)
+      const wNorm = (w) => (w || '').trim().toLowerCase()
+      const variant = product?.variants?.find((v) => wNorm(v.weight) === wNorm(weightStr))
+      const stock = variant?.stock ?? 0
+      if (stock < (item.qty || 0)) outIds.add(item.id)
+    }
+    const canPlace = outIds.size === 0 && overSlugs.size === 0
+    return {
+      outOfStockItemIds: outIds,
+      overLimitProductSlugs: overSlugs,
+      canPlaceOrder: canPlace,
+    }
+  }, [cart, products])
 
   // --- useEffect: Auto-fill Form from Context ---
   useEffect(() => {
@@ -101,19 +128,21 @@ const Checkout = ({
   setTouched({ fullName: true, phone: true, email: true, addressLine1: true, city: true, state: true, pincode: true })
   
   if (!isValid) return
+  if (!canPlaceOrder) {
+    alert('Some items are out of stock or exceed the purchase limit. Please update your cart.')
+    return
+  }
   setPlacing(true)
   
   try {
     const orderPayload = {
-      items: cart.map(item => ({
-        // FIX: productId key ko explicitly define karo
-        productId: item._id || item.productId || item.id, 
+      items: cart.map((item) => ({
+        productId: item._id || item.productId || item.id,
         name: item.name,
         qty: item.qty,
         price: item.price,
         image: item.image,
-        // Ensure weight exact match ho DB variant se
-        weight: item.size || item.weight 
+        weight: item.size || item.weight,
       })),
       shippingAddress: form,
       subtotal,
@@ -153,7 +182,7 @@ const Checkout = ({
 
   if (cart.length === 0) {
     return (
-      <main className="min-h-[60vh] px-4 py-16 text-center">
+      <main className="min-h-[60vh] px-2 py-16 text-center">
           <BackButton className="mb-6 mx-auto" />
           <h1 className="text-2xl font-semibold text-stone-900">Your cart is empty</h1>
           <Link to="/products" className="mt-6 inline-block rounded-xl bg-stone-900 px-6 py-3 text-sm font-semibold text-white">
@@ -169,7 +198,7 @@ const Checkout = ({
     }`
 
   return (
-    <main className="min-h-[60vh] bg-stone-50/50 px-4 py-10 md:py-16">
+    <main className="min-h-[60vh] bg-stone-50/50 px-2 py-10 md:py-16">
       <div className="mx-auto max-w-6xl">
         <BackButton className="mb-8" />
         <h1 className="text-3xl font-bold text-stone-900 md:text-4xl">Checkout</h1>
@@ -257,17 +286,31 @@ const Checkout = ({
           <div className="mt-10 lg:mt-0 lg:w-[45%]">
             <div className="sticky top-24 rounded-2xl border border-stone-200 bg-white p-6 shadow-sm md:p-8">
               <h2 className="text-lg font-semibold text-stone-900 border-b pb-4">Order summary</h2>
+              {(outOfStockItemIds.size > 0 || overLimitProductSlugs.size > 0) && (
+                <div className="mt-4 rounded-xl bg-red-50 border border-red-200 p-4 text-sm text-red-800">
+                  {outOfStockItemIds.size > 0 && (
+                    <p className="font-medium">Some items in your cart are out of stock. Remove them to place the order.</p>
+                  )}
+                  {overLimitProductSlugs.size > 0 && (
+                    <p className="font-medium mt-1">Some products exceed the maximum allowed per product. Reduce quantity to continue.</p>
+                  )}
+                </div>
+              )}
               <div className="mt-4 space-y-4 max-h-[300px] overflow-y-auto pr-2">
-                {cart.map((item) => (
-                  <div key={item.id} className="flex gap-4 text-sm text-stone-900">
-                    <img src={item.image} alt="" className="h-14 w-14 rounded-lg border object-cover" />
-                    <div className="flex-1">
-                      <p className="font-medium">{item.name}</p>
-                      <p className="text-xs text-stone-500">Qty: {item.qty} × ₹{item.price}</p>
+                {cart.map((item) => {
+                  const isOutOfStock = outOfStockItemIds.has(item.id)
+                  return (
+                    <div key={item.id} className={`flex gap-4 text-sm ${isOutOfStock ? 'text-red-700 opacity-90' : 'text-stone-900'}`}>
+                      <img src={item.image} alt="" className="h-14 w-14 rounded-lg border object-cover" />
+                      <div className="flex-1">
+                        <p className="font-medium">{item.name}</p>
+                        <p className="text-xs text-stone-500">Qty: {item.qty} × ₹{item.price}</p>
+                        {isOutOfStock && <p className="text-xs font-semibold text-red-600 mt-1">Out of stock — remove to continue</p>}
+                      </div>
+                      <p className="font-bold">₹{item.price * item.qty}</p>
                     </div>
-                    <p className="font-bold">₹{item.price * item.qty}</p>
-                  </div>
-                ))}
+                  )
+                })}
               </div>
 
               <div className="mt-6 space-y-3 border-t pt-6 text-sm">
@@ -279,11 +322,14 @@ const Checkout = ({
 
               <button 
                 type="submit" 
-                disabled={!isValid || placing} 
+                disabled={!isValid || placing || !canPlaceOrder} 
                 className="mt-8 w-full rounded-xl bg-stone-900 py-4 text-sm font-bold text-white transition-all active:scale-95 disabled:opacity-50 disabled:bg-stone-400"
               >
                 {placing ? 'Processing Order...' : `Confirm Order (COD)`}
               </button>
+              {!canPlaceOrder && (outOfStockItemIds.size > 0 || overLimitProductSlugs.size > 0) && (
+                <p className="mt-2 text-xs text-red-600 text-center">Fix cart issues above to place order.</p>
+              )}
               <p className="mt-4 text-center text-[10px] text-stone-400">By placing order, you agree to our Terms and Conditions.</p>
             </div>
           </div>

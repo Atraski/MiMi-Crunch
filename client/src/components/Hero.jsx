@@ -1,7 +1,7 @@
 const Hero = () => {
   return (
     <section className="bg-[#faf7f2] py-20">
-      <div className="mx-auto grid max-w-6xl gap-12 px-4 lg:grid-cols-2 lg:items-center">
+      <div className="mx-auto grid max-w-6xl gap-12 px-2 lg:grid-cols-2 lg:items-center">
         <div>
           <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">
             Proud family recipe • Made in India

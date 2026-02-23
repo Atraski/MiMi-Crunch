@@ -37,7 +37,7 @@ const NotFound = () => {
   return (
     <main
       ref={containerRef}
-      className="flex min-h-[80vh] flex-col items-center justify-center px-4 py-20"
+      className="flex min-h-[80vh] flex-col items-center justify-center px-2 py-20"
     >
       <h1
         ref={headingRef}

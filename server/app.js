@@ -17,7 +17,7 @@ import uploadRoutes from './routes/uploads.js'
 import userRoutes from './routes/users.js'
 import authRoutes from './routes/auth.js'
 import adminRoutes from './routes/admin.js'
-import orderRoutes from './routes/orders.js' // <--- Naya Order Route Import
+import orderRoutes from './routes/orders.js'
 
 const app = express()
 app.set('trust proxy', 1)
@@ -34,6 +34,7 @@ const defaultAllowedOrigins = [
   'http://localhost:5174',
   'http://127.0.0.1:5174',
   'https://www.mimicrunch.com',
+  'https://mimicrunch.com',
   'https://mimicrunch.netlify.app',
   'https://mimi-control.netlify.app'
 ]
@@ -65,7 +66,7 @@ app.use(
     legacyHeaders: false,
   }),
 )
-app.use(express.json({ limit: '1mb' })) // req.body parse karne ke liye zaroori hai
+app.use(express.json({ limit: '1mb' }))
 
 // API Routes Registration
 app.use(healthRoutes)
@@ -80,10 +81,10 @@ app.use('/api', reviewRoutes)
 app.use('/api', couponRoutes)
 app.use('/api', uploadRoutes)
 
-// Order Management (Guest aur Registered dono ke liye)
-app.use('/api/orders', orderRoutes) // <--- Orders ka naya endpoint register ho gaya
+// Order management (guest and registered users)
+app.use('/api/orders', orderRoutes)
 
-// Error Handler (Hamesha saare routes ke baad aayega)
+// Error handler (must be after all routes)
 app.use(errorHandler)
 
 export default app

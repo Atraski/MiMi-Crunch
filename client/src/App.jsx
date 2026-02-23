@@ -15,7 +15,7 @@ import RecipesPage from './pages/RecipesPage'
 import RecipeDetail from './pages/RecipeDetail'
 import { products as fallbackProducts } from './data/homeData'
 import ShippingReturns from './pages/ShippingReturns'
-import PrivacyPolicy from './pages/PrivacyPolicy'
+import PolicyPage from './pages/PolicyPage'
 import TermsConditions from './pages/TermsConditions'
 import Profile from './pages/Profile'
 import Wishlist from './pages/Wishlist'
@@ -25,12 +25,13 @@ import NotFound from './pages/NotFound'
 import Checkout from './pages/Checkout'
 import Lenis from 'lenis'
 import OrderSuccess from './pages/OrderSuccess'
+import { getProductSlugFromCartItem, wouldExceedWeightLimit } from './utils/cartUtils'
 
 const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000'
 
 function App() {
 
-  // Initial state ko localStorage se uthao
+  // Restore initial state from localStorage
   const [cart, setCart] = useState(() => {
     try {
       const savedCart = localStorage.getItem('mimi_cart')
@@ -41,13 +42,14 @@ function App() {
     }
   })
 
-  // Jab bhi cart change ho, usey localStorage mein save karo
+  // Persist cart to localStorage on change
   useEffect(() => {
     localStorage.setItem('mimi_cart', JSON.stringify(cart))
   }, [cart])
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [appliedCoupon, setAppliedCoupon] = useState(null)
   const [couponError, setCouponError] = useState('')
+  const [cartLimitMessage, setCartLimitMessage] = useState('')
   const [products, setProducts] = useState(fallbackProducts)
   const [isProductsLoading, setIsProductsLoading] = useState(false)
   const [collections, setCollections] = useState([])
@@ -87,16 +89,24 @@ function App() {
         const mapped = data.map((item) => {
           const derivedVariants =
             item.variants?.length
-              ? item.variants
+              ? item.variants.map((v) => ({
+                  ...v,
+                  weight: v.weight,
+                  price: v.price ?? item.price,
+                  stock: v.stock ?? 0,
+                  images: v.images || item.images || [],
+                }))
               : item.weightOptions?.length
               ? item.weightOptions.map((weight) => ({
                   weight,
                   price: item.price,
                   images: item.images || [],
+                  stock: 0,
                 }))
               : []
           const firstVariant = derivedVariants[0]
           return {
+            _id: item._id,
             name: item.name,
             slug: item.slug,
             size: firstVariant?.weight || item.weight,
@@ -226,10 +236,18 @@ function App() {
   }
 
   const handleAddToCart = (product) => {
+    setCartLimitMessage('')
+    const slug = product.slug ?? product.id ?? ''
+    const weightStr = product.size ?? product.selectedVariant?.weight ?? ''
+    if (slug && wouldExceedWeightLimit(cart, slug, weightStr, 1)) {
+      setCartLimitMessage("Can't buy a product more than this.")
+      return
+    }
     const id = buildCartId(product)
     setCart((prev) => {
       const existing = prev.find((item) => item.id === id)
       if (existing) {
+        if (wouldExceedWeightLimit(prev, slug, weightStr, 1)) return prev
         return prev.map((item) =>
           item.id === id
             ? { ...item, qty: item.qty + 1 }
@@ -258,10 +276,18 @@ function App() {
   }
 
   const handleIncreaseQty = (product) => {
+    setCartLimitMessage('')
+    const slug = getProductSlugFromCartItem(product) || (product.slug ?? product.id ?? '')
+    const weightStr = product.size ?? product.selectedVariant?.weight ?? ''
+    if (slug && wouldExceedWeightLimit(cart, slug, weightStr, 1)) {
+      setCartLimitMessage("Can't buy a product more than this.")
+      return
+    }
     const id = buildCartId(product)
     setCart((prev) => {
       const existing = prev.find((item) => item.id === id)
       if (existing) {
+        if (wouldExceedWeightLimit(prev, slug, weightStr, 1)) return prev
         return prev.map((item) =>
           item.id === id ? { ...item, qty: item.qty + 1 } : item,
         )
@@ -274,11 +300,10 @@ function App() {
     setCart((prev) => prev.filter((i) => i.id !== item.id))
   }
 
-  // App.js mein ye naya function add karein
-const handleClearCart = () => {
-  setCart([]); // State khali karne ke liye
-  localStorage.removeItem('mimi_cart'); // LocalStorage saaf karne ke liye
-};
+  const handleClearCart = () => {
+    setCart([])
+    localStorage.removeItem('mimi_cart')
+  }
 
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0)
   const subtotal = useMemo(
@@ -395,6 +420,7 @@ const handleClearCart = () => {
               onDecreaseQty={handleDecreaseQty}
               cart={cart}
               products={products}
+              cartLimitMessage={cartLimitMessage}
             />
           }
         />
@@ -408,6 +434,7 @@ const handleClearCart = () => {
               onDecreaseQty={handleDecreaseQty}
               cart={cart}
               products={products}
+              cartLimitMessage={cartLimitMessage}
             />
           }
         />
@@ -422,7 +449,7 @@ const handleClearCart = () => {
         />
         <Route path="/contact" element={<Contact />} />
         <Route path="/shipping-returns" element={<ShippingReturns />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/privacy-policy" element={<PolicyPage />} />
         <Route path="/terms-conditions" element={<TermsConditions />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
@@ -433,6 +460,7 @@ const handleClearCart = () => {
           element={
             <Checkout
               cart={cart}
+              products={products}
               subtotal={subtotal}
               deliveryFee={deliveryFee}
               discountAmount={discountAmount}
@@ -447,7 +475,7 @@ const handleClearCart = () => {
       <Footer />
       <CartDrawer
         open={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
+        onClose={() => { setIsCartOpen(false); setCartLimitMessage('') }}
         cart={cart}
         subtotal={subtotal}
         deliveryFee={deliveryFee}
@@ -461,6 +489,7 @@ const handleClearCart = () => {
         onDecreaseQty={handleDecreaseQty}
         onRemoveItem={handleRemoveFromCart}
         apiBase={API_BASE}
+        cartLimitMessage={cartLimitMessage}
       />
     </div>
   )

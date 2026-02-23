@@ -120,8 +120,15 @@ const ProductList = ({
         {loading ? (
           <div className="py-20 text-center text-stone-400 animate-pulse">Fetching inventory...</div>
         ) : (
-          <div className="overflow-hidden">
-            <table className="w-full table-fixed text-left">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left" style={{ minWidth: 640 }}>
+              <colgroup>
+                <col style={{ minWidth: 200 }} />
+                <col style={{ width: 120 }} />
+                <col />
+                <col style={{ width: 140 }} />
+                <col style={{ width: 100 }} />
+              </colgroup>
               <thead>
                 <tr className="border-b border-stone-100 bg-stone-50/30 text-[11px] font-bold uppercase tracking-wider text-stone-500">
                   <th className="px-4 py-4 sm:px-6">Product Info</th>
@@ -145,9 +152,9 @@ const ProductList = ({
                             className="h-12 w-12 rounded-xl border object-cover bg-stone-100" 
                             alt="" 
                           />
-                          <div className="min-w-0">
-                            <p className="truncate text-sm font-bold text-stone-900">{item.title || item.name}</p>
-                            <p className="text-[10px] text-stone-400 font-medium">ID: {item._id.slice(-6).toUpperCase()}</p>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-bold text-stone-900 break-words">{item.title || item.name}</p>
+                            <p className="text-[10px] text-stone-400 font-medium mt-0.5">ID: {item._id.slice(-6).toUpperCase()}</p>
                           </div>
                         </div>
                       </td>
@@ -179,7 +186,7 @@ const ProductList = ({
               : 'bg-stone-50 border-stone-100 text-stone-600'
           }`}
         >
-          {/* Yahan weight ke baad se ":" hata diya aur v.stock ensure kiya */}
+          {/* Variant label: weight and stock */}
           {v.weight} <span className="text-stone-900 ml-1">{v.stock ?? 0}</span>
         </div>
       ))

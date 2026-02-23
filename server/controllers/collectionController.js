@@ -1,6 +1,4 @@
 import Collection from '../models/Collection.js'
-import Product from '../models/Product.js'
-import seedProductsIfEmpty from '../utils/seedProducts.js'
 
 const slugify = (value = '') =>
   value
@@ -33,59 +31,13 @@ const createCollection = async (req, res) => {
 
 const listCollections = async (_req, res) => {
   try {
-    // Ensure products are seeded so we can infer collections if needed.
-    await seedProductsIfEmpty()
-    let collections = await Collection.find().sort({ createdAt: -1 }).lean()
-
-    // If no explicit collections exist yet, seed them from existing products.
-    if (!collections.length) {
-      const products = await Product.find({
-        collection: { $exists: true, $ne: '' },
-      })
-        .sort({ createdAt: 1 })
-        .lean()
-
-      const byCollection = new Map()
-      for (const product of products) {
-        const raw = (product.collection || '').trim()
-        if (!raw) continue
-        const slug = slugify(raw)
-        if (!byCollection.has(slug)) {
-          byCollection.set(slug, {
-            title: formatCollectionTitle(raw),
-            slug,
-            description: '',
-            image: '',
-            productSlugs: [],
-          })
-        }
-        const entry = byCollection.get(slug)
-        if (product.slug && !entry.productSlugs.includes(product.slug)) {
-          entry.productSlugs.push(product.slug)
-        }
-      }
-
-      const seed = [...byCollection.values()]
-      if (seed.length) {
-        await Collection.insertMany(seed)
-        collections = await Collection.find().sort({ createdAt: -1 }).lean()
-      }
-    }
-
+    const collections = await Collection.find().sort({ createdAt: -1 }).lean()
     return res.json(collections)
   } catch (err) {
     console.error('Collection list error:', err)
     return res.status(500).json({ error: 'Failed to fetch collections.' })
   }
 }
-
-const formatCollectionTitle = (value = '') =>
-  value
-    .replace(/[-_]/g, ' ')
-    .split(' ')
-    .filter(Boolean)
-    .map((word) => word[0].toUpperCase() + word.slice(1))
-    .join(' ')
 
 const getCollectionById = async (req, res) => {
   try {

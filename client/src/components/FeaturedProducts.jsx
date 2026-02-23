@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 const FeaturedProducts = ({ featured }) => {
   return (
     <section className="bg-[#fbf8f3] py-16">
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl px-2">
         <div className="mb-8 space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">
             Best Sellers
@@ -19,7 +19,7 @@ const FeaturedProducts = ({ featured }) => {
               key={item.slug || item.name}
               className="flex flex-col gap-3 rounded-3xl border border-stone-200/70 bg-white/95 p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="h-44 overflow-hidden rounded-2xl border border-stone-200/70 bg-gradient-to-br from-amber-100 to-stone-50">
+              <div className="aspect-square w-full overflow-hidden rounded-2xl border border-stone-200/70 bg-gradient-to-br from-amber-100 to-stone-50">
                 {item.image ? (
                   <img
                     src={item.image}

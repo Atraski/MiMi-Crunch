@@ -50,7 +50,7 @@ const Header = ({ cartCount, onCartToggle, products }) => {
 
   return (
     <header className="sticky top-0 z-20 border-b border-stone-200/70 bg-white/90 backdrop-blur">
-      <div className="relative mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3 md:gap-6">
+      <div className="relative mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-2 py-3 md:gap-6">
         <div className="flex items-center gap-3">
           <button
             className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-800 shadow-sm hover:-translate-y-0.5 hover:shadow-lg md:hidden"
@@ -275,7 +275,7 @@ const Header = ({ cartCount, onCartToggle, products }) => {
       )}
       {isMenuOpen ? (
         <div className="border-t border-stone-200/70 bg-brand-50 md:hidden">
-          <div className="mx-auto max-w-6xl px-4 py-3">
+          <div className="mx-auto max-w-6xl px-2 py-3">
             <nav className="flex flex-col gap-3 text-sm font-medium text-stone-800">
               <a href="/products" onClick={() => setIsMenuOpen(false)}>
                 Products

@@ -15,7 +15,7 @@ const AdminLogin = ({ onSubmit, errorMessage = '', loading = false }) => {
       <section className="w-full max-w-md rounded-2xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
         <p className="text-xs font-semibold uppercase tracking-wider text-stone-500">Admin Access</p>
         <h1 className="mt-2 text-2xl font-bold text-stone-900">Mimi Crunch Admin Login</h1>
-        <p className="mt-1 text-sm text-stone-500">Session auto-expires after 1 hour.</p>
+        <p className="mt-1 text-sm text-stone-500">Welcome back Admin 😇</p>
 
         <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
           <div>

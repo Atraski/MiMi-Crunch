@@ -106,7 +106,7 @@ const ProductsTest = () => {
 
   return (
     <main ref={rootRef} className="min-h-screen bg-gradient-to-b from-amber-50 via-rose-50 to-white">
-      <div className="mx-auto max-w-6xl px-4 pb-24 pt-10">
+      <div className="mx-auto max-w-6xl px-2 pb-24 pt-10">
         <BackButton className="mb-6" />
 
         <section

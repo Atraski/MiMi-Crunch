@@ -150,7 +150,7 @@ export const me = async (req, res) => {
   try {
     const userId = req.auth.userId;
 
-    // 1. Pehle Redis check karo (Fastest)
+    // 1. Check Redis first (fastest)
     if (process.env.REDIS_URL) {
       try {
         const cached = await getCachedUser(userId);
@@ -163,7 +163,7 @@ export const me = async (req, res) => {
       }
     }
 
-    // 2. Agar cache miss hua ya Redis nahi hai, toh DB se lo
+    // 2. On cache miss or no Redis, load from DB
     const user = await User.findById(userId).lean();
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
@@ -171,7 +171,7 @@ export const me = async (req, res) => {
 
     const safe = toSafeUser(user);
 
-    // 3. Naya data Redis mein set kar do agli baar ke liye
+    // 3. Set data in Redis for next time
     if (process.env.REDIS_URL) {
       await setCachedUser(userId, safe).catch(() => {});
     }

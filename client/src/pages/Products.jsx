@@ -104,11 +104,11 @@ const Products = ({
 
   return (
     <main className="py-16">
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl px-2">
         <BackButton className="mb-6" />
       </div>
       {activeCollection ? (
-        <div className="mx-auto max-w-6xl px-4">
+        <div className="mx-auto max-w-6xl px-2">
           <div className="flex flex-wrap items-center gap-3">
             <span className="pill">
               {activeCategory ? activeCategory.title : activeCollection}
@@ -142,7 +142,7 @@ const ProductGrid = ({
   loading,
 }) => (
   <section className="py-12">
-    <div className="mx-auto max-w-6xl px-4">
+    <div className="mx-auto max-w-6xl px-2">
       <div className="mb-8 space-y-2">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-stone-500">
           Shop
@@ -229,7 +229,7 @@ const ProductGrid = ({
 
 const CategoriesSection = ({ collections }) => (
   <section className="py-12">
-    <div className="mx-auto max-w-6xl px-4">
+    <div className="mx-auto max-w-6xl px-2">
       <div className="mb-6 space-y-2">
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">
           Collections
@@ -295,7 +295,7 @@ const slugifyCollection = (value) =>
 
 const FeaturedSection = () => (
   <section className="bg-brand-100 py-12">
-    <div className="mx-auto max-w-6xl px-4">
+    <div className="mx-auto max-w-6xl px-2">
       <div className="mb-6 space-y-2">
         <p className="text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">
           Highlights

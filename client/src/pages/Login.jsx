@@ -33,7 +33,7 @@ const Login = () => {
 
   return (
     <main className="min-h-[70vh] py-12">
-      <div className="mx-auto max-w-md px-4">
+      <div className="mx-auto max-w-md px-2">
         <BackButton className="mb-6" />
         <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
           <h1 className="text-xl font-semibold text-stone-900">Log in</h1>

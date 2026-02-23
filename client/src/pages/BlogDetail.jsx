@@ -8,7 +8,7 @@ const BlogDetail = ({ blogs }) => {
   if (!blog) {
     return (
       <main className="py-16">
-        <div className="mx-auto max-w-4xl px-4">
+        <div className="mx-auto max-w-4xl px-2">
           <BackButton className="mb-6" />
           <h1 className="text-2xl font-semibold text-stone-900">
             Blog not found
@@ -31,7 +31,7 @@ const BlogDetail = ({ blogs }) => {
 
   return (
     <main className="py-16">
-      <div className="mx-auto max-w-3xl px-4">
+      <div className="mx-auto max-w-3xl px-2">
         <BackButton className="mb-6" />
         {publishedDate ? (
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">
@@ -47,7 +47,7 @@ const BlogDetail = ({ blogs }) => {
       </div>
       {blog.coverImage ? (
         <div className="mt-8">
-          <div className="mx-auto max-w-5xl px-4">
+          <div className="mx-auto max-w-5xl px-2">
             <div className="h-80 overflow-hidden rounded-3xl border border-stone-200 bg-stone-100">
               <img
                 src={blog.coverImage}
@@ -59,7 +59,7 @@ const BlogDetail = ({ blogs }) => {
         </div>
       ) : null}
       <section className="py-10">
-        <div className="mx-auto max-w-3xl px-4">
+        <div className="mx-auto max-w-3xl px-2">
           <article
             className="prose prose-sm max-w-none prose-headings:font-semibold prose-headings:text-stone-900 prose-p:text-stone-700 prose-a:text-brand-900 prose-li:marker:text-stone-400"
             dangerouslySetInnerHTML={{ __html: blog.contentHtml || '' }}

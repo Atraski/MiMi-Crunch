@@ -4,21 +4,21 @@ import productEvents from '../utils/productEvents.js'
 import seedProductsIfEmpty from '../utils/seedProducts.js'
 
 /**
- * Naya Function: Order hone par variant-specific stock minus karne ke liye.
- * Logic: Matches productId and the specific variant weight to decrement stock.
+ * On order: decrement variant-specific stock.
+ * Matches productId and variant weight to update stock.
  */
 const updateStock = async (items) => {
   try {
     const stockUpdates = items.map(async (item) => {
       console.log(`--- Processing Stock for: ${item.productId} (${item.weight}) ---`);
 
-      // 1. Validation: Basic check (24-char limit hata di hai kyunki teri ID custom string hai)
+      // 1. Validation: basic check (custom productId format supported)
       if (!item.productId) {
         console.warn("Skipping: Product ID is missing in item");
         return Promise.resolve();
       }
 
-      // 2. Logic: Variant match karke stock minus karna
+      // 2. Match variant and decrement stock
       // Support either an ObjectId `_id`, a `slug`, or a compound `slug:weight` productId
       let filter = { 'variants.weight': item.weight };
 
@@ -36,7 +36,7 @@ const updateStock = async (items) => {
         $inc: { 'variants.$.stock': -Number(item.qty) },
       });
 
-      // 3. Match Check: Dekho document mila ya nahi
+      // 3. Match check
       if (result.matchedCount === 0) {
         console.error(`❌ No match found for ID: ${item.productId} and Weight: ${item.weight}`);
       } else {

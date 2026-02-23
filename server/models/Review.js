@@ -4,8 +4,10 @@ const reviewSchema = new mongoose.Schema(
   {
     productSlug: { type: String, trim: true, required: true },
     rating: { type: Number, required: true, min: 1, max: 5 },
-    content: { type: String, trim: true, required: true },
+    content: { type: String, trim: true },
     imageUrl: { type: String, trim: true },
+    profileImage: { type: String, trim: true },
+    productImage: { type: String, trim: true },
     authorName: { type: String, trim: true },
     isPinned: { type: Boolean, default: false },
     replyText: { type: String, trim: true },

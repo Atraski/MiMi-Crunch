@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 const News = ({ news }) => {
   return (
     <section className="py-16">
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl px-2">
         <div className="mb-8 space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">
             Journal
@@ -21,7 +21,7 @@ const News = ({ news }) => {
               key={item.title}
               className="rounded-3xl border border-stone-200/70 bg-white/90 p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
-              <div className="mb-4 h-36 overflow-hidden rounded-2xl bg-gradient-to-br from-amber-100 to-stone-50">
+              <div className="mb-4 aspect-square w-full overflow-hidden rounded-2xl bg-gradient-to-br from-amber-100 to-stone-50">
                 {item.coverImage ? (
                   <img
                     src={item.coverImage}

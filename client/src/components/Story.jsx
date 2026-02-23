@@ -1,7 +1,7 @@
 const Story = () => {
   return (
     <section className="py-16">
-      <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-6xl items-center gap-10 px-2 lg:grid-cols-2">
         <div className="h-72 rounded-[32px] border border-stone-200/80 bg-gradient-to-br from-stone-200 to-emerald-100" />
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">

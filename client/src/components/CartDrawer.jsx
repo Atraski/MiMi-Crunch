@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getProductSlugFromCartItem } from '../utils/cartUtils'
 
 const FREE_DELIVERY_MIN = 499
 const DELIVERY_FEE_AMOUNT = 49
@@ -46,7 +47,9 @@ const CartDrawer = ({
   onDecreaseQty,
   onRemoveItem,
   apiBase,
+  cartLimitMessage = '',
 }) => {
+  const navigate = useNavigate()
   const [couponInput, setCouponInput] = useState('')
   const [applying, setApplying] = useState(false)
   const [availableCoupons, setAvailableCoupons] = useState([])
@@ -54,6 +57,14 @@ const CartDrawer = ({
   const couponInputRef = useRef(null)
   const couponsSectionRef = useRef(null)
   const asideRef = useRef(null)
+
+  const handleViewProduct = (item) => {
+    const slug = getProductSlugFromCartItem(item) || item.slug || ''
+    if (slug) {
+      onClose?.()
+      navigate(`/products/${slug}`)
+    }
+  }
 
   useEffect(() => {
     if (!open || !apiBase || cart.length === 0) {
@@ -169,6 +180,11 @@ const CartDrawer = ({
             </div>
           ) : (
             <div className="space-y-4">
+              {cartLimitMessage ? (
+                <div className="rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
+                  {cartLimitMessage}
+                </div>
+              ) : null}
               <div className="bg-stone-900 px-4 py-2.5 text-center text-sm font-medium text-white">
                 Delivery in 2–5 days
               </div>
@@ -213,60 +229,99 @@ const CartDrawer = ({
               )}
 
               <div className="space-y-4 px-5 py-4">
-                {cart.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex gap-4 rounded-xl border border-stone-200 bg-white p-3 shadow-sm"
-                  >
-                    <div className="h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-stone-200 bg-stone-50">
-                      {item.image ? (
-                        <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
-                      ) : (
-                        <div className="h-full w-full bg-stone-200" />
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="font-semibold text-stone-900 line-clamp-2">{item.name}</p>
-                        {onRemoveItem && (
-                          <button
-                            type="button"
-                            onClick={() => onRemoveItem(item)}
-                            className="shrink-0 rounded p-1 text-stone-400 hover:bg-stone-100 hover:text-red-600"
-                            aria-label={`Remove ${item.name}`}
-                          >
-                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
+                {cart.map((item) => {
+                  const slug = getProductSlugFromCartItem(item) || item.slug || ''
+                  return (
+                    <div
+                      key={item.id}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => handleViewProduct(item)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault()
+                          handleViewProduct(item)
+                        }
+                      }}
+                      className="flex cursor-pointer gap-4 rounded-xl border border-stone-200 bg-white p-3 shadow-sm transition hover:border-stone-300 hover:shadow-md"
+                    >
+                      <div className="h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-stone-200 bg-stone-50">
+                        {item.image ? (
+                          <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
+                        ) : (
+                          <div className="h-full w-full bg-stone-200" />
                         )}
                       </div>
-                      {item.size && <p className="mt-0.5 text-xs text-stone-500">{item.size}</p>}
-                      <div className="mt-2 flex items-center justify-between">
-                        <div className="inline-flex items-center gap-1 rounded-full border border-stone-200 bg-stone-50 px-2 py-1 text-sm">
-                          <button
-                            type="button"
-                            className="text-stone-600 hover:text-stone-900"
-                            onClick={() => onDecreaseQty(item)}
-                            aria-label={`Decrease ${item.name}`}
-                          >
-                            −
-                          </button>
-                          <span className="min-w-[1.25rem] text-center font-medium text-stone-800">{item.qty}</span>
-                          <button
-                            type="button"
-                            className="text-stone-600 hover:text-stone-900"
-                            onClick={() => onIncreaseQty(item)}
-                            aria-label={`Increase ${item.name}`}
-                          >
-                            +
-                          </button>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-start justify-between gap-2">
+                          <p className="font-semibold text-stone-900 line-clamp-2">{item.name}</p>
+                          {onRemoveItem && (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                onRemoveItem(item)
+                              }}
+                              className="shrink-0 rounded p-1 text-stone-400 hover:bg-stone-100 hover:text-red-600"
+                              aria-label={`Remove ${item.name}`}
+                            >
+                              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          )}
                         </div>
-                        <p className="text-sm font-semibold text-stone-900">₹{item.price * item.qty}</p>
+                        {item.size && <p className="mt-0.5 text-xs text-stone-500">{item.size}</p>}
+                        <div className="mt-2 flex items-center justify-between gap-2">
+                          <div
+                            className="inline-flex items-center gap-1 rounded-full border border-stone-200 bg-stone-50 px-2 py-1 text-sm"
+                            onClick={(e) => e.stopPropagation()}
+                            onKeyDown={(e) => e.stopPropagation()}
+                          >
+                            <button
+                              type="button"
+                              className="text-stone-600 hover:text-stone-900"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                onDecreaseQty(item)
+                              }}
+                              aria-label={`Decrease ${item.name}`}
+                            >
+                              −
+                            </button>
+                            <span className="min-w-[1.25rem] text-center font-medium text-stone-800">{item.qty}</span>
+                            <button
+                              type="button"
+                              className="text-stone-600 hover:text-stone-900"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                onIncreaseQty(item)
+                              }}
+                              aria-label={`Increase ${item.name}`}
+                            >
+                              +
+                            </button>
+                          </div>
+                          <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                            {slug ? (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  handleViewProduct(item)
+                                }}
+                                className="shrink-0 rounded-lg border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs font-semibold text-stone-700 hover:bg-stone-100"
+                              >
+                                View
+                              </button>
+                            ) : null}
+                            <p className="text-sm font-semibold text-stone-900">₹{item.price * item.qty}</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                })}
 
               <div ref={couponsSectionRef} className="border-t border-stone-200 pt-4 px-5 shrink-0">
                 <div className="mb-2 flex items-center gap-2">

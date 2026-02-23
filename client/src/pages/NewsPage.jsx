@@ -22,10 +22,10 @@ const NewsPage = ({ blogs }) => {
 
   return (
     <main className="py-16">
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl px-2">
         <BackButton className="mb-6" />
       </div>
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl px-2">
         <div className="space-y-2">
           <h1 className="text-3xl font-semibold text-stone-900">News</h1>
           <p className="text-stone-600">

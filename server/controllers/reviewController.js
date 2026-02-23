@@ -1,18 +1,57 @@
 import Review from '../models/Review.js'
+import { cloudinary, isCloudinaryConfigured } from '../config/cloudinary.js'
+
+/** Public upload signature for review images only (folder: reviews). No auth required. */
+const getReviewUploadSignature = (req, res) => {
+  if (!isCloudinaryConfigured) {
+    return res.status(500).json({ error: 'Upload not configured.' })
+  }
+  const timestamp = Math.round(Date.now() / 1000)
+  const paramsToSign = { timestamp, folder: 'reviews' }
+  const signature = cloudinary.utils.api_sign_request(
+    paramsToSign,
+    process.env.CLOUDINARY_API_SECRET,
+  )
+  return res.json({
+    signature,
+    timestamp,
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+  })
+}
 
 const createReview = async (req, res) => {
   try {
-    const { productSlug, rating, content, imageUrl, authorName } = req.body || {}
-    if (!productSlug || !content) {
-      return res.status(400).json({ error: 'Product and review text are required.' })
+    const { productSlug, rating, content, imageUrl, profileImage, productImage, authorName } = req.body || {}
+    const name = authorName ? String(authorName).trim() : ''
+    const text = content ? String(content).trim() : ''
+    const profile = profileImage ? String(profileImage).trim() : ''
+    const product = productImage ? String(productImage).trim() : (imageUrl ? String(imageUrl).trim() : '')
+
+    if (!productSlug) {
+      return res.status(400).json({ error: 'Product is required.' })
     }
+    if (!name) {
+      return res.status(400).json({ error: 'Name is required.' })
+    }
+    const hasContent = !!text
+    const hasProfile = !!profile
+    const hasProduct = !!product
+    if (!hasContent && !hasProfile && !hasProduct) {
+      return res.status(400).json({
+        error: 'Please add at least one: profile photo, product photo, or text review.',
+      })
+    }
+
     const numRating = Math.min(5, Math.max(1, Number(rating) || 1))
     const doc = await Review.create({
       productSlug: String(productSlug).trim(),
       rating: numRating,
-      content: String(content).trim(),
-      imageUrl: imageUrl ? String(imageUrl).trim() : undefined,
-      authorName: authorName ? String(authorName).trim() : undefined,
+      content: text || undefined,
+      imageUrl: product || undefined,
+      profileImage: profile || undefined,
+      productImage: product || undefined,
+      authorName: name,
     })
     return res.status(201).json(doc)
   } catch (err) {
@@ -84,4 +123,4 @@ const updateReview = async (req, res) => {
   }
 }
 
-export { createReview, listByProduct, listAll, updateReview }
+export { createReview, listByProduct, listAll, updateReview, getReviewUploadSignature }

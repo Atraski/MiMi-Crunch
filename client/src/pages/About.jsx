@@ -3,10 +3,10 @@ import BackButton from '../components/BackButton'
 const About = () => {
   return (
     <main className="py-16">
-      <div className="mx-auto max-w-5xl px-4">
+      <div className="mx-auto max-w-5xl px-2">
         <BackButton className="mb-6" />
       </div>
-      <div className="mx-auto max-w-5xl px-4">
+      <div className="mx-auto max-w-5xl px-2">
         <div className="space-y-2">
           <h1 className="text-3xl font-semibold text-stone-900">About</h1>
           <p className="text-stone-600">

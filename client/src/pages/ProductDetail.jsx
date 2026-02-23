@@ -12,6 +12,7 @@ const ProductDetail = ({
   onDecreaseQty,
   cart,
   products,
+  cartLimitMessage = '',
 }) => {
   // 1. SAARE HOOKS (TOP LEVEL)
   const { slug } = useParams()
@@ -33,7 +34,8 @@ const ProductDetail = ({
     content: '',
     authorName: '',
   })
-  const [reviewImageFile, setReviewImageFile] = useState(null)
+  const [reviewProfileImageFile, setReviewProfileImageFile] = useState(null)
+  const [reviewProductImageFile, setReviewProductImageFile] = useState(null)
   const [reviewSubmitting, setReviewSubmitting] = useState(false)
   const [reviewError, setReviewError] = useState('')
   const [linkedRecipes, setLinkedRecipes] = useState([])
@@ -102,7 +104,7 @@ const ProductDetail = ({
   if (!product) {
     return (
       <main className="py-16">
-        <div className="mx-auto max-w-4xl px-4">
+        <div className="mx-auto max-w-4xl px-2">
           <h1 className="text-2xl font-semibold text-stone-900">Product not found</h1>
           <p className="mt-2 text-stone-600">Please check the product link or go back.</p>
           <Link className="btn btn-primary mt-6" to="/products">Back to Products</Link>
@@ -124,6 +126,8 @@ const ProductDetail = ({
   const mainImage = images[activeImage] || images[0]
   const displayPrice = selectedVariant?.price ?? product.price
   const displayWeight = selectedVariant?.weight ?? product.size
+  const variantStock = selectedVariant?.stock ?? 0
+  const isSoldOut = variantStock <= 0
   const currentCartId = `${product.slug}:${displayWeight || ''}`
   const cartItem = safeCart.find((entry) => entry.id === currentCartId)
   const qty = cartItem ? cartItem.qty : 0
@@ -138,17 +142,17 @@ const ProductDetail = ({
     setActiveImage((prev) => (prev + 1) % images.length)
   }
 
-  const uploadReviewImage = async () => {
-    if (!reviewImageFile || !apiBase) return null
-    const res = await fetch(`${apiBase}/api/uploads/signature`, {
+  const uploadReviewImageToCloudinary = async (file) => {
+    if (!file || !apiBase) return null
+    const res = await fetch(`${apiBase}/api/reviews/upload-signature`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ folder: 'reviews' }),
+      body: JSON.stringify({}),
     })
     if (!res.ok) throw new Error('Upload signature failed')
     const { signature, timestamp, cloudName, apiKey } = await res.json()
     const formData = new FormData()
-    formData.append('file', reviewImageFile)
+    formData.append('file', file)
     formData.append('api_key', apiKey)
     formData.append('timestamp', timestamp)
     formData.append('signature', signature)
@@ -164,26 +168,46 @@ const ProductDetail = ({
 
   const handleSubmitReview = async (e) => {
     e.preventDefault()
-    if (!product?.slug || !reviewForm.content.trim()) return
+    const name = reviewForm.authorName.trim()
+    const text = reviewForm.content.trim()
+    const hasText = text.length > 0
+    const hasProfile = !!reviewProfileImageFile
+    const hasProduct = !!reviewProductImageFile
+    if (!product?.slug) return
+    if (!name) {
+      setReviewError('Name is required.')
+      return
+    }
+    if (!hasText && !hasProfile && !hasProduct) {
+      setReviewError('Please add at least one: your photo, product photo, or text review.')
+      return
+    }
     setReviewError('')
     setReviewSubmitting(true)
     try {
-      let imageUrl = null
-      if (reviewImageFile) imageUrl = await uploadReviewImage()
+      let profileImageUrl = null
+      let productImageUrl = null
+      if (reviewProfileImageFile) profileImageUrl = await uploadReviewImageToCloudinary(reviewProfileImageFile)
+      if (reviewProductImageFile) productImageUrl = await uploadReviewImageToCloudinary(reviewProductImageFile)
       const res = await fetch(`${apiBase}/api/reviews`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           productSlug: product.slug,
           rating: Math.min(5, Math.max(1, Number(reviewForm.rating) || 5)),
-          content: reviewForm.content.trim(),
-          authorName: reviewForm.authorName.trim() || undefined,
-          imageUrl: imageUrl || undefined,
+          content: text || undefined,
+          authorName: name,
+          profileImage: profileImageUrl || undefined,
+          productImage: productImageUrl || undefined,
         }),
       })
-      if (!res.ok) throw new Error('Failed to submit review')
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || 'Failed to submit review')
+      }
       setReviewForm({ rating: 5, content: '', authorName: '' })
-      setReviewImageFile(null)
+      setReviewProfileImageFile(null)
+      setReviewProductImageFile(null)
       const listRes = await fetch(`${apiBase}/api/reviews?productSlug=${encodeURIComponent(product.slug)}`)
       const list = await listRes.json()
       if (Array.isArray(list)) setReviews(list)
@@ -204,10 +228,10 @@ const ProductDetail = ({
 
   return (
     <main className="py-16">
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl px-2">
         <BackButton className="mb-6" />
       </div>
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-6xl gap-10 px-2 lg:grid-cols-2">
         <div className="space-y-4">
           <div className="relative flex h-96 items-center justify-center overflow-hidden rounded-3xl bg-transparent">
             {mainImage ? (
@@ -290,7 +314,14 @@ const ProductDetail = ({
           ) : null}
         </div>
         <div>
-          <p className="pill">{displayWeight}</p>
+          <div className="flex items-center gap-2 flex-wrap">
+            <p className="pill">{displayWeight}</p>
+            {isSoldOut && (
+              <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-red-700">
+                Sold out
+              </span>
+            )}
+          </div>
           <h1 className="mt-3 text-3xl font-semibold text-stone-900">
             {product.name}
           </h1>
@@ -304,23 +335,32 @@ const ProductDetail = ({
                 Weight
               </p>
               <div className="mt-2 flex flex-wrap gap-2">
-                {variants.map((variant, index) => (
-                  <button
-                    key={`${variant.weight}-${index}`}
-                    className={`rounded-full border px-4 py-2 text-xs font-semibold ${
-                      activeVariant === index
-                        ? 'border-stone-900 bg-stone-900 text-white'
-                        : 'border-stone-200 bg-white text-stone-700'
-                    }`}
-                    type="button"
-                    onClick={() => {
-                      setActiveVariant(index)
-                      setActiveImage(0)
-                    }}
-                  >
-                    {variant.weight}
-                  </button>
-                ))}
+                {variants.map((variant, index) => {
+                  const vStock = variant.stock ?? 0
+                  const vSoldOut = vStock <= 0
+                  return (
+                    <button
+                      key={`${variant.weight}-${index}`}
+                      className={`rounded-full border px-4 py-2 text-xs font-semibold ${
+                        activeVariant === index
+                          ? 'border-stone-900 bg-stone-900 text-white'
+                          : vSoldOut
+                            ? 'border-stone-200 bg-stone-100 text-stone-400 cursor-not-allowed'
+                            : 'border-stone-200 bg-white text-stone-700'
+                      }`}
+                      type="button"
+                      disabled={vSoldOut}
+                      onClick={() => {
+                        if (vSoldOut) return
+                        setActiveVariant(index)
+                        setActiveImage(0)
+                      }}
+                    >
+                      {variant.weight}
+                      {vSoldOut ? ' (Sold out)' : ''}
+                    </button>
+                  )
+                })}
               </div>
             </div>
           ) : null}
@@ -338,13 +378,19 @@ const ProductDetail = ({
           ) : null}
 
           <div className="mt-6 space-y-4">
+            {cartLimitMessage ? (
+              <p className="text-sm font-medium text-amber-700 bg-amber-50 px-4 py-2 rounded-xl">
+                {cartLimitMessage}
+              </p>
+            ) : null}
             <div className="flex items-center gap-3">
               <div className="inline-flex items-center gap-4 rounded-full border border-stone-200 px-4 py-2">
                 <button
-                  className="text-lg font-semibold text-stone-700"
-                  onClick={() => onDecreaseQty(product)}
+                  className="text-lg font-semibold text-stone-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => !isSoldOut && onDecreaseQty({ ...product, id: currentCartId, size: displayWeight, selectedVariant })}
                   type="button"
                   aria-label={`Decrease ${product.name} quantity`}
+                  disabled={isSoldOut}
                 >
                   −
                 </button>
@@ -352,18 +398,21 @@ const ProductDetail = ({
                   {qty}
                 </span>
                 <button
-                  className="text-lg font-semibold text-stone-700"
-                  onClick={() => onIncreaseQty(product)}
+                  className="text-lg font-semibold text-stone-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => !isSoldOut && onIncreaseQty({ ...product, id: currentCartId, size: displayWeight, selectedVariant })}
                   type="button"
                   aria-label={`Increase ${product.name} quantity`}
+                  disabled={isSoldOut}
                 >
                   +
                 </button>
               </div>
               <button
-                className="flex-1 rounded-full bg-emerald-300 px-6 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-emerald-900 transition hover:bg-emerald-400"
+                className="flex-1 rounded-full bg-emerald-300 px-6 py-3 text-sm font-semibold uppercase tracking-[0.12em] text-emerald-900 transition hover:bg-emerald-400 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-stone-300 disabled:text-stone-500"
                 type="button"
+                disabled={isSoldOut}
                 onClick={() =>
+                  !isSoldOut &&
                   onAddToCart({
                     ...product,
                     selectedVariant,
@@ -373,7 +422,7 @@ const ProductDetail = ({
                   })
                 }
               >
-                Add to Cart
+                {isSoldOut ? 'Sold out' : 'Add to Cart'}
               </button>
               <button
                 className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-stone-200 text-stone-600 disabled:opacity-50"
@@ -442,7 +491,7 @@ const ProductDetail = ({
         </div>
       </div>
 
-      <section className="mx-auto max-w-6xl px-4 pt-16 pb-20">
+      <section className="mx-auto max-w-6xl px-2 pt-16 pb-20">
         <h2 className="text-xl font-semibold text-stone-900">Reviews &amp; testimonials</h2>
         <p className="mt-1 text-sm text-stone-500">What others say about this product</p>
 
@@ -455,66 +504,82 @@ const ProductDetail = ({
               className="flex gap-4 overflow-x-auto overflow-y-hidden pb-2 scroll-smooth scrollbar-thin"
               style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
             >
-              {reviews.map((r) => (
-                <article
-                  key={r._id}
-                  data-review-card
-                  className={`flex h-full min-w-[min(100%,320px)] max-w-[320px] flex-shrink-0 flex-col rounded-2xl border border-stone-200 bg-white p-5 shadow-sm`}
-                  style={{ scrollSnapAlign: 'start' }}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border border-stone-200 bg-stone-100">
-                      {r.imageUrl ? (
-                        <img
-                          src={r.imageUrl}
-                          alt=""
-                          className="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center text-lg font-semibold text-stone-400">
-                          {r.authorName ? r.authorName.charAt(0).toUpperCase() : '?'}
-                        </div>
-                      )}
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-semibold text-stone-900">
-                        {r.authorName || 'Anonymous'}
-                      </p>
-                      <div className="flex items-center gap-1.5">
-                        <div className="flex gap-0.5" aria-label={`${r.rating} out of 5 stars`}>
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <span
-                              key={star}
-                              className={star <= r.rating ? 'text-amber-500' : 'text-stone-300'}
-                            >
-                              ★
+              {reviews.map((r) => {
+                const profileImg = r.profileImage || null
+                const productImg = r.productImage || r.imageUrl || null
+                const displayName = r.authorName || 'Anonymous'
+                return (
+                  <article
+                    key={r._id}
+                    data-review-card
+                    className={`flex h-full min-w-[min(100%,320px)] max-w-[320px] flex-shrink-0 flex-col rounded-2xl border border-stone-200 bg-white p-5 shadow-sm`}
+                    style={{ scrollSnapAlign: 'start' }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full border border-stone-200 bg-stone-100">
+                        {profileImg ? (
+                          <img
+                            src={profileImg}
+                            alt=""
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-stone-400">
+                            {displayName.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-semibold text-stone-900">
+                          {displayName}
+                        </p>
+                        <div className="flex items-center gap-1.5">
+                          <div className="flex gap-0.5" aria-label={`${r.rating} out of 5 stars`}>
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <span
+                                key={star}
+                                className={star <= r.rating ? 'text-amber-500' : 'text-stone-300'}
+                              >
+                                ★
+                              </span>
+                            ))}
+                          </div>
+                          {r.isPinned ? (
+                            <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-800">
+                              Pinned
                             </span>
-                          ))}
+                          ) : null}
                         </div>
-                        {r.isPinned ? (
-                          <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-medium text-amber-800">
-                            Pinned
-                          </span>
-                        ) : null}
                       </div>
                     </div>
-                  </div>
-                  <time className="mt-1.5 block text-xs text-stone-500" dateTime={r.createdAt}>
-                    {formatReviewDate(r.createdAt)}
-                  </time>
-                  <p className="mt-3 flex-1 text-sm leading-relaxed text-stone-700 line-clamp-4">
-                    {r.content}
-                  </p>
-                  {r.replyText ? (
-                    <div className="mt-4 rounded-xl border-l-2 border-stone-300 bg-stone-50 p-2.5">
-                      <p className="text-[10px] font-semibold uppercase tracking-wider text-stone-500">
-                        Response
+                    <time className="mt-1.5 block text-xs text-stone-500" dateTime={r.createdAt}>
+                      {formatReviewDate(r.createdAt)}
+                    </time>
+                    {r.content ? (
+                      <p className="mt-3 flex-1 text-sm leading-relaxed text-stone-700 line-clamp-4">
+                        {r.content}
                       </p>
-                      <p className="mt-0.5 line-clamp-2 text-xs text-stone-700">{r.replyText}</p>
-                    </div>
-                  ) : null}
-                </article>
-              ))}
+                    ) : null}
+                    {productImg ? (
+                      <div className="mt-3">
+                        <img
+                          src={productImg}
+                          alt="Product"
+                          className="h-24 w-full rounded-xl border border-stone-200 object-cover"
+                        />
+                      </div>
+                    ) : null}
+                    {r.replyText ? (
+                      <div className="mt-4 rounded-xl border-l-2 border-stone-300 bg-stone-50 p-2.5">
+                        <p className="text-[10px] font-semibold uppercase tracking-wider text-stone-500">
+                          Response
+                        </p>
+                        <p className="mt-0.5 line-clamp-2 text-xs text-stone-700">{r.replyText}</p>
+                      </div>
+                    ) : null}
+                  </article>
+                )
+              })}
             </div>
             {reviews.length > 1 ? (
               <div className="mt-4 flex items-center justify-center gap-3">
@@ -586,6 +651,25 @@ const ProductDetail = ({
           <h3 className="text-base font-semibold text-stone-900">Write a review</h3>
           <p className="mt-1 text-sm text-stone-500">Share your experience with this product</p>
           <form onSubmit={handleSubmitReview} className="mt-5 max-w-xl space-y-4">
+            <p className="text-xs text-stone-500">
+              Name is required. Add at least one: your photo, product photo, or text review.
+            </p>
+            <div>
+              <label htmlFor="review-name" className="block text-xs font-medium text-stone-600">
+                Name <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="review-name"
+                type="text"
+                className="mt-1 w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-800 placeholder:text-stone-400 focus:border-stone-400 focus:outline-none"
+                placeholder="Your name"
+                value={reviewForm.authorName}
+                onChange={(e) =>
+                  setReviewForm((f) => ({ ...f, authorName: e.target.value }))
+                }
+                required
+              />
+            </div>
             <div>
               <label className="block text-xs font-medium text-stone-600">Rating</label>
               <div className="mt-1 flex gap-1">
@@ -604,7 +688,7 @@ const ProductDetail = ({
             </div>
             <div>
               <label htmlFor="review-content" className="block text-xs font-medium text-stone-600">
-                Your review
+                Text review (optional)
               </label>
               <textarea
                 id="review-content"
@@ -615,41 +699,48 @@ const ProductDetail = ({
                 onChange={(e) =>
                   setReviewForm((f) => ({ ...f, content: e.target.value }))
                 }
-                required
               />
             </div>
-            <div>
-              <label htmlFor="review-name" className="block text-xs font-medium text-stone-600">
-                Name (optional)
-              </label>
-              <input
-                id="review-name"
-                type="text"
-                className="mt-1 w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-800 placeholder:text-stone-400 focus:border-stone-400 focus:outline-none"
-                placeholder="Your name"
-                value={reviewForm.authorName}
-                onChange={(e) =>
-                  setReviewForm((f) => ({ ...f, authorName: e.target.value }))
-                }
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-stone-600">
-                Photo (optional)
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                className="mt-1 block w-full text-sm text-stone-600 file:mr-2 file:rounded-lg file:border-0 file:bg-stone-200 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-stone-700"
-                onChange={(e) => setReviewImageFile(e.target.files?.[0] || null)}
-              />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="block text-xs font-medium text-stone-600">
+                  Your photo (optional)
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="mt-1 block w-full text-sm text-stone-600 file:mr-2 file:rounded-lg file:border-0 file:bg-stone-200 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-stone-700"
+                  onChange={(e) => setReviewProfileImageFile(e.target.files?.[0] || null)}
+                />
+                {reviewProfileImageFile ? (
+                  <p className="mt-1 text-xs text-stone-500">{reviewProfileImageFile.name}</p>
+                ) : null}
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-stone-600">
+                  Product photo (optional)
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="mt-1 block w-full text-sm text-stone-600 file:mr-2 file:rounded-lg file:border-0 file:bg-stone-200 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-stone-700"
+                  onChange={(e) => setReviewProductImageFile(e.target.files?.[0] || null)}
+                />
+                {reviewProductImageFile ? (
+                  <p className="mt-1 text-xs text-stone-500">{reviewProductImageFile.name}</p>
+                ) : null}
+              </div>
             </div>
             {reviewError ? (
               <p className="text-sm text-red-600">{reviewError}</p>
             ) : null}
             <button
               type="submit"
-              disabled={reviewSubmitting || !reviewForm.content.trim()}
+              disabled={
+                reviewSubmitting ||
+                !reviewForm.authorName.trim() ||
+                (!reviewForm.content.trim() && !reviewProfileImageFile && !reviewProductImageFile)
+              }
               className="rounded-full bg-stone-800 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-stone-700 disabled:opacity-50"
             >
               {reviewSubmitting ? 'Submitting...' : 'Submit review'}

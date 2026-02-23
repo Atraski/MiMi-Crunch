@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 const Categories = ({ collections }) => {
   return (
     <section className="py-16">
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl px-2">
         <div className="mb-8 space-y-2">
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">
             Collections

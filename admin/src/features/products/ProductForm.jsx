@@ -248,8 +248,8 @@ const ProductForm = ({
         payloadVariants.push({
           weight: variant.weight.trim(),
           price: Number(variant.price),
-          stock: Number(variant.stock || 0), // Naya field
-    sku: variant.sku || '',             // Naya field
+          stock: Number(variant.stock || 0),
+    sku: variant.sku || '',
           compareAtPrice: variant.compareAtPrice
             ? Number(variant.compareAtPrice)
             : undefined,
@@ -316,6 +316,7 @@ const ProductForm = ({
               handleChange(event)
             }}
           />
+          <p className="mt-1 text-xs text-stone-500">Must be unique (e.g. ragi-power-mix-2 if “ragi-power-mix” exists)</p>
         </div>
         <div>
           <p className="label">Category</p>

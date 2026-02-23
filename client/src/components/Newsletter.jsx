@@ -1,12 +1,12 @@
 const Newsletter = () => {
   return (
     <section className="bg-[#1f1d1a] py-16 text-white">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-6 px-4">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-6 px-2">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.3em] text-stone-300">
             Stay in touch
           </p>
-          <h2 className="mt-3 text-3xl font-semibold">Spice up your inbox</h2>
+          <h2 className="mt-3 text-3xl font-semibold">Join the Crunch Club</h2>
           <p className="mt-2 text-sm text-stone-300">
             Get offers, recipes, and product drops before anyone else.
           </p>

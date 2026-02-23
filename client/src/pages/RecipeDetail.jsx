@@ -69,7 +69,7 @@ const RecipeDetail = () => {
   if (loading) {
     return (
       <main className="py-16">
-        <div className="mx-auto max-w-6xl px-4">
+        <div className="mx-auto max-w-6xl px-2">
           <p className="text-sm text-stone-600">Loading recipe...</p>
         </div>
       </main>
@@ -79,7 +79,7 @@ const RecipeDetail = () => {
   if (error || !recipe) {
     return (
       <main className="py-16">
-        <div className="mx-auto max-w-6xl px-4">
+        <div className="mx-auto max-w-6xl px-2">
           <BackButton className="mb-6" />
           <p className="text-sm text-red-600">{error || 'Recipe not found.'}</p>
         </div>
@@ -89,10 +89,10 @@ const RecipeDetail = () => {
 
   return (
     <main className="py-16">
-      <div className="mx-auto max-w-6xl px-4">
+      <div className="mx-auto max-w-6xl px-2">
         <BackButton className="mb-6" />
       </div>
-      <article className="mx-auto max-w-6xl px-4">
+      <article className="mx-auto max-w-6xl px-2">
         <header className="grid gap-6 md:grid-cols-[2fr_1fr] md:items-start">
           <div>
             <h1 className="text-3xl font-semibold text-stone-900">{recipe.title}</h1>

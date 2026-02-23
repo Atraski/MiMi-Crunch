@@ -8,21 +8,19 @@ import {
   updateOrderStatus,
   requestPickup,
 } from '../controllers/orderController.js'
-import { authMiddleware } from '../middleware/auth.js' // Auth check ke liye
+import { authMiddleware } from '../middleware/auth.js'
 import { adminAuthMiddleware } from '../middleware/adminAuth.js'
 
-// 1. Order Place Karne ke liye (Public - Guest aur Registered dono ke liye)
-// Note: Isme authMiddleware optional rakha hai taaki guest orders (Case 1) chal sakein
+// 1. Place order (public - guest and registered)
 router.post('/', createOrder)
 
-// 2. Logged-in User ki Order History dekhne ke liye (Case 2)
-// Isme authMiddleware zaroori hai taaki koi aur aapka order na dekh sake
+// 2. Logged-in user order history (auth required)
 router.get('/my-orders/:userId', authMiddleware, getUserOrders)
 
-// 3. Admin ke liye saare orders ki list (Future Admin Panel ke liye)
+// 3. Admin: list all orders
 router.get('/admin/all', adminAuthMiddleware, listAllOrders)
 
-// 4. Admin ke liye order status update
+// 4. Admin: update order status
 router.patch('/admin/:id/status', adminAuthMiddleware, updateOrderStatus)
 
 // 5. Shiprocket sync (requested route)

@@ -2,8 +2,8 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <div className="relative mt-20 bg-emerald-950 text-emerald-50">
-      <footer className="mx-auto max-w-7xl px-6 py-12 lg:px-8">
+    <div className="relative bg-emerald-950 text-emerald-50">
+      <footer className="mx-auto max-w-7xl px-3 py-12 lg:px-4">
         <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4">
           
           {/* Brand Section */}
@@ -55,7 +55,7 @@ const Footer = () => {
                 <span className="text-emerald-400">📧</span> support@mimicrunch.com
               </li>
               <li className="flex items-center gap-2 text-emerald-200/80">
-                <span className="text-emerald-400">📞</span> +91 90000 00000
+                <span className="text-emerald-400">📞</span> +91 9157165523
               </li>
               <li className="flex items-center gap-2 text-emerald-200/80">
                 <span className="text-emerald-400">📍</span> Gujarat, India

@@ -4,11 +4,13 @@ import {
   listByProduct,
   listAll,
   updateReview,
+  getReviewUploadSignature,
 } from '../controllers/reviewController.js'
 import { adminAuthMiddleware } from '../middleware/adminAuth.js'
 
 const router = Router()
 
+router.post('/reviews/upload-signature', getReviewUploadSignature)
 router.post('/reviews', createReview)
 router.get('/reviews', (req, res, next) => {
   if (req.query.productSlug) return listByProduct(req, res, next)

@@ -90,7 +90,7 @@ const Signup = () => {
   if (step === 'otp') {
     return (
       <main className="min-h-[70vh] py-12">
-        <div className="mx-auto max-w-md px-4">
+        <div className="mx-auto max-w-md px-2">
           <BackButton className="mb-6" />
           <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
             <h1 className="text-xl font-semibold text-stone-900">Verify your email</h1>
@@ -144,7 +144,7 @@ const Signup = () => {
 
   return (
     <main className="min-h-[70vh] py-12">
-      <div className="mx-auto max-w-md px-4">
+      <div className="mx-auto max-w-md px-2">
         <BackButton className="mb-6" />
         <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
           <h1 className="text-xl font-semibold text-stone-900">Create account</h1>

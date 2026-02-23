@@ -320,7 +320,7 @@ const OrderList = ({
             <div>
               <h3 className="text-lg font-bold text-stone-900">Orders</h3>
               <p className="text-xs text-stone-500">
-                Kisi bhi row pe click karo, full order details khul jayengi.
+                Click any row to view full order details.
               </p>
             </div>
             <button

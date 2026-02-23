@@ -1,12 +1,12 @@
 import BackButton from '../components/BackButton'
 
-const PrivacyPolicy = () => {
+const PolicyPage = () => {
   return (
     <main className="py-16">
-      <div className="mx-auto max-w-4xl px-4">
+      <div className="mx-auto max-w-4xl px-2">
         <BackButton className="mb-6" />
       </div>
-      <div className="mx-auto max-w-4xl px-4">
+      <div className="mx-auto max-w-4xl px-2">
         <h1 className="text-3xl font-semibold text-stone-900">Privacy Policy</h1>
         <div className="mt-6 space-y-4 text-sm text-stone-600">
           <p>
@@ -28,4 +28,4 @@ const PrivacyPolicy = () => {
   )
 }
 
-export default PrivacyPolicy
+export default PolicyPage
