@@ -1,7 +1,6 @@
 import mongoose from 'mongoose'
 import Product from '../models/Product.js'
 import productEvents from '../utils/productEvents.js'
-import seedProductsIfEmpty from '../utils/seedProducts.js'
 
 /**
  * On order: decrement variant-specific stock.
@@ -120,7 +119,6 @@ const createProduct = async (req, res) => {
 
 const listProducts = async (req, res) => {
   try {
-    await seedProductsIfEmpty()
     const filter =
       req.query.active === 'true'
         ? {
