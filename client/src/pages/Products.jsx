@@ -1,7 +1,27 @@
+import { useEffect, useState } from 'react'
 import BackButton from '../components/BackButton'
 import { Link, useLocation, useParams } from 'react-router-dom'
-import { featured, products as fallbackProducts } from '../data/homeData'
+import { featured as fallbackFeatured, products as fallbackProducts } from '../data/homeData'
 import NotFound from './NotFound'
+import { getOptimizedImage } from '../utils/imageUtils'
+
+function getRandomFeaturedFromBackend(productsList) {
+  if (!Array.isArray(productsList) || productsList.length < 3) return []
+  const pool = [...productsList]
+  for (let i = pool.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[pool[i], pool[j]] = [pool[j], pool[i]]
+  }
+  return pool.slice(0, 3).map((item) => ({
+    name: item.name,
+    slug: item.slug,
+    size: item.size ?? item.variants?.[0]?.weight,
+    price: item.price ?? item.variants?.[0]?.price,
+    tags: item.tags || [],
+    image: item.image ?? item.images?.[0] ?? item.variants?.[0]?.images?.[0],
+    desc: item.description || item.desc || '',
+  }))
+}
 
 const Products = ({
   onAddToCart,
@@ -14,6 +34,7 @@ const Products = ({
 }) => {
   const location = useLocation()
   const { collection: collectionParam } = useParams()
+  const [featuredItems, setFeaturedItems] = useState([])
   const activeCollection =
     collectionParam ||
     new URLSearchParams(location.search).get('collection')
@@ -98,6 +119,21 @@ const Products = ({
     ? collectionCards.filter((item) => item.slug !== activeCategory.slug)
     : collectionCards
 
+  useEffect(() => {
+    if (products.length >= 3) {
+      setFeaturedItems(getRandomFeaturedFromBackend(products))
+    } else {
+      setFeaturedItems(
+        fallbackFeatured.map((item) => ({
+          ...item,
+          slug: item.slug || '',
+          image: '',
+          price: item.price,
+        })),
+      )
+    }
+  }, [products])
+
   if (collectionParam && activeCollectionSlug && !activeCategory) {
     return <NotFound />
   }
@@ -128,7 +164,7 @@ const Products = ({
         loading={loading}
       />
       <CategoriesSection collections={secondaryCollections} />
-      <FeaturedSection />
+      <FeaturedSection featured={featuredItems} />
     </main>
   )
 }
@@ -165,11 +201,11 @@ const ProductGrid = ({
               className="flex flex-col overflow-hidden rounded-3xl border border-stone-200/80 bg-white/95 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
               aria-label={`View ${item.name}`}
             >
-              <div className="relative h-60 overflow-hidden border-b border-stone-200/60 bg-stone-100">
+              <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden border-b border-stone-200/60 bg-stone-100">
                 {item.image ? (
                   <img
-                    className="h-full w-full object-cover"
-                    src={item.image}
+                    className="h-full w-full object-contain"
+                    src={getOptimizedImage(item.image)}
                     alt={item.name}
                     loading="lazy"
                   />
@@ -248,7 +284,7 @@ const CategoriesSection = ({ collections }) => (
             <div className="mb-4 h-28 w-full overflow-hidden rounded-2xl border border-stone-200/70 bg-stone-100">
               {item.image ? (
                 <img
-                  src={item.image}
+                  src={getOptimizedImage(item.image)}
                   alt={item.title}
                   className="h-full w-full object-cover"
                   loading="lazy"
@@ -293,47 +329,69 @@ const slugifyCollection = (value) =>
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
 
-const FeaturedSection = () => (
-  <section className="bg-brand-100 py-12">
-    <div className="mx-auto max-w-6xl px-2">
-      <div className="mb-6 space-y-2">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">
-          Highlights
-        </p>
-        <h2 className="text-3xl font-semibold text-stone-900">
-          Featured Products
-        </h2>
-        <p className="text-stone-600">Popular picks from our community.</p>
-      </div>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {featured.map((item) => (
-          <article
-            key={item.name}
-            className="flex flex-col gap-4 rounded-3xl border border-stone-200/70 bg-white/90 p-6 shadow-sm transition hover:shadow-md"
-          >
-            <div className="h-44 rounded-2xl border border-stone-200/70 bg-gradient-to-br from-amber-100 to-stone-50" />
-            <div>
-              <p className="pill">{item.size}</p>
-              <h3 className="mt-2 text-lg font-semibold text-stone-900">
-                {item.name}
-              </h3>
-              <p className="mt-2 text-sm text-stone-600">{item.desc}</p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {item.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full border border-amber-200/70 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-800"
-                  >
-                    {tag}
-                  </span>
-                ))}
+const FeaturedSection = ({ featured = [] }) => {
+  const list = Array.isArray(featured) && featured.length ? featured : fallbackFeatured.map((f) => ({ ...f, slug: '', image: '' }))
+  return (
+    <section className="bg-brand-100 py-12">
+      <div className="mx-auto max-w-6xl px-2">
+        <div className="mb-6 space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-stone-500">
+            Highlights
+          </p>
+          <h2 className="text-3xl font-semibold text-stone-900">
+            Featured Products
+          </h2>
+          <p className="text-stone-600">Popular picks from our community.</p>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {list.map((item) => (
+            <article
+              key={item.slug || item.name}
+              className="flex flex-col gap-4 rounded-3xl border border-stone-200/70 bg-white/90 p-6 shadow-sm transition hover:shadow-md"
+            >
+              <div className="aspect-square w-full overflow-hidden rounded-2xl border border-stone-200/70 bg-gradient-to-br from-amber-100 to-stone-50">
+                {item.image ? (
+                  <img
+                    src={getOptimizedImage(item.image)}
+                    alt={item.name}
+                    className="h-full w-full object-contain"
+                    loading="lazy"
+                  />
+                ) : null}
               </div>
-            </div>
-          </article>
-        ))}
+              <div>
+                {item.size ? <p className="pill">{item.size}</p> : null}
+                <h3 className="mt-2 text-lg font-semibold text-stone-900">
+                  {item.name}
+                </h3>
+                {item.desc ? (
+                  <p className="mt-2 text-sm text-stone-600 line-clamp-2">{item.desc}</p>
+                ) : null}
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {(item.tags || []).map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-amber-200/70 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-800"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                {item.slug ? (
+                  <Link
+                    to={`/products/${item.slug}`}
+                    className="mt-4 inline-flex text-sm font-semibold text-brand-900"
+                  >
+                    View Product
+                  </Link>
+                ) : null}
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-)
+    </section>
+  )
+}
 
 export default Products

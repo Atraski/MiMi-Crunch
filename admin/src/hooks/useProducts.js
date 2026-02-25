@@ -61,6 +61,9 @@ const useProducts = (apiBase) => {
       inventory: {
         stock: form.stock ? Number(form.stock) : 0,
       },
+      benefits: form.benefits ?? '',
+      trust: form.trust ?? '',
+      faqContent: form.faqContent ?? '',
     }
   }
 

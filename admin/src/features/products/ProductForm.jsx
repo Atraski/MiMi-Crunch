@@ -11,6 +11,9 @@ const defaultForm = {
   keywords: '',
   tags: '',
   stock: '',
+  benefits: '',
+  trust: '',
+  faqContent: '',
 }
 
 const createVariant = () => ({
@@ -138,6 +141,9 @@ const ProductForm = ({
         typeof initialProduct.inventory?.stock === 'number'
           ? String(initialProduct.inventory.stock)
           : '',
+      benefits: initialProduct.benefits || '',
+      trust: initialProduct.trust || '',
+      faqContent: initialProduct.faqContent || '',
     })
     const seedVariants = initialProduct.variants?.length
       ? initialProduct.variants
@@ -403,6 +409,45 @@ const ProductForm = ({
             placeholder="Additional information"
             rows="4"
             value={form.additionalInfo}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+
+      <div className="space-y-4">
+        <div>
+          <p className="label">Benefits</p>
+          <p className="mt-1 text-xs text-stone-500">Plain text. Rendered as normal text on the product page.</p>
+          <textarea
+            className="input mt-2 min-h-[100px]"
+            name="benefits"
+            placeholder="e.g. High in fibre, Gluten-free, Supports digestion..."
+            rows="4"
+            value={form.benefits}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <p className="label">Trust</p>
+          <p className="mt-1 text-xs text-stone-500">HTML supported. Add icons with &lt;img src=&quot;icon-url&quot; class=&quot;w-8 h-8&quot; alt=&quot;&quot; /&gt; or use emoji.</p>
+          <textarea
+            className="input mt-2 min-h-[120px] font-mono text-sm"
+            name="trust"
+            placeholder="<p>Trust badges, certifications...</p>"
+            rows="6"
+            value={form.trust}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <p className="label">FAQ content</p>
+          <p className="mt-1 text-xs text-stone-500">HTML supported. Use headings and paragraphs for Q&amp;A.</p>
+          <textarea
+            className="input mt-2 min-h-[120px] font-mono text-sm"
+            name="faqContent"
+            placeholder="<h4>Question?</h4><p>Answer...</p>"
+            rows="6"
+            value={form.faqContent}
             onChange={handleChange}
           />
         </div>

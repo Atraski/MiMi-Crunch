@@ -5,6 +5,7 @@ import MapSelector from '../components/MapSelector'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 import { getProductSlugFromCartItem, getCartWeightKgForProduct, parseWeightToKg, MAX_WEIGHT_PER_PRODUCT_KG } from '../utils/cartUtils'
+import { getOptimizedImage } from '../utils/imageUtils'
 
 const Checkout = ({
   cart = [],
@@ -301,7 +302,7 @@ const Checkout = ({
                   const isOutOfStock = outOfStockItemIds.has(item.id)
                   return (
                     <div key={item.id} className={`flex gap-4 text-sm ${isOutOfStock ? 'text-red-700 opacity-90' : 'text-stone-900'}`}>
-                      <img src={item.image} alt="" className="h-14 w-14 rounded-lg border object-cover" />
+                      <img src={getOptimizedImage(item.image)} alt="" className="h-14 w-14 rounded-lg border object-cover" />
                       <div className="flex-1">
                         <p className="font-medium">{item.name}</p>
                         <p className="text-xs text-stone-500">Qty: {item.qty} × ₹{item.price}</p>

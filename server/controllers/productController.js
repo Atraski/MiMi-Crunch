@@ -79,6 +79,9 @@ const createProduct = async (req, res) => {
       variants,
       inventory,
       faqs,
+      benefits,
+      trust,
+      faqContent,
       isActive,
     } = req.body || {}
     
@@ -106,6 +109,9 @@ const createProduct = async (req, res) => {
       variants,
       inventory,
       faqs,
+      benefits: benefits ?? '',
+      trust: trust ?? '',
+      faqContent: faqContent ?? '',
       isActive,
     })
     
@@ -126,6 +132,7 @@ const listProducts = async (req, res) => {
           }
         : {}
     const products = await Product.find(filter).sort({ createdAt: -1 }).lean()
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate')
     return res.json(products)
   } catch (err) {
     console.error('Product list error:', err)
@@ -152,6 +159,7 @@ const getProductBySlug = async (req, res) => {
     if (!product) {
       return res.status(404).json({ error: 'Product not found.' })
     }
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate')
     return res.json(product)
   } catch (err) {
     console.error('Product slug fetch error:', err)
@@ -161,7 +169,19 @@ const getProductBySlug = async (req, res) => {
 
 const updateProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
+    const allowed = [
+      'name', 'title', 'slug', 'weight', 'weightOptions', 'selectorCount',
+      'ctaPrimary', 'ctaSecondary', 'category', 'description', 'additionalInfo',
+      'price', 'compareAtPrice', 'collection', 'keywords', 'tags', 'images',
+      'variants', 'inventory', 'isActive', 'faqs', 'benefits', 'trust', 'faqContent',
+    ]
+    const updates = {}
+    for (const key of allowed) {
+      if (req.body[key] !== undefined) {
+        updates[key] = req.body[key]
+      }
+    }
+    const product = await Product.findByIdAndUpdate(req.params.id, updates, {
       new: true,
       runValidators: true,
     }).lean()

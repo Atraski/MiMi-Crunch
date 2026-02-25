@@ -22,12 +22,12 @@ const Contact = () => {
             </div>
             <div>
               <p className="text-sm font-semibold text-stone-900">Phone</p>
-              <p>+91 90000 00000</p>
+              <p>+91 9157165523</p>
             </div>
-            <div>
+            {/* <div>
               <p className="text-sm font-semibold text-stone-900">Address</p>
               <p>Gujrat, India</p>
-            </div>
+            </div> */}
           </div>
 
           <form className="rounded-2xl bg-white p-6 shadow-lg shadow-stone-200/70">

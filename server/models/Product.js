@@ -54,6 +54,9 @@ const productSchema = new mongoose.Schema(
       lowStockThreshold: { type: Number, default: 5 },
     },
     faqs: { type: [productFaqSchema], default: [] },
+    benefits: { type: String, trim: true, default: '' },
+    trust: { type: String, trim: true, default: '' },
+    faqContent: { type: String, trim: true, default: '' },
   },
   { timestamps: true, suppressReservedKeysWarning: true },
 )

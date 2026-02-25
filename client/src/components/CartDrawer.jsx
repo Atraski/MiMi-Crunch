@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getProductSlugFromCartItem } from '../utils/cartUtils'
+import { getOptimizedImage } from '../utils/imageUtils'
 
 const FREE_DELIVERY_MIN = 499
 const DELIVERY_FEE_AMOUNT = 49
@@ -247,7 +248,7 @@ const CartDrawer = ({
                     >
                       <div className="h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-stone-200 bg-stone-50">
                         {item.image ? (
-                          <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
+                          <img src={getOptimizedImage(item.image)} alt={item.name} className="h-full w-full object-cover" />
                         ) : (
                           <div className="h-full w-full bg-stone-200" />
                         )}

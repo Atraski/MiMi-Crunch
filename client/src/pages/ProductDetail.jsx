@@ -2,6 +2,7 @@ import BackButton from '../components/BackButton'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
+import { getOptimizedImage } from '../utils/imageUtils'
 
 const API_BASE_FALLBACK = import.meta.env.VITE_API_BASE || 'http://localhost:5000'
 
@@ -18,7 +19,10 @@ const ProductDetail = ({
   const { slug } = useParams()
   const navigate = useNavigate()
   const { user, token } = useAuth()
-  const product = products.find((item) => item.slug === slug)
+  const productFromList = products.find((item) => item.slug === slug)
+  const [fetchedProduct, setFetchedProduct] = useState(null)
+  const [productLoading, setProductLoading] = useState(true)
+  const product = fetchedProduct ?? productFromList
   const safeCart = cart ?? []
 
   // States
@@ -42,7 +46,60 @@ const ProductDetail = ({
   const [recipesLoading, setRecipesLoading] = useState(false)
   const reviewCarouselRef = useRef(null)
 
-  // Effects
+  // Effects – fetch fresh product by slug so admin updates show immediately
+  useEffect(() => {
+    if (!slug || !apiBase) {
+      setProductLoading(false)
+      setFetchedProduct(null)
+      return
+    }
+    let cancelled = false
+    setProductLoading(true)
+    fetch(`${apiBase}/api/products/slug/${encodeURIComponent(slug)}`)
+      .then((res) => {
+        if (!res.ok) return null
+        return res.json()
+      })
+      .then((data) => {
+        if (cancelled || !data) return
+        const item = data
+        const derivedVariants = item.variants?.length
+          ? item.variants.map((v) => ({
+              ...v,
+              weight: v.weight,
+              price: v.price ?? item.price,
+              stock: v.stock ?? 0,
+              images: v.images || item.images || [],
+            }))
+          : []
+        const firstVariant = derivedVariants[0]
+        setFetchedProduct({
+          _id: item._id,
+          name: item.name,
+          slug: item.slug,
+          size: firstVariant?.weight || item.weight,
+          desc: item.description,
+          price: firstVariant?.price ?? item.price,
+          collection: item.collection,
+          tags: item.tags || [],
+          image: firstVariant?.images?.[0] || item.images?.[0] || '',
+          images: firstVariant?.images?.length ? firstVariant.images : item.images || [],
+          variants: derivedVariants.length ? derivedVariants : null,
+          benefits: item.benefits,
+          trust: item.trust,
+          faqContent: item.faqContent,
+          faqs: item.faqs,
+        })
+      })
+      .catch(() => {
+        if (!cancelled) setFetchedProduct(null)
+      })
+      .finally(() => {
+        if (!cancelled) setProductLoading(false)
+      })
+    return () => { cancelled = true }
+  }, [slug, apiBase])
+
   useEffect(() => {
     setActiveVariant(0)
     setActiveImage(0)
@@ -101,6 +158,15 @@ const ProductDetail = ({
   }
 
   // 2. CONDITIONAL RETURN (Hooks ke baad)
+  if (productLoading && !product) {
+    return (
+      <main className="py-16">
+        <div className="mx-auto max-w-4xl px-2">
+          <p className="text-stone-600">Loading product…</p>
+        </div>
+      </main>
+    )
+  }
   if (!product) {
     return (
       <main className="py-16">
@@ -239,7 +305,7 @@ const ProductDetail = ({
                 className={`max-h-full max-w-full object-contain ${
                   isZoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'
                 }`}
-                src={mainImage}
+                src={getOptimizedImage(mainImage)}
                 alt={product.name}
                 loading="lazy"
                 onClick={() => setIsZoomed(true)}
@@ -281,7 +347,7 @@ const ProductDetail = ({
                 >
                   <img
                     className="h-full w-full object-cover"
-                    src={img}
+                    src={getOptimizedImage(img)}
                     alt={`${product.name} ${index + 1}`}
                     loading="lazy"
                   />
@@ -306,7 +372,7 @@ const ProductDetail = ({
               </button>
               <img
                 className="max-h-[90vh] w-full max-w-5xl object-contain"
-                src={mainImage}
+                src={getOptimizedImage(mainImage)}
                 alt={product.name}
                 onClick={(event) => event.stopPropagation()}
               />
@@ -491,7 +557,49 @@ const ProductDetail = ({
         </div>
       </div>
 
-      <section className="mx-auto max-w-6xl px-2 pt-16 pb-20">
+      {(product.benefits || product.trust || product.faqContent || (product.faqs?.length > 0)) ? (
+        <div className="w-full px-4 pt-12 pb-12 space-y-12 md:px-6 lg:px-8">
+          {product.benefits ? (
+            <section>
+              <h2 className="text-xl font-semibold text-stone-900">Benefits</h2>
+              <div className="mt-3 whitespace-pre-line text-stone-700">
+                {product.benefits}
+              </div>
+            </section>
+          ) : null}
+          {product.trust ? (
+            <section>
+              <h2 className="text-xl font-semibold text-stone-900">Why trust us</h2>
+              <div
+                className="mt-3 prose prose-stone max-w-none text-sm prose-p:text-stone-700 prose-img:inline prose-img:align-middle"
+                dangerouslySetInnerHTML={{ __html: product.trust }}
+              />
+            </section>
+          ) : null}
+          {(product.faqContent || (product.faqs?.length > 0)) ? (
+            <section>
+              <h2 className="text-xl font-semibold text-stone-900">FAQ</h2>
+              {product.faqContent ? (
+                <div
+                  className="mt-3 prose prose-stone max-w-none text-sm prose-headings:font-semibold prose-headings:text-stone-900 prose-p:text-stone-700"
+                  dangerouslySetInnerHTML={{ __html: product.faqContent }}
+                />
+              ) : (
+                <dl className="mt-3 space-y-4">
+                  {product.faqs.map((faq, idx) => (
+                    <div key={idx}>
+                      <dt className="font-semibold text-stone-900">{faq.question}</dt>
+                      <dd className="mt-1 text-stone-600">{faq.answer}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+            </section>
+          ) : null}
+        </div>
+      ) : null}
+
+      <section className="w-full px-4 pt-16 pb-20 md:px-6 lg:px-8">
         <h2 className="text-xl font-semibold text-stone-900">Reviews &amp; testimonials</h2>
         <p className="mt-1 text-sm text-stone-500">What others say about this product</p>
 

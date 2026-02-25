@@ -117,6 +117,10 @@ function App() {
             image: firstVariant?.images?.[0] || item.images?.[0] || '',
             images: firstVariant?.images?.length ? firstVariant.images : item.images || [],
             variants: derivedVariants,
+            benefits: item.benefits,
+            trust: item.trust,
+            faqContent: item.faqContent,
+            faqs: item.faqs,
           }
         })
         if (isMounted && mapped.length) {
