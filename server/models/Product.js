@@ -15,6 +15,7 @@ const variantSchema = new mongoose.Schema(
     compareAtPrice: { type: Number },
     images: [{ type: String, trim: true }],
     stock: { type: Number, default: 0 },
+    sku: { type: String, trim: true, default: '' },
   },
   { _id: true },
 )
@@ -57,6 +58,10 @@ const productSchema = new mongoose.Schema(
     benefits: { type: String, trim: true, default: '' },
     trust: { type: String, trim: true, default: '' },
     faqContent: { type: String, trim: true, default: '' },
+    metaData: { type: String, trim: true, default: '' },
+    metaTitle: { type: String, trim: true, default: '' },
+    metaDescription: { type: String, trim: true, default: '' },
+    schemaMarkup: { type: String, trim: true, default: '' },
   },
   { timestamps: true, suppressReservedKeysWarning: true },
 )

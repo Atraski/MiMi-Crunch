@@ -8,6 +8,7 @@ import {
 } from '../config/redis.js'
 import generateOtp from '../utils/otp.js'
 import { sendVerificationEmail } from '../utils/email.js'
+import { sendSmsOtp } from '../utils/twilio.js'
 
 const JWT_SECRET =
   process.env.JWT_SECRET ||
@@ -26,6 +27,8 @@ const toSafeUser = (user) => {
   delete u.password
   delete u.emailOtp
   delete u.emailOtpExpiresAt
+  delete u.phoneOtp
+  delete u.phoneOtpExpiresAt
   return u
 }
 
@@ -173,7 +176,7 @@ export const me = async (req, res) => {
 
     // 3. Set data in Redis for next time
     if (process.env.REDIS_URL) {
-      await setCachedUser(userId, safe).catch(() => {});
+      await setCachedUser(userId, safe).catch(() => { });
     }
 
     return res.json(safe);
@@ -182,3 +185,82 @@ export const me = async (req, res) => {
     return res.status(500).json({ error: 'Failed to load profile.' });
   }
 };
+
+export const sendPhoneOtp = async (req, res) => {
+  try {
+    const { phone } = req.body || {}
+    if (!phone) {
+      return res.status(400).json({ error: 'Phone number is required.' })
+    }
+
+    // Normalize phone number (very basic, Twilio handles formatting too, but good to strip spaces)
+    let phoneNorm = String(phone).replace(/\s+/g, '')
+
+    // Find or create user
+    let user = await User.findOne({ phone: phoneNorm })
+    if (!user) {
+      user = new User({
+        phone: phoneNorm,
+        phoneVerified: false,
+      })
+    }
+
+    const code = generateOtp()
+    user.phoneOtp = code
+    user.phoneOtpExpiresAt = new Date(Date.now() + OTP_EXPIRY_MS)
+
+    await user.save()
+
+    // Send SMS
+    await sendSmsOtp(phoneNorm, code)
+
+    return res.status(200).json({ success: true, message: 'OTP sent successfully', phone: phoneNorm })
+  } catch (err) {
+    console.error('Send Phone OTP error:', err)
+    return res.status(500).json({ error: err.message || 'Failed to send OTP.' })
+  }
+}
+
+export const verifyPhoneOtp = async (req, res) => {
+  try {
+    const { phone, code } = req.body || {}
+    if (!phone || !code) {
+      return res.status(400).json({ error: 'Phone number and code are required.' })
+    }
+
+    const phoneNorm = String(phone).replace(/\s+/g, '')
+    const user = await User.findOne({ phone: phoneNorm })
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' })
+    }
+
+    if (!user.phoneOtp || !user.phoneOtpExpiresAt) {
+      return res.status(400).json({ error: 'No OTP pending or expired. Request a new code.' })
+    }
+
+    if (user.phoneOtp !== String(code).trim()) {
+      return res.status(400).json({ error: 'Invalid verification code.' })
+    }
+
+    if (user.phoneOtpExpiresAt < new Date()) {
+      return res.status(400).json({ error: 'Code expired. Request a new code.' })
+    }
+
+    user.phoneVerified = true
+    user.phoneOtp = undefined
+    user.phoneOtpExpiresAt = undefined
+    await user.save()
+
+    const userId = user._id.toString()
+    await deleteCachedUser(userId)
+    const safe = toSafeUser(user)
+    await setCachedUser(userId, safe)
+
+    const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '30d' })
+    return res.json({ user: safe, token })
+  } catch (err) {
+    console.error('Verify Phone OTP error:', err)
+    return res.status(500).json({ error: 'Verification failed.' })
+  }
+}

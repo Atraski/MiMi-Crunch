@@ -10,7 +10,20 @@ const recipeSchema = new mongoose.Schema(
     gallery: [{ type: String, trim: true }],
     videoUrl: { type: String, trim: true },
     productSlug: { type: String, trim: true }, // linked product
+    time: { type: String, trim: true }, // e.g. "20 mins", "30 min" – shown on recipe cards
     tags: [{ type: String, trim: true }],
+    source: {
+      type: String,
+      enum: ['official', 'community'],
+      default: 'official',
+    },
+    approvalStatus: {
+      type: String,
+      enum: ['approved', 'pending', 'rejected'],
+      default: 'approved',
+    },
+    submittedBy: { type: String, trim: true },
+    submitterEmail: { type: String, trim: true },
     published: { type: Boolean, default: true },
   },
   { timestamps: true, suppressReservedKeysWarning: true },

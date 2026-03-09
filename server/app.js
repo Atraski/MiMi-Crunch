@@ -18,6 +18,7 @@ import userRoutes from './routes/users.js'
 import authRoutes from './routes/auth.js'
 import adminRoutes from './routes/admin.js'
 import orderRoutes from './routes/orders.js'
+import analyticsRoutes from './routes/analytics.js'
 
 const app = express()
 app.set('trust proxy', 1)
@@ -33,6 +34,8 @@ const defaultAllowedOrigins = [
   'http://127.0.0.1:5173',
   'http://localhost:5174',
   'http://127.0.0.1:5174',
+  'http://localhost:5175',
+  'http://127.0.0.1:5175',
   'https://www.mimicrunch.com',
   'https://mimicrunch.com',
   'https://mimicrunch.netlify.app',
@@ -80,6 +83,7 @@ app.use('/api', recipeRoutes)
 app.use('/api', reviewRoutes)
 app.use('/api', couponRoutes)
 app.use('/api', uploadRoutes)
+app.use('/api', analyticsRoutes)
 
 // Order management (guest and registered users)
 app.use('/api/orders', orderRoutes)

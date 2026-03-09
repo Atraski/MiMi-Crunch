@@ -19,7 +19,12 @@ const createRecipe = async (req, res) => {
       gallery,
       videoUrl,
       productSlug,
+      time,
       tags,
+      source,
+      approvalStatus,
+      submittedBy,
+      submitterEmail,
       published,
     } = req.body || {}
 
@@ -38,7 +43,14 @@ const createRecipe = async (req, res) => {
       gallery: Array.isArray(gallery) ? gallery : [],
       videoUrl,
       productSlug,
+      time: time || undefined,
       tags: Array.isArray(tags) ? tags : [],
+      source: source === 'community' ? 'community' : 'official',
+      approvalStatus: approvalStatus === 'pending' || approvalStatus === 'rejected'
+        ? approvalStatus
+        : 'approved',
+      submittedBy: submittedBy || undefined,
+      submitterEmail: submitterEmail || undefined,
       published: Boolean(published ?? true),
     })
 
@@ -46,6 +58,58 @@ const createRecipe = async (req, res) => {
   } catch (err) {
     console.error('Recipe create error:', err)
     return res.status(500).json({ error: 'Failed to create recipe.' })
+  }
+}
+
+const submitRecipeForApproval = async (req, res) => {
+  try {
+    const {
+      title,
+      slug,
+      excerpt,
+      contentHtml,
+      coverImage,
+      gallery,
+      videoUrl,
+      productSlug,
+      time,
+      tags,
+      submittedBy,
+      submitterEmail,
+    } = req.body || {}
+
+    if (!title) {
+      return res.status(400).json({ error: 'Title is required.' })
+    }
+
+    const finalSlug = slug ? slugify(slug) : slugify(`${title}-${Date.now()}`)
+
+    const recipe = await Recipe.create({
+      title,
+      slug: finalSlug,
+      excerpt,
+      contentHtml,
+      coverImage,
+      gallery: Array.isArray(gallery) ? gallery : [],
+      videoUrl,
+      productSlug,
+      time: time || undefined,
+      tags: Array.isArray(tags) ? tags : [],
+      source: 'community',
+      approvalStatus: 'pending',
+      submittedBy: submittedBy || undefined,
+      submitterEmail: submitterEmail || undefined,
+      published: false,
+    })
+
+    return res.status(201).json({
+      success: true,
+      message: 'Recipe submitted for approval.',
+      recipeId: recipe._id,
+    })
+  } catch (err) {
+    console.error('Recipe submission error:', err)
+    return res.status(500).json({ error: 'Failed to submit recipe.' })
   }
 }
 
@@ -57,6 +121,19 @@ const listRecipes = async (req, res) => {
     }
     if (req.query.published === 'true') {
       filter.published = true
+    }
+    if (req.query.source === 'official' || req.query.source === 'community') {
+      filter.source = req.query.source
+    }
+    if (
+      req.query.approvalStatus === 'approved' ||
+      req.query.approvalStatus === 'pending' ||
+      req.query.approvalStatus === 'rejected'
+    ) {
+      filter.approvalStatus = req.query.approvalStatus
+    }
+    if (req.query.published === 'true' && !req.query.approvalStatus) {
+      filter.approvalStatus = 'approved'
     }
 
     const recipes = await Recipe.find(filter).sort({ createdAt: -1 }).lean()
@@ -82,7 +159,11 @@ const getRecipeById = async (req, res) => {
 
 const getRecipeBySlug = async (req, res) => {
   try {
-    const recipe = await Recipe.findOne({ slug: req.params.slug }).lean()
+    const recipe = await Recipe.findOne({
+      slug: req.params.slug,
+      published: true,
+      approvalStatus: 'approved',
+    }).lean()
     if (!recipe) {
       return res.status(404).json({ error: 'Recipe not found.' })
     }
@@ -104,6 +185,24 @@ const updateRecipe = async (req, res) => {
     }
     if (updates.gallery && !Array.isArray(updates.gallery)) {
       updates.gallery = []
+    }
+    if (updates.source && !['official', 'community'].includes(updates.source)) {
+      delete updates.source
+    }
+    if (
+      updates.approvalStatus &&
+      !['approved', 'pending', 'rejected'].includes(updates.approvalStatus)
+    ) {
+      delete updates.approvalStatus
+    }
+    if (updates.approvalStatus === 'approved' && updates.published == null) {
+      updates.published = true
+    }
+    if (
+      (updates.approvalStatus === 'pending' || updates.approvalStatus === 'rejected') &&
+      updates.published == null
+    ) {
+      updates.published = false
     }
 
     const recipe = await Recipe.findByIdAndUpdate(req.params.id, updates, {
@@ -134,5 +233,13 @@ const deleteRecipe = async (req, res) => {
   }
 }
 
-export { createRecipe, listRecipes, getRecipeById, getRecipeBySlug, updateRecipe, deleteRecipe }
+export {
+  createRecipe,
+  submitRecipeForApproval,
+  listRecipes,
+  getRecipeById,
+  getRecipeBySlug,
+  updateRecipe,
+  deleteRecipe,
+}
 

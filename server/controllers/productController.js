@@ -41,14 +41,14 @@ const updateStock = async (items) => {
       } else {
         console.log(`✅ Stock updated for ${item.productId} (${item.weight})`);
       }
-      
+
       return result;
     });
 
     await Promise.all(stockUpdates);
-    
+
     // Real-time UI update trigger (SSE)
-    productEvents.emit('updated'); 
+    productEvents.emit('updated');
     return { success: true };
   } catch (err) {
     console.error('Stock update error:', err);
@@ -82,12 +82,14 @@ const createProduct = async (req, res) => {
       benefits,
       trust,
       faqContent,
+      metaData,
+      schemaMarkup,
       isActive,
     } = req.body || {}
-    
+
     const primaryVariant =
       Array.isArray(variants) && variants.length ? variants[0] : null
-      
+
     const product = await Product.create({
       name: name || title,
       title: title || name,
@@ -112,9 +114,13 @@ const createProduct = async (req, res) => {
       benefits: benefits ?? '',
       trust: trust ?? '',
       faqContent: faqContent ?? '',
+      metaData: metaData ?? '',
+      metaTitle: req.body.metaTitle ?? '',
+      metaDescription: req.body.metaDescription ?? '',
+      schemaMarkup: schemaMarkup ?? '',
       isActive,
     })
-    
+
     productEvents.emit('updated')
     return res.status(201).json(product)
   } catch (err) {
@@ -128,8 +134,8 @@ const listProducts = async (req, res) => {
     const filter =
       req.query.active === 'true'
         ? {
-            $or: [{ isActive: { $exists: false } }, { isActive: true }],
-          }
+          $or: [{ isActive: { $exists: false } }, { isActive: true }],
+        }
         : {}
     const products = await Product.find(filter).sort({ createdAt: -1 }).lean()
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate')
@@ -173,7 +179,7 @@ const updateProduct = async (req, res) => {
       'name', 'title', 'slug', 'weight', 'weightOptions', 'selectorCount',
       'ctaPrimary', 'ctaSecondary', 'category', 'description', 'additionalInfo',
       'price', 'compareAtPrice', 'collection', 'keywords', 'tags', 'images',
-      'variants', 'inventory', 'isActive', 'faqs', 'benefits', 'trust', 'faqContent',
+      'variants', 'inventory', 'isActive', 'faqs', 'benefits', 'trust', 'faqContent', 'metaData', 'metaTitle', 'metaDescription', 'schemaMarkup',
     ]
     const updates = {}
     for (const key of allowed) {
@@ -192,7 +198,7 @@ const updateProduct = async (req, res) => {
     return res.json(product)
   } catch (err) {
     console.error('Product update error:', err)
-    return res.status(500).json({ error: 'Failed to update product.' })
+    return res.status(500).json({ error: err.message || 'Failed to update product.' })
   }
 }
 
@@ -246,5 +252,5 @@ export {
   updateProduct,
   deleteProduct,
   streamProducts,
-  updateStock, 
+  updateStock,
 }
