@@ -1,13 +1,89 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MiMi Crunch</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MiMi Crunch</title>
+  <script>
+    !function (f, b, e, v, n, t, s) {
+      if (f.fbq) return;
+      n = f.fbq = function () {
+        n.callMethod ?
+          n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+      };
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = !0;
+      n.version = '2.0';
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = !0;
+      t.src = v;
+      s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s);
+    }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '3315764865254343');
+    fbq('track', 'PageView');
+  </script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K6K1Y8PE0D"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-K6K1Y8PE0D');
+  </script>
+</head>
+
+<body>
+  <noscript>
+    <img
+      height="1"
+      width="1"
+      style="display:none"
+      src="https://www.facebook.com/tr?id=3315764865254343&ev=PageView&noscript=1"
+    />
+  </noscript>
+  <div id="root">
+    <!-- Instant Low-Network Loader (Static HTML) -->
+    <div id="preloader"
+      style="position: fixed; inset: 0; background: #FDFBF7; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; font-family: system-ui, -apple-system, sans-serif;">
+      <div
+        style="width: 80px; height: 80px; background: white; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); animation: pulse 2s infinite ease-in-out;">
+        <span style="font-size: 40px; font-weight: 900; color: #2E7D32; font-style: italic;">M</span>
+      </div>
+      <p
+        style="margin-top: 20px; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.3em; color: #A8A29E;">
+        Mimi Crunch</p>
+      <style>
+        @keyframes pulse {
+          0% {
+            transform: scale(0.95);
+            opacity: 0.8;
+          }
+
+          50% {
+            transform: scale(1.05);
+            opacity: 1;
+          }
+
+          100% {
+            transform: scale(0.95);
+            opacity: 0.8;
+          }
+        }
+
+        #root:not(:empty)>#preloader {
+          display: none !important;
+        }
+      </style>
+    </div>
+  </div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>

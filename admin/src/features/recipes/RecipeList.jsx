@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import RichTextEditor from '../../components/RichTextEditor.jsx'
+import Spinner from '../../components/Spinner.jsx'
 import { getAdminAuthHeaders } from '../../utils/adminAuth.js'
 
 const RecipeList = ({
@@ -13,11 +14,20 @@ const RecipeList = ({
   onUpdate,
   onDelete,
   apiBase,
+  siteUrl,
 }) => {
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [editingRecipe, setEditingRecipe] = useState(null)
   const [editLoading, setEditLoading] = useState(false)
+  const pendingCount = useMemo(
+    () => recipes.filter((r) => r.approvalStatus === 'pending').length,
+    [recipes],
+  )
+  const officialCount = useMemo(
+    () => recipes.filter((r) => (r.source || 'official') === 'official').length,
+    [recipes],
+  )
 
   const productOptions = useMemo(
     () =>
@@ -46,7 +56,7 @@ const RecipeList = ({
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-4">
         <div className="rounded-2xl border border-stone-200/80 bg-white p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
           <p className="text-xs font-medium uppercase tracking-wider text-stone-500">
             Total
@@ -69,6 +79,17 @@ const RecipeList = ({
           </p>
           <p className="mt-1 text-2xl font-semibold tracking-tight text-stone-700">
             {recipes.filter((r) => r.videoUrl).length}
+          </p>
+        </div>
+        <div className="rounded-2xl border border-amber-200/90 bg-amber-50 p-4 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+          <p className="text-xs font-medium uppercase tracking-wider text-amber-700">
+            Pending approval
+          </p>
+          <p className="mt-1 text-2xl font-semibold tracking-tight text-amber-800">
+            {pendingCount}
+          </p>
+          <p className="mt-1 text-xs text-amber-700/80">
+            Official: {officialCount}
           </p>
         </div>
       </div>
@@ -105,9 +126,10 @@ const RecipeList = ({
           <p className="px-5 pt-4 text-sm text-red-600 sm:px-6">{error}</p>
         ) : null}
         {loading ? (
-          <p className="px-5 py-8 text-center text-sm text-stone-500 sm:px-6">
-            Loading...
-          </p>
+          <div className="py-20 flex flex-col items-center justify-center text-stone-400">
+            <Spinner className="h-8 w-8 mb-3" />
+            <p className="text-sm font-medium">Gathering recipes...</p>
+          </div>
         ) : (
           <div className="overflow-hidden">
             <table className="w-full table-fixed text-left text-sm">
@@ -115,6 +137,8 @@ const RecipeList = ({
                 <tr className="border-b border-stone-200 bg-stone-50/80 text-xs font-medium uppercase tracking-wider text-stone-500">
                   <th className="px-5 py-3 sm:px-6">Title</th>
                   <th className="hidden px-5 py-3 sm:px-6 md:table-cell">Slug</th>
+                  <th className="hidden px-5 py-3 sm:px-6 md:table-cell">Type</th>
+                  <th className="hidden px-5 py-3 sm:px-6 md:table-cell">Status</th>
                   <th className="hidden px-5 py-3 sm:px-6 sm:table-cell">Product</th>
                   <th className="px-5 py-3 text-right sm:px-6">Actions</th>
                 </tr>
@@ -151,11 +175,81 @@ const RecipeList = ({
                     <td className="hidden px-5 py-3.5 text-xs text-stone-500 sm:px-6 md:table-cell">
                       {recipe.slug}
                     </td>
+                    <td className="hidden px-5 py-3.5 text-xs text-stone-500 sm:px-6 md:table-cell">
+                      <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${(recipe.source || 'official') === 'official'
+                        ? 'bg-emerald-50 text-emerald-700'
+                        : 'bg-indigo-50 text-indigo-700'
+                        }`}>
+                        {(recipe.source || 'official') === 'official' ? 'Official' : 'Community'}
+                      </span>
+                    </td>
+                    <td className="hidden px-5 py-3.5 text-xs text-stone-500 sm:px-6 md:table-cell">
+                      <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${(recipe.approvalStatus || 'approved') === 'approved'
+                        ? 'bg-emerald-50 text-emerald-700'
+                        : (recipe.approvalStatus || 'approved') === 'pending'
+                          ? 'bg-amber-50 text-amber-700'
+                          : 'bg-rose-50 text-rose-700'
+                        }`}>
+                        {recipe.approvalStatus || 'approved'}
+                      </span>
+                    </td>
                     <td className="hidden px-5 py-3.5 text-xs text-stone-500 sm:px-6 sm:table-cell">
                       {recipe.productSlug || '—'}
                     </td>
                     <td className="px-5 py-3.5 text-right sm:px-6">
                       <div className="inline-flex items-center gap-1">
+                        {(recipe.source || 'official') === 'community' &&
+                          (recipe.approvalStatus || 'approved') === 'pending' ? (
+                          <>
+                            <button
+                              className="inline-flex h-8 items-center justify-center rounded-full border border-emerald-200 bg-emerald-50 px-2 text-[11px] font-semibold text-emerald-700 hover:bg-emerald-100"
+                              type="button"
+                              aria-label="Approve recipe"
+                              onClick={() =>
+                                onUpdate?.(recipe._id, {
+                                  approvalStatus: 'approved',
+                                  published: true,
+                                })
+                              }
+                            >
+                              Approve
+                            </button>
+                            <button
+                              className="inline-flex h-8 items-center justify-center rounded-full border border-rose-200 bg-rose-50 px-2 text-[11px] font-semibold text-rose-700 hover:bg-rose-100"
+                              type="button"
+                              aria-label="Reject recipe"
+                              onClick={() =>
+                                onUpdate?.(recipe._id, {
+                                  approvalStatus: 'rejected',
+                                  published: false,
+                                })
+                              }
+                            >
+                              Reject
+                            </button>
+                          </>
+                        ) : null}
+                        <a
+                          href={`${siteUrl}/recipes/${recipe.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
+                          title="Live Preview"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            className="h-4 w-4"
+                          >
+                            <path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+                            <path
+                              fillRule="evenodd"
+                              d="M.664 10.59a1.651 1.651 0 0 1 0-1.186A10.004 10.004 0 0 1 10 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0 1 10 17c-4.257 0-7.893-2.66-9.336-6.41ZM14 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </a>
                         <button
                           className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
                           type="button"
@@ -207,7 +301,7 @@ const RecipeList = ({
                   <tr>
                     <td
                       className="px-5 py-8 text-center text-sm text-stone-500 sm:px-6"
-                      colSpan="4"
+                      colSpan="6"
                     >
                       No recipes yet.
                     </td>
@@ -233,6 +327,10 @@ const RecipeList = ({
               videoUrl: '',
               productSlug: '',
               tags: [],
+              source: 'official',
+              approvalStatus: 'approved',
+              submittedBy: '',
+              submitterEmail: '',
               published: true,
             }}
             onClose={() => setIsCreateOpen(false)}
@@ -284,7 +382,12 @@ const RecipeEditorModal = ({
     gallery: initialData.gallery || [],
     videoUrl: initialData.videoUrl || '',
     productSlug: initialData.productSlug || '',
+    time: initialData.time || '',
     tags: initialData.tags || [],
+    source: initialData.source || 'official',
+    approvalStatus: initialData.approvalStatus || 'approved',
+    submittedBy: initialData.submittedBy || '',
+    submitterEmail: initialData.submitterEmail || '',
     published: Boolean(initialData.published ?? true),
   })
   const [slugTouched, setSlugTouched] = useState(Boolean(initialData.slug))
@@ -308,7 +411,12 @@ const RecipeEditorModal = ({
       gallery: initialData.gallery || [],
       videoUrl: initialData.videoUrl || '',
       productSlug: initialData.productSlug || '',
+      time: initialData.time || '',
       tags: initialData.tags || [],
+      source: initialData.source || 'official',
+      approvalStatus: initialData.approvalStatus || 'approved',
+      submittedBy: initialData.submittedBy || '',
+      submitterEmail: initialData.submitterEmail || '',
       published: Boolean(initialData.published ?? true),
     })
     setSlugTouched(Boolean(initialData.slug))
@@ -336,6 +444,16 @@ const RecipeEditorModal = ({
         setSlugTouched(Boolean(value.trim()))
       } else if (name === 'published' && type === 'checkbox') {
         next.published = checked
+      } else if (name === 'source') {
+        next.source = value === 'community' ? 'community' : 'official'
+        if (next.source === 'official' && next.approvalStatus === 'pending') {
+          next.approvalStatus = 'approved'
+          next.published = true
+        }
+      } else if (name === 'approvalStatus') {
+        next.approvalStatus = value
+        if (value === 'approved') next.published = true
+        if (value === 'pending' || value === 'rejected') next.published = false
       } else if (name === 'tags') {
         next.tags = value
           .split(',')
@@ -541,6 +659,64 @@ const RecipeEditorModal = ({
                   ) : null}
                 </div>
                 <div>
+                  <p className="label">Time (e.g. 20 mins, 30 min)</p>
+                  <input
+                    className="input mt-2"
+                    name="time"
+                    placeholder="20 mins"
+                    value={form.time}
+                    onChange={handleChange}
+                  />
+                  <p className="mt-1 text-xs text-stone-500">
+                    Shown on recipe cards with a clock icon.
+                  </p>
+                </div>
+                <div>
+                  <p className="label">Recipe type</p>
+                  <select
+                    name="source"
+                    className="input mt-2"
+                    value={form.source}
+                    onChange={handleChange}
+                  >
+                    <option value="official">Official (shared by us)</option>
+                    <option value="community">Community submission</option>
+                  </select>
+                </div>
+                <div>
+                  <p className="label">Approval status</p>
+                  <select
+                    name="approvalStatus"
+                    className="input mt-2"
+                    value={form.approvalStatus}
+                    onChange={handleChange}
+                  >
+                    <option value="approved">Approved</option>
+                    <option value="pending">Pending review</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                </div>
+                <div>
+                  <p className="label">Submitted by</p>
+                  <input
+                    className="input mt-2"
+                    name="submittedBy"
+                    placeholder="Name of submitter"
+                    value={form.submittedBy}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <p className="label">Submitter email</p>
+                  <input
+                    className="input mt-2"
+                    name="submitterEmail"
+                    placeholder="submitter@email.com"
+                    value={form.submitterEmail}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
                   <p className="label">Linked product</p>
                   <select
                     name="productSlug"
@@ -649,4 +825,3 @@ const RecipeEditorModal = ({
 }
 
 export default RecipeList
-

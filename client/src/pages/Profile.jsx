@@ -4,7 +4,7 @@ import BackButton from '../components/BackButton'
 import { useAuth } from '../context/AuthContext'
 import { products } from '../data/homeData'
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000'
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://mimicrunch-33how.ondigitalocean.app'
 
 const Profile = () => {
   const { user, loading: authLoading, logout } = useAuth()
@@ -71,7 +71,7 @@ const Profile = () => {
       return
     }
     let cancelled = false
-    
+
     // Profile aur Orders dono load karo
     Promise.all([loadProfile(user._id), loadOrders()])
       .catch(() => {
@@ -122,7 +122,7 @@ const Profile = () => {
   }
 
   const canUseWishlist =
-    profile?.name && profile?.phone && profile?.email && profile?.emailVerified
+    profile?.email && profile?.emailVerified
   const wishlistItems = (profile?.wishlist || [])
     .map((id) => products.find((item) => item.slug === id))
     .filter(Boolean)
@@ -184,130 +184,175 @@ const Profile = () => {
   }
 
   return (
-    <main className="py-16">
-      <div className="mx-auto max-w-5xl px-2">
-        <BackButton className="mb-6" />
-      </div>
-      <div className="mx-auto max-w-5xl px-2">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-semibold text-stone-900">My Profile</h1>
-          <p className="text-stone-600">
-            {profile?.name || user?.name || user?.email || 'MiMi Crunch User'}
+    <main className="min-h-screen bg-[#FAF8F5] relative overflow-hidden py-16 px-4 font-[Manrope]">
+      {/* Aesthetic Background Elements */}
+      <div className="absolute top-[-10%] left-[10%] w-[40%] h-[40%] rounded-full bg-[#1B3B26] opacity-[0.04] blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-[20%] right-[-5%] w-[35%] h-[40%] rounded-full bg-[#F5B041] opacity-[0.06] blur-[100px] pointer-events-none"></div>
+
+      <div className="mx-auto max-w-4xl relative z-10">
+        <BackButton className="mb-8 text-[#1B3B26]" />
+
+        <div className="space-y-4 mb-10">
+          <h1 className="text-4xl md:text-5xl font-[Fraunces] font-medium text-[#1B3B26] tracking-tight">
+            My Profile
+          </h1>
+          <p className="text-lg text-[#4A5D4E]">
+            {profile?.name || user?.name || user?.phone || user?.email || 'MiMi Crunch User'}
           </p>
         </div>
 
         {loading ? (
-          <p className="mt-6 text-sm text-stone-600">Loading profile...</p>
+          <div className="flex animate-pulse space-x-4">
+            <div className="h-4 p-6 bg-[#EAE6DF] rounded-2xl w-full max-w-sm"></div>
+          </div>
         ) : (
-          <>
-            {error ? (
-              <p className="mt-6 text-sm text-red-600">{error}</p>
-            ) : null}
+          <div className="space-y-8">
+            {error && (
+              <div className="rounded-xl bg-red-50/80 border border-red-100 px-4 py-3 text-sm text-red-600 backdrop-blur-sm animate-[pulse_2s_ease-in-out_infinite]">
+                {error}
+              </div>
+            )}
+
+            {otpMessage && (
+              <div className="rounded-xl bg-green-50/80 border border-green-100 px-4 py-3 text-sm text-green-700 backdrop-blur-sm">
+                {otpMessage}
+              </div>
+            )}
 
             {/* Profile Section */}
-            {!canUseWishlist ? (
-              <div id="complete-profile" className="mt-8 rounded-2xl border border-stone-200 bg-stone-50 p-6">
-                <h2 className="text-lg font-semibold text-stone-900">Complete your profile</h2>
-                <p className="mt-2 text-sm text-stone-600">Add details to enable all features.</p>
-                <form className="mt-5 grid gap-4 sm:grid-cols-2" onSubmit={handleSave}>
-                  <input className="rounded-xl border border-stone-200 bg-white px-4 py-2 text-sm" placeholder="Full name" name="name" value={form.name} onChange={handleChange} />
-                  <input className="rounded-xl border border-stone-200 bg-white px-4 py-2 text-sm" placeholder="Phone number" name="phone" value={form.phone} onChange={handleChange} />
-                  <input className="rounded-xl border border-stone-200 bg-stone-100 px-4 py-2 text-sm text-stone-600 sm:col-span-2" value={form.email} readOnly />
-                  <input className="rounded-xl border border-stone-200 bg-white px-4 py-2 text-sm sm:col-span-2" placeholder="Address" name="address" value={form.address} onChange={handleChange} />
-                  <button className="btn btn-primary w-fit" disabled={saving} type="submit">{saving ? 'Saving...' : 'Save Details'}</button>
-                </form>
+            <div id="complete-profile" className="backdrop-blur-xl bg-white/60 border border-white/50 shadow-[0_20px_50px_-15px_rgba(27,59,38,0.08)] rounded-[2rem] p-8 md:p-10 transition-all hover:shadow-[0_24px_60px_-15px_rgba(27,59,38,0.1)]">
+              <h2 className="text-2xl font-[Fraunces] font-medium text-[#1B3B26] mb-2">Profile Details</h2>
+              {!canUseWishlist && (
+                <p className="mb-6 text-sm text-[#F5B041] font-semibold bg-[#F5B041]/10 w-fit px-3 py-1 rounded-full">
+                  Complete your profile to enable all features
+                </p>
+              )}
+              <form className="mt-6 grid gap-6 sm:grid-cols-2" onSubmit={handleSave}>
+                <div className="space-y-1.5">
+                  <label className="block text-sm font-semibold text-[#1B3B26] pl-1">Full Name</label>
+                  <input className="w-full bg-white/70 border border-stone-200/80 rounded-xl px-4 py-3 text-[#1B3B26] placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#F5B041] focus:border-transparent transition-all shadow-sm" placeholder="Your full name" name="name" value={form.name} onChange={handleChange} />
+                </div>
+                <div className="space-y-1.5 sm:col-span-2">
+                  <label className="block text-sm font-semibold text-[#1B3B26] pl-1">Email <span className="opacity-60 font-normal">(Read Only)</span></label>
+                  <input className="w-full bg-stone-100/60 border border-stone-200/50 rounded-xl px-4 py-3 text-stone-500 cursor-not-allowed shadow-inner" value={form.email} readOnly />
+                </div>
+                <div className="space-y-1.5 sm:col-span-2">
+                  <label className="block text-sm font-semibold text-[#1B3B26] pl-1">Phone Number</label>
+                  <input className="w-full bg-white/70 border border-stone-200/80 rounded-xl px-4 py-3 text-[#1B3B26] placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#F5B041] focus:border-transparent transition-all shadow-sm" placeholder="Your phone number" name="phone" value={form.phone} onChange={handleChange} />
+                </div>
+                <div className="space-y-1.5 sm:col-span-2">
+                  <label className="block text-sm font-semibold text-[#1B3B26] pl-1">Address</label>
+                  <input className="w-full bg-white/70 border border-stone-200/80 rounded-xl px-4 py-3 text-[#1B3B26] placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#F5B041] focus:border-transparent transition-all shadow-sm" placeholder="Your delivery address" name="address" value={form.address} onChange={handleChange} />
+                </div>
+                <div className="sm:col-span-2 mt-2">
+                  <button className="bg-[#1B3B26] hover:bg-[#2A5237] text-white font-semibold rounded-xl px-8 py-3.5 transition-all duration-200 shadow-[0_8px_20px_rgba(27,59,38,0.15)] hover:shadow-[0_12px_25px_rgba(27,59,38,0.2)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:hover:-translate-y-0" disabled={saving} type="submit">{saving ? 'Saving...' : 'Save Details'}</button>
+                </div>
+              </form>
+            </div>
+
+            {/* Email Verification Section */}
+            {profile?.email && !profile?.emailVerified ? (
+              <div className="backdrop-blur-xl bg-orange-50/70 border border-orange-200/60 shadow-sm rounded-[2rem] p-8 md:p-10">
+                <h2 className="text-xl font-[Fraunces] font-medium text-[#1B3B26] mb-1">Verify your email</h2>
+                <p className="text-sm text-[#4A5D4E] mb-5">Please verify your email address to secure your account.</p>
+                <div className="flex flex-wrap items-center gap-4">
+                  <button className="bg-white hover:bg-stone-50 text-[#1B3B26] border border-stone-200 font-semibold rounded-xl px-6 py-3 transition-all shadow-sm" onClick={handleSendOtp} disabled={otpSending}>
+                    {otpSending ? 'Sending...' : 'Send Code'}
+                  </button>
+                  <form className="flex flex-1 items-center gap-3 min-w-[250px]" onSubmit={handleVerifyOtp}>
+                    <input className="w-full flex-1 bg-white border border-stone-200 rounded-xl px-4 py-3 text-[#1B3B26] focus:outline-none focus:ring-2 focus:ring-[#F5B041] transition-all shadow-sm" placeholder="Enter 6-digit code" value={otp} onChange={(e) => setOtp(e.target.value)} />
+                    <button className="bg-[#F5B041] hover:bg-[#e4a135] text-[#1B3B26] font-semibold rounded-xl px-6 py-3 transition-all shadow-sm" type="submit" disabled={otpVerifying}>{otpVerifying ? 'Verifying...' : 'Verify'}</button>
+                  </form>
+                </div>
               </div>
             ) : null}
 
             {/* Wishlist Section */}
             {canUseWishlist && (
-              <div id="wishlist" className="mt-8 rounded-2xl bg-white p-6 shadow-lg shadow-stone-200/70">
-                <h2 className="text-lg font-semibold text-stone-900">Your Wishlist</h2>
+              <div id="wishlist" className="backdrop-blur-xl bg-white/60 border border-white/50 shadow-[0_20px_50px_-15px_rgba(27,59,38,0.08)] rounded-[2rem] p-8 md:p-10">
+                <h2 className="text-2xl font-[Fraunces] font-medium text-[#1B3B26] mb-6">Your Wishlist</h2>
                 {wishlistItems.length ? (
-                  <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                     {wishlistItems.map((item) => (
-                      <div key={item.slug} className="rounded-xl border border-stone-200 p-4">
-                        <p className="pill">{item.size}</p>
-                        <h3 className="mt-2 text-sm font-semibold text-stone-900">{item.name}</h3>
-                        <p className="mt-1 text-xs text-stone-600">₹{item.price}</p>
+                      <div key={item.slug} className="group bg-white/80 rounded-2xl border border-stone-100 p-5 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
+                        <div className="bg-[#1B3B26]/5 text-[#1B3B26] text-[10px] font-bold uppercase tracking-wider w-fit px-2.5 py-1 rounded-md mb-3 border border-[#1B3B26]/10">
+                          {item.size || 'PACK'}
+                        </div>
+                        <h3 className="text-lg font-[Fraunces] font-medium text-[#1B3B26] leading-tight mb-1">{item.name}</h3>
+                        <p className="text-[#F5B041] font-bold mt-2">₹{item.price}</p>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="mt-3 text-sm text-stone-600">Wishlist empty.</p>
+                  <div className="text-center py-8 bg-white/40 rounded-2xl border border-stone-200/50 border-dashed">
+                    <p className="text-[#4A5D4E]">Your wishlist is currently empty.</p>
+                  </div>
                 )}
               </div>
             )}
 
-            {/* --- Updated Order History Section --- */}
-            <div id="orders" className="mt-8 rounded-2xl bg-white p-6 shadow-lg shadow-stone-200/70">
-              <h2 className="text-lg font-semibold text-stone-900">Your Orders</h2>
+            {/* Order History Section */}
+            <div id="orders" className="backdrop-blur-xl bg-white/60 border border-white/50 shadow-[0_20px_50px_-15px_rgba(27,59,38,0.08)] rounded-[2rem] p-8 md:p-10">
+              <h2 className="text-2xl font-[Fraunces] font-medium text-[#1B3B26] mb-6">Order History</h2>
               {ordersLoading ? (
-                <p className="mt-4 text-sm text-stone-600 italic">Fetching your orders...</p>
+                <div className="flex animate-pulse space-x-4">
+                  <div className="h-24 bg-white/50 rounded-2xl w-full"></div>
+                </div>
               ) : orders.length > 0 ? (
-                <div className="mt-4 space-y-4">
+                <div className="space-y-5">
                   {orders.map((order) => (
-                    <div key={order._id} className="rounded-xl border border-stone-200 p-4">
-                      <div className="flex justify-between items-start">
+                    <div key={order._id} className="bg-white/80 rounded-2xl border border-stone-100 p-6 shadow-sm hover:shadow-md transition-all">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
                         <div>
-                          <p className="text-xs font-bold text-stone-500 uppercase tracking-wider">Order #{order._id.slice(-6).toUpperCase()}</p>
-                          <p className="text-sm font-medium text-stone-900 mt-1">₹{order.totalAmount}</p>
+                          <p className="text-xs font-bold text-[#F5B041] uppercase tracking-wider mb-1">
+                            Order #{order._id.slice(-6).toUpperCase()}
+                          </p>
+                          <p className="text-xl font-[Fraunces] font-medium text-[#1B3B26]">₹{order.totalAmount}</p>
                         </div>
-                        <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase ${
-                          order.status === 'Delivered' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
-                        }`}>
+                        <span className={`w-fit px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider ${order.status === 'Delivered'
+                          ? 'bg-[#1B3B26]/10 text-[#1B3B26] border border-[#1B3B26]/20'
+                          : 'bg-blue-50 text-blue-700 border border-blue-100'
+                          }`}>
                           {order.status}
                         </span>
                       </div>
-                      <div className="mt-3">
-                         {order.items.map((item, idx) => (
-                           <span key={idx} className="text-xs text-stone-600 bg-stone-100 px-2 py-1 rounded mr-2 inline-block mb-2">
-                             {item.name} x {item.qty}
-                           </span>
-                         ))}
+                      <div className="mt-5 flex flex-wrap gap-2">
+                        {order.items.map((item, idx) => (
+                          <span key={idx} className="text-sm text-[#4A5D4E] bg-stone-100/80 border border-stone-200/60 px-3 py-1.5 rounded-lg font-medium">
+                            {item.name} <span className="text-[#1B3B26] font-bold ml-1">×{item.qty}</span>
+                          </span>
+                        ))}
                       </div>
-                      <p className="mt-2 text-[10px] text-stone-400">
-                        Placed on: {new Date(order.createdAt).toLocaleDateString()}
-                      </p>
+                      <div className="mt-5 pt-4 border-t border-stone-100 flex justify-between items-center">
+                        <p className="text-sm text-[#4A5D4E] font-medium">
+                          Placed on {new Date(order.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+                        </p>
+                      </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="mt-3 text-sm text-stone-600">No orders yet. Start crunching!</p>
+                <div className="text-center py-8 bg-white/40 rounded-2xl border border-stone-200/50 border-dashed">
+                  <p className="text-[#4A5D4E]">No orders yet. Discover our premium millet blends!</p>
+                </div>
               )}
             </div>
 
-            {/* Email Verification Section */}
-            {profile?.email && !profile?.emailVerified ? (
-              <div className="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-6">
-                <h2 className="text-lg font-semibold text-stone-900">Verify your email</h2>
-                <div className="mt-4 flex flex-wrap items-center gap-3">
-                   <button className="btn btn-primary" onClick={handleSendOtp} disabled={otpSending}>
-                     {otpSending ? 'Sending...' : 'Resend Code'}
-                   </button>
-                   <form className="flex flex-1 items-center gap-2" onSubmit={handleVerifyOtp}>
-                     <input className="w-full rounded-xl border border-stone-200 bg-white px-4 py-2 text-sm" placeholder="Code" value={otp} onChange={(e) => setOtp(e.target.value)} />
-                     <button className="btn btn-primary" type="submit" disabled={otpVerifying}>Verify</button>
-                   </form>
-                </div>
-              </div>
-            ) : null}
-
             {/* Logout Section */}
-            <div className="mt-8 rounded-2xl border border-stone-200 bg-white p-6">
-              <h2 className="text-lg font-semibold text-stone-900">Account</h2>
+            <div className="mt-12 flex justify-center">
               <button
                 type="button"
-                className="mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-100"
+                className="bg-transparent border border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 font-semibold rounded-xl px-10 py-3 transition-all duration-200"
                 onClick={() => {
                   logout()
                   navigate('/', { replace: true })
                 }}
               >
-                Log out
+                Log out securely
               </button>
             </div>
-          </>
+
+          </div>
         )}
       </div>
     </main>

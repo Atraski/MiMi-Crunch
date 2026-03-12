@@ -1,52 +1,41 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import BackButton from '../components/BackButton'
 
 const Signup = () => {
-  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  const [otp, setOtp] = useState('')
+  const [step, setStep] = useState('email') // 'email' or 'otp'
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
-  const [step, setStep] = useState('form')
-  const [pendingUserId, setPendingUserId] = useState(null)
-  const [otp, setOtp] = useState('')
-  const [otpSubmitting, setOtpSubmitting] = useState(false)
   const [resendCooldown, setResendCooldown] = useState(0)
-  const { signup, verifyEmail, resendOtp } = useAuth()
+
+  const { sendEmailLoginOtp, verifyEmailLoginOtp } = useAuth()
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const redirect = searchParams.get('redirect') || '/profile'
+  const redirect = searchParams.get('redirect') || '/'
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  useEffect(() => {
+    if (resendCooldown <= 0) return
+    const t = setInterval(() => setResendCooldown((c) => c - 1), 1000)
+    return () => clearInterval(t)
+  }, [resendCooldown])
+
+  const handleSendOtp = async (e) => {
+    e?.preventDefault()
     setError('')
-    if (!email.trim() || !password) {
-      setError('Email and password are required.')
-      return
-    }
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters.')
-      return
-    }
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.')
+    if (!email.trim() || !email.includes('@')) {
+      setError('Please enter a valid email address.')
       return
     }
     setSubmitting(true)
     try {
-      const data = await signup(name, email, password)
-      if (data.needsVerification && data.userId) {
-        setPendingUserId(data.userId)
-        setStep('otp')
-        setResendCooldown(60)
-      } else {
-        navigate(redirect, { replace: true })
-      }
+      await sendEmailLoginOtp(email)
+      setStep('otp')
+      setResendCooldown(60)
     } catch (err) {
-      setError(err.message || 'Could not create account.')
+      setError(err.message || 'Could not send OTP.')
     } finally {
       setSubmitting(false)
     }
@@ -55,180 +44,143 @@ const Signup = () => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault()
     setError('')
-    if (!otp.trim() || !pendingUserId) {
-      setError('Enter the 6-digit code from your email.')
+    if (!otp.trim() || otp.trim().length !== 6) {
+      setError('Enter the 6-digit code.')
       return
     }
-    setOtpSubmitting(true)
+    setSubmitting(true)
     try {
-      await verifyEmail(pendingUserId, otp)
+      await verifyEmailLoginOtp(email, otp)
       navigate(redirect, { replace: true })
     } catch (err) {
-      setError(err.message || 'Invalid or expired code.')
+      setError(err.message || 'Invalid or expired OTP.')
     } finally {
-      setOtpSubmitting(false)
+      setSubmitting(false)
     }
-  }
-
-  const handleResendOtp = async () => {
-    if (!pendingUserId || resendCooldown > 0) return
-    setError('')
-    try {
-      await resendOtp(pendingUserId)
-      setResendCooldown(60)
-    } catch (err) {
-      setError(err.message || 'Could not resend code.')
-    }
-  }
-
-  useEffect(() => {
-    if (resendCooldown <= 0) return
-    const t = setInterval(() => setResendCooldown((c) => c - 1), 1000)
-    return () => clearInterval(t)
-  }, [resendCooldown])
-
-  if (step === 'otp') {
-    return (
-      <main className="min-h-[70vh] py-12">
-        <div className="mx-auto max-w-md px-2">
-          <BackButton className="mb-6" />
-          <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
-            <h1 className="text-xl font-semibold text-stone-900">Verify your email</h1>
-            <p className="mt-1 text-sm text-stone-600">
-              We sent a 6-digit code to <strong>{email}</strong>. Enter it below.
-            </p>
-            {error ? (
-              <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
-            ) : null}
-            <form className="mt-5 space-y-4" onSubmit={handleVerifyOtp}>
-              <div>
-                <label className="block text-sm font-medium text-stone-700" htmlFor="signup-otp">
-                  Verification code
-                </label>
-                <input
-                  id="signup-otp"
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  maxLength={6}
-                  className="input mt-1 w-full text-center text-lg tracking-[0.4em]"
-                  placeholder="000000"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                />
-              </div>
-              <button
-                type="submit"
-                className="btn btn-primary w-full"
-                disabled={otpSubmitting}
-              >
-                {otpSubmitting ? 'Verifying…' : 'Verify & continue'}
-              </button>
-            </form>
-            <p className="mt-4 text-center text-sm text-stone-600">
-              Didn’t get the code?{' '}
-              <button
-                type="button"
-                className="font-semibold text-brand-700 hover:underline disabled:text-stone-400"
-                onClick={handleResendOtp}
-                disabled={resendCooldown > 0}
-              >
-                {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend code'}
-              </button>
-            </p>
-          </div>
-        </div>
-      </main>
-    )
   }
 
   return (
-    <main className="min-h-[70vh] py-12">
-      <div className="mx-auto max-w-md px-2">
-        <BackButton className="mb-6" />
-        <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
-          <h1 className="text-xl font-semibold text-stone-900">Create account</h1>
-          <p className="mt-1 text-sm text-stone-600">
-            Sign up to save your profile and wishlist.
-          </p>
-          {error ? (
-            <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
-          ) : null}
-          <form className="mt-5 space-y-4" onSubmit={handleSubmit}>
-            <div>
-              <label className="block text-sm font-medium text-stone-700" htmlFor="signup-name">
-                Name (optional)
-              </label>
-              <input
-                id="signup-name"
-                type="text"
-                autoComplete="name"
-                className="input mt-1 w-full"
-                placeholder="Your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-stone-700" htmlFor="signup-email">
-                Email
-              </label>
-              <input
-                id="signup-email"
-                type="email"
-                autoComplete="email"
-                className="input mt-1 w-full"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-stone-700" htmlFor="signup-password">
-                Password
-              </label>
-              <input
-                id="signup-password"
-                type="password"
-                autoComplete="new-password"
-                className="input mt-1 w-full"
-                placeholder="At least 6 characters"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-stone-700" htmlFor="signup-confirm">
-                Confirm password
-              </label>
-              <input
-                id="signup-confirm"
-                type="password"
-                autoComplete="new-password"
-                className="input mt-1 w-full"
-                placeholder="••••••••"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="btn btn-primary w-full"
-              disabled={submitting}
-            >
-              {submitting ? 'Creating account…' : 'Sign up'}
-            </button>
-          </form>
-          <p className="mt-5 text-center text-sm text-stone-600">
-            Already have an account?{' '}
-            <Link to={`/login${redirect !== '/profile' ? `?redirect=${encodeURIComponent(redirect)}` : ''}`} className="font-semibold text-brand-700 hover:underline">
-              Log in
-            </Link>
-          </p>
+    <main className="min-h-[85vh] flex items-center justify-center bg-[#FAF8F5] relative overflow-hidden py-12 px-4 font-[Manrope]">
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#1B3B26] opacity-[0.05] blur-[100px] pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-[#F5B041] opacity-[0.08] blur-[120px] pointer-events-none"></div>
+
+      <div className="relative w-full max-w-md z-10">
+        <BackButton className="mb-6 text-[#1B3B26]" />
+
+        <div className="backdrop-blur-2xl bg-white/70 border border-white/60 shadow-[0_24px_60px_-15px_rgba(27,59,38,0.1)] rounded-[2rem] p-8 md:p-10 transition-all duration-300 hover:shadow-[0_30px_70px_-15px_rgba(27,59,38,0.12)]">
+
+          {step === 'email' ? (
+            <>
+              <div className="text-center mb-8">
+                <h1 className="text-4xl font-[Fraunces] text-[#1B3B26] font-medium mb-3 tracking-tight">Sign up / Log in</h1>
+                <p className="text-sm text-[#4A5D4E] opacity-90">
+                  Enter your email address to receive an OTP.
+                </p>
+              </div>
+
+              {error && (
+                <div className="mb-6 rounded-xl bg-red-50/80 border border-red-100 px-4 py-3 text-sm text-red-600 backdrop-blur-sm animate-[pulse_2s_ease-in-out_infinite]">
+                  {error}
+                </div>
+              )}
+
+              <form className="space-y-5" onSubmit={handleSendOtp}>
+                <div className="space-y-1.5">
+                  <label className="block text-sm font-semibold text-[#1B3B26] pl-1" htmlFor="signup-email">
+                    Email Address
+                  </label>
+                  <input
+                    id="signup-email"
+                    type="email"
+                    className="w-full bg-white/50 border border-stone-200/80 rounded-xl px-4 py-3 text-[#1B3B26] placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-[#F5B041] focus:border-transparent transition-all shadow-sm"
+                    placeholder="e.g. you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="mt-6 w-full bg-[#1B3B26] hover:bg-[#2A5237] text-white font-semibold rounded-xl py-3.5 transition-all duration-200 shadow-[0_8px_20px_rgba(27,59,38,0.15)] hover:shadow-[0_12px_25px_rgba(27,59,38,0.2)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:hover:-translate-y-0 disabled:hover:shadow-[0_8px_20px_rgba(27,59,38,0.15)]"
+                  disabled={submitting}
+                >
+                  {submitting ? 'Sending OTP…' : 'Send OTP'}
+                </button>
+              </form>
+            </>
+          ) : (
+            <>
+              <div className="text-center mb-8">
+                <h1 className="text-3xl font-[Fraunces] text-[#1B3B26] font-medium mb-3 tracking-tight">Verify Email</h1>
+                <p className="text-sm text-[#4A5D4E] opacity-90">
+                  We sent a 6-digit code to <strong className="text-[#1B3B26]">{email}</strong>.
+                </p>
+              </div>
+
+              {error && (
+                <div className="mb-6 rounded-xl bg-red-50/80 border border-red-100 px-4 py-3 text-sm text-red-600 backdrop-blur-sm animate-[pulse_2s_ease-in-out_infinite]">
+                  {error}
+                </div>
+              )}
+
+              <form className="space-y-6" onSubmit={handleVerifyOtp}>
+                <div>
+                  <label className="block text-sm font-semibold text-[#1B3B26] pl-1 text-center mb-2" htmlFor="signup-otp">
+                    Verification code
+                  </label>
+                  <input
+                    id="signup-otp"
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={6}
+                    className="w-full bg-white/50 border border-stone-200/80 rounded-xl px-4 py-4 text-center text-3xl font-bold tracking-[0.4em] text-[#1B3B26] placeholder:text-stone-300 focus:outline-none focus:ring-2 focus:ring-[#F5B041] focus:border-transparent transition-all shadow-sm"
+                    placeholder="000000"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-[#1B3B26] hover:bg-[#2A5237] text-white font-semibold rounded-xl py-3.5 transition-all duration-200 shadow-[0_8px_20px_rgba(27,59,38,0.15)] hover:shadow-[0_12px_25px_rgba(27,59,38,0.2)] hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-70 disabled:hover:-translate-y-0"
+                  disabled={submitting}
+                >
+                  {submitting ? 'Verifying…' : 'Verify & Continue'}
+                </button>
+              </form>
+
+              <p className="mt-6 text-center text-sm text-[#4A5D4E]">
+                Didn’t get the code?{' '}
+                <button
+                  type="button"
+                  className="font-bold text-[#F5B041] hover:text-[#d99732] hover:underline transition-colors px-1 disabled:text-stone-400 disabled:hover:no-underline"
+                  onClick={handleSendOtp}
+                  disabled={resendCooldown > 0 || submitting}
+                >
+                  {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend code'}
+                </button>
+              </p>
+
+              <div className="mt-4 text-center">
+                <button
+                  type="button"
+                  className="text-sm text-stone-500 hover:text-stone-700 underline"
+                  onClick={() => { setStep('email'); setOtp(''); setError(''); }}
+                >
+                  Change Email Address
+                </button>
+              </div>
+              <p className="mt-8 text-center text-sm text-[#4A5D4E]">
+                Already have an account?{' '}
+                <Link to="/login" className="font-bold text-[#F5B041] hover:text-[#d99732] hover:underline transition-colors">
+                  Log in instead
+                </Link>
+              </p>
+            </>
+          )}
+
         </div>
       </div>
     </main>

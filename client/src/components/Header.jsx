@@ -4,7 +4,7 @@ import { gsap } from 'gsap'
 import { useAuth } from '../context/AuthContext'
 import logo from '../assets/MiMi Crunch Logo.png'
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000'
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://mimicrunch-33how.ondigitalocean.app'
 
 const Header = ({ cartCount, onCartToggle, products }) => {
   const { user, logout } = useAuth()
@@ -48,8 +48,18 @@ const Header = ({ cartCount, onCartToggle, products }) => {
 
 
 
+  const [badgeAnimated, setBadgeAnimated] = useState(false)
+
+  useEffect(() => {
+    if (cartCount > 0) {
+      setBadgeAnimated(true)
+      const timer = setTimeout(() => setBadgeAnimated(false), 400)
+      return () => clearTimeout(timer)
+    }
+  }, [cartCount])
+
   return (
-    <header className="sticky top-0 z-20 border-b border-stone-200/70 bg-white/90 backdrop-blur">
+    <header className="sticky top-0 z-[100] border-b border-stone-200/70 bg-white/90 backdrop-blur transition-all duration-300">
       <div className="relative mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-2 py-3 md:gap-6">
         <div className="flex items-center gap-3">
           <button
@@ -89,7 +99,7 @@ const Header = ({ cartCount, onCartToggle, products }) => {
           <a href="/products">Products</a>
           <a href="/recipes">Recipes</a>
           <a href="/about">About</a>
-          <a href="/news">News</a>
+          <a href="/blogs">Blogs</a>
           <a href="/contact">Contact</a>
         </nav>
 
@@ -190,8 +200,6 @@ const Header = ({ cartCount, onCartToggle, products }) => {
                       <Link to="/profile" className="block hover:text-brand-900">Profile</Link>
                       <Link to="/profile#orders" className="block hover:text-brand-900">Orders</Link>
                       <button type="button" className="block w-full text-left hover:text-brand-900" onClick={handleWishlistClick}>Wishlist</button>
-                      <Link to="/profile#addresses" className="block hover:text-brand-900">Saved Addresses</Link>
-                      <Link to="/contact" className="block hover:text-brand-900">Support</Link>
                     </div>
                     <div className="mt-3 border-t border-stone-100 pt-3">
                       <button type="button" className="text-xs font-semibold text-red-600 hover:underline" onClick={() => logout()}>Log out</button>
@@ -224,6 +232,7 @@ const Header = ({ cartCount, onCartToggle, products }) => {
             <span className="hidden md:block">Wishlist</span>
           </Link>
           <button
+            id="cart-icon-desktop"
             className="relative flex flex-col items-center gap-1 text-[11px] font-semibold text-stone-700"
             onClick={onCartToggle}
             aria-label="Open cart"
@@ -235,7 +244,11 @@ const Header = ({ cartCount, onCartToggle, products }) => {
                 <circle cx="17" cy="20" r="1" />
                 <path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L20 7H6" />
               </svg>
-              <span className="absolute -top-1 -right-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-600 px-1 text-[10px] font-semibold text-white">{cartCount}</span>
+              {cartCount > 0 && (
+                <span className={`absolute -top-1 -right-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-emerald-600 px-1 text-[10px] font-semibold text-white transition-all duration-300 ${badgeAnimated ? 'scale-150 shadow-[0_0_15px_rgba(16,185,129,0.8)]' : 'scale-100'}`}>
+                  {cartCount}
+                </span>
+              )}
             </span>
             <span className="hidden md:block">Bag</span>
           </button>
@@ -286,8 +299,8 @@ const Header = ({ cartCount, onCartToggle, products }) => {
               <a href="/about" onClick={() => setIsMenuOpen(false)}>
                 About
               </a>
-              <a href="/news" onClick={() => setIsMenuOpen(false)}>
-                News
+              <a href="/blogs" onClick={() => setIsMenuOpen(false)}>
+                Blogs
               </a>
               <a href="/contact" onClick={() => setIsMenuOpen(false)}>
                 Contact

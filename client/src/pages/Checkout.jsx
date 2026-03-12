@@ -17,8 +17,8 @@ const Checkout = ({
   onOrderSuccess,
 }) => {
   const navigate = useNavigate()
-  const { user, token, loading } = useAuth() 
-  
+  const { user, token, loading } = useAuth()
+
   const [form, setForm] = useState({
     fullName: '',
     phone: '',
@@ -29,11 +29,11 @@ const Checkout = ({
     state: '',
     pincode: '',
   })
-  
+
   const [touched, setTouched] = useState({})
   const [placing, setPlacing] = useState(false)
   const [showMap, setShowMap] = useState(false)
-  
+
   // COD default payment method rakha hai
   const [paymentMethod, setPaymentMethod] = useState('COD')
 
@@ -84,7 +84,7 @@ const Checkout = ({
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`
       )
       const data = await response.json()
-      
+
       if (data.address) {
         setForm((prev) => ({
           ...prev,
@@ -125,53 +125,53 @@ const Checkout = ({
 
   // --- Submit Order Logic (Step 2 Implementation) ---
   const handleSubmit = async (e) => {
-  e.preventDefault()
-  setTouched({ fullName: true, phone: true, email: true, addressLine1: true, city: true, state: true, pincode: true })
-  
-  if (!isValid) return
-  if (!canPlaceOrder) {
-    alert('Some items are out of stock or exceed the purchase limit. Please update your cart.')
-    return
-  }
-  setPlacing(true)
-  
-  try {
-    const orderPayload = {
-      items: cart.map((item) => ({
-        productId: item._id || item.productId || item.id,
-        name: item.name,
-        qty: item.qty,
-        price: item.price,
-        image: item.image,
-        weight: item.size || item.weight,
-      })),
-      shippingAddress: form,
-      subtotal,
-      deliveryFee,
-      discountAmount,
-      total,
-      paymentMethod: paymentMethod 
-    }
+    e.preventDefault()
+    setTouched({ fullName: true, phone: true, email: true, addressLine1: true, city: true, state: true, pincode: true })
 
-    const response = await axios.post(
-      `${import.meta.env.VITE_API_BASE || 'http://localhost:5000'}/api/orders`, 
-      orderPayload, 
-      { headers: token ? { Authorization: `Bearer ${token}` } : {} }
-    );
-
-    if (response.data.success) {
-      if (onOrderSuccess) onOrderSuccess(); 
-      navigate('/order-success', { 
-        state: { orderId: response.data.orderId, totalAmount: total } 
-      });
+    if (!isValid) return
+    if (!canPlaceOrder) {
+      alert('Some items are out of stock or exceed the purchase limit. Please update your cart.')
+      return
     }
-  } catch (err) {
-    console.error("Order placement error:", err)
-    alert(err.response?.data?.error || "Failed to place order. Please try again.")
-  } finally {
-    setPlacing(false)
+    setPlacing(true)
+
+    try {
+      const orderPayload = {
+        items: cart.map((item) => ({
+          productId: item._id || item.productId || item.id,
+          name: item.name,
+          qty: item.qty,
+          price: item.price,
+          image: item.image,
+          weight: item.size || item.weight,
+        })),
+        shippingAddress: form,
+        subtotal,
+        deliveryFee,
+        discountAmount,
+        total,
+        paymentMethod: paymentMethod
+      }
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE || 'https://mimicrunch-33how.ondigitalocean.app'}/api/orders`,
+        orderPayload,
+        { headers: token ? { Authorization: `Bearer ${token}` } : {} }
+      );
+
+      if (response.data.success) {
+        if (onOrderSuccess) onOrderSuccess();
+        navigate('/order-success', {
+          state: { orderId: response.data.orderId, totalAmount: total }
+        });
+      }
+    } catch (err) {
+      console.error("Order placement error:", err)
+      alert(err.response?.data?.error || "Failed to place order. Please try again.")
+    } finally {
+      setPlacing(false)
+    }
   }
-}
 
   if (loading) {
     return (
@@ -184,18 +184,17 @@ const Checkout = ({
   if (cart.length === 0) {
     return (
       <main className="min-h-[60vh] px-2 py-16 text-center">
-          <BackButton className="mb-6 mx-auto" />
-          <h1 className="text-2xl font-semibold text-stone-900">Your cart is empty</h1>
-          <Link to="/products" className="mt-6 inline-block rounded-xl bg-stone-900 px-6 py-3 text-sm font-semibold text-white">
-            Shop products
-          </Link>
+        <BackButton className="mb-6 mx-auto" />
+        <h1 className="text-2xl font-semibold text-stone-900">Your cart is empty</h1>
+        <Link to="/products" className="mt-6 inline-block rounded-xl bg-stone-900 px-6 py-3 text-sm font-semibold text-white">
+          Shop products
+        </Link>
       </main>
     )
   }
 
   const inputClass = (name) =>
-    `w-full rounded-xl border px-4 py-3 text-sm transition placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-300 ${
-      touched[name] && errors[name] ? 'border-red-300 bg-red-50/50' : 'border-stone-200 bg-white'
+    `w-full rounded-xl border px-4 py-3 text-sm transition placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-300 ${touched[name] && errors[name] ? 'border-red-300 bg-red-50/50' : 'border-stone-200 bg-white'
     }`
 
   return (
@@ -321,9 +320,9 @@ const Checkout = ({
                 <div className="flex justify-between border-t border-stone-100 pt-4 text-xl font-black text-stone-900"><span>Total</span><span>₹{Math.round(total)}</span></div>
               </div>
 
-              <button 
-                type="submit" 
-                disabled={!isValid || placing || !canPlaceOrder} 
+              <button
+                type="submit"
+                disabled={!isValid || placing || !canPlaceOrder}
                 className="mt-8 w-full rounded-xl bg-stone-900 py-4 text-sm font-bold text-white transition-all active:scale-95 disabled:opacity-50 disabled:bg-stone-400"
               >
                 {placing ? 'Processing Order...' : `Confirm Order (COD)`}

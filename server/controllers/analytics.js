@@ -8,21 +8,25 @@ export const recordVisit = async (req, res) => {
             return res.status(400).json({ message: 'visitorId is required' })
         }
 
+        let finalSource = 'direct'
+        if (source && source !== 'direct' && source.trim() !== '') {
+            const s = source.toLowerCase()
+            if (s.includes('google')) finalSource = 'google'
+            else if (s.includes('instagram')) finalSource = 'instagram'
+            else if (s.includes('facebook') || s.includes('fb.')) finalSource = 'facebook'
+            else finalSource = 'other'
+        }
+
         let visitor = await Analytics.findOne({ visitorId })
 
         if (visitor) {
             visitor.lastActive = Date.now()
             visitor.pageViews += 1
+            if (finalSource !== 'direct') {
+                visitor.source = finalSource // Update source if coming from a tracked referral
+            }
             await visitor.save()
         } else {
-            let finalSource = 'direct'
-            if (source) {
-                const s = source.toLowerCase()
-                if (s.includes('google')) finalSource = 'google'
-                else if (s.includes('instagram')) finalSource = 'instagram'
-                else if (s.includes('facebook') || s.includes('fb.')) finalSource = 'facebook'
-                else if (s !== 'direct' && s.trim() !== '') finalSource = 'other'
-            }
             visitor = new Analytics({ visitorId, source: finalSource })
             await visitor.save()
         }

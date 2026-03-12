@@ -1,8 +1,15 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import CartDrawer from './components/CartDrawer'
 import Footer from './components/Footer'
 import Header from './components/Header'
-import { Route, Routes } from 'react-router-dom'
+import MobileHeader from './components/MobileHeader'
+import MobileNavbar from './components/MobileNavbar'
+import Loader from './components/Loader'
+import PageWrapper from './components/PageWrapper'
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom'
+import { useAuth } from './context/AuthContext'
+import FlyToCart from './components/FlyToCart'
+import ProfileReminder from './components/ProfileReminder'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Home from './pages/Home'
@@ -27,9 +34,66 @@ import Lenis from 'lenis'
 import OrderSuccess from './pages/OrderSuccess'
 import { getProductSlugFromCartItem, wouldExceedWeightLimit } from './utils/cartUtils'
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000'
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://mimicrunch-33how.ondigitalocean.app'
 
 function App() {
+  const navigate = useNavigate()
+  const location = useLocation()
+  const { user } = useAuth()
+  const hasTrackedInitialPageView = useRef(false)
+
+  // Scroll to top on every route change
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [location.pathname])
+
+  useEffect(() => {
+    if (!hasTrackedInitialPageView.current) {
+      hasTrackedInitialPageView.current = true
+      return
+    }
+
+    if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
+      window.fbq('track', 'PageView')
+    }
+  }, [location.pathname, location.search, location.hash])
+
+  // Analytics Tracking
+  useEffect(() => {
+    let visitorId = sessionStorage.getItem('mimi_visitor_id')
+    if (!visitorId) {
+      visitorId = 'v_' + Math.random().toString(36).substr(2, 9)
+      sessionStorage.setItem('mimi_visitor_id', visitorId)
+    }
+
+    const recordVisit = async () => {
+      try {
+        await fetch(`${API_BASE}/api/analytics/visit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            visitorId,
+            source: document.referrer || 'direct',
+            path: window.location.pathname
+          })
+        })
+      } catch (err) {
+        // silently fail
+      }
+    }
+
+    recordVisit()
+
+    const intervalId = setInterval(() => {
+      fetch(`${API_BASE}/api/analytics/ping`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ visitorId })
+      }).catch(() => { })
+    }, 30000)
+
+    return () => clearInterval(intervalId)
+  }, [])
 
   // Restore initial state from localStorage
   const [cart, setCart] = useState(() => {
@@ -55,6 +119,8 @@ function App() {
   const [collections, setCollections] = useState([])
   const [blogs, setBlogs] = useState([])
   const [homeRecipes, setHomeRecipes] = useState([])
+  const [flyingItem, setFlyingItem] = useState(null)
+  const [flyingPos, setFlyingPos] = useState(null)
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -90,20 +156,20 @@ function App() {
           const derivedVariants =
             item.variants?.length
               ? item.variants.map((v) => ({
-                  ...v,
-                  weight: v.weight,
-                  price: v.price ?? item.price,
-                  stock: v.stock ?? 0,
-                  images: v.images || item.images || [],
-                }))
+                ...v,
+                weight: v.weight,
+                price: v.price ?? item.price,
+                stock: v.stock ?? 0,
+                images: v.images || item.images || [],
+              }))
               : item.weightOptions?.length
-              ? item.weightOptions.map((weight) => ({
+                ? item.weightOptions.map((weight) => ({
                   weight,
                   price: item.price,
                   images: item.images || [],
                   stock: 0,
                 }))
-              : []
+                : []
           const firstVariant = derivedVariants[0]
           return {
             _id: item._id,
@@ -206,6 +272,7 @@ function App() {
       loadProducts(false)
       loadCollections()
       loadBlogs()
+      loadRecipes()
     })
     source.onerror = () => {
       source.close()
@@ -239,7 +306,9 @@ function App() {
     return weight ? `${base}:${weight}` : base
   }
 
-  const handleAddToCart = (product) => {
+  const [pendingCartUpdate, setPendingCartUpdate] = useState(null)
+
+  const handleAddToCart = (product, startPos = null) => {
     setCartLimitMessage('')
     const slug = product.slug ?? product.id ?? ''
     const weightStr = product.size ?? product.selectedVariant?.weight ?? ''
@@ -247,15 +316,29 @@ function App() {
       setCartLimitMessage("Can't buy a product more than this.")
       return
     }
+
+    // Trigger fly animation
+    if (startPos) {
+      setFlyingItem(product)
+      setFlyingPos(startPos)
+      setPendingCartUpdate(product)
+    } else {
+      // If no startPos (unlikely now), add immediately
+      commitCartUpdate(product)
+    }
+  }
+
+  const commitCartUpdate = (product) => {
     const id = buildCartId(product)
+    const slug = product.slug ?? product.id ?? ''
+    const weightStr = product.size ?? product.selectedVariant?.weight ?? ''
+
     setCart((prev) => {
       const existing = prev.find((item) => item.id === id)
       if (existing) {
         if (wouldExceedWeightLimit(prev, slug, weightStr, 1)) return prev
         return prev.map((item) =>
-          item.id === id
-            ? { ...item, qty: item.qty + 1 }
-            : item,
+          item.id === id ? { ...item, qty: item.qty + 1 } : item,
         )
       }
       return [...prev, { ...product, id, qty: 1 }]
@@ -302,6 +385,14 @@ function App() {
 
   const handleRemoveFromCart = (item) => {
     setCart((prev) => prev.filter((i) => i.id !== item.id))
+  }
+
+  const handleBuyNow = (product) => {
+    setCartLimitMessage('')
+    const id = buildCartId(product)
+    // Buy Now = only this product, qty 1 (replace cart for instant checkout)
+    setCart([{ ...product, id, qty: 1 }])
+    setTimeout(() => navigate('/checkout'), 0)
   }
 
   const handleClearCart = () => {
@@ -356,127 +447,145 @@ function App() {
     setCouponError('')
   }
 
-  
+
+
+  const wishlistCount = user?.wishlist?.length || 0
 
   return (
-    <div className="bg-brand-50 text-stone-900">
-      <Header
+    <div className="flex min-h-screen flex-col bg-brand-bg md:bg-white transition-colors duration-500">
+      {isProductsLoading && <Loader />}
+      {/* Desktop Header */}
+      <div className="hidden md:block">
+        <Header cartCount={cartCount} onCartToggle={() => setIsCartOpen(!isCartOpen)} products={products} />
+      </div>
+
+      {/* Mobile Header */}
+      <MobileHeader
         cartCount={cartCount}
-        onCartToggle={() => setIsCartOpen((prev) => !prev)}
-        products={products}
+        onCartToggle={() => setIsCartOpen(!isCartOpen)}
+        wishlistCount={wishlistCount}
       />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <Home products={products} blogs={blogs} recipes={homeRecipes} />
-          }
-        />
-        <Route
-          path="/product"
-          element={
-            <Products
-              onAddToCart={handleAddToCart}
-              onIncreaseQty={handleIncreaseQty}
-              onDecreaseQty={handleDecreaseQty}
-              cart={cart}
-              products={products}
-              loading={isProductsLoading}
-              collections={collections}
+
+      <main className="flex-1 relative overflow-hidden bg-brand-bg pb-24 md:pb-0 m-0 p-0">
+        <PageWrapper>
+          <Routes location={location} key={location.pathname}>
+            <Route
+              path="/"
+              element={
+                <Home products={products} collections={collections} blogs={blogs} recipes={homeRecipes} onAddToCart={handleAddToCart} />
+              }
             />
-          }
-        />
-        <Route
-          path="/products"
-          element={
-            <Products
-              onAddToCart={handleAddToCart}
-              onIncreaseQty={handleIncreaseQty}
-              onDecreaseQty={handleDecreaseQty}
-              cart={cart}
-              products={products}
-              loading={isProductsLoading}
-              collections={collections}
+            <Route
+              path="/product"
+              element={
+                <Products
+                  onAddToCart={handleAddToCart}
+                  onIncreaseQty={handleIncreaseQty}
+                  onDecreaseQty={handleDecreaseQty}
+                  cart={cart}
+                  products={products}
+                  loading={isProductsLoading}
+                  collections={collections}
+                />
+              }
             />
-          }
-        />
-        <Route
-          path="/:collection"
-          element={
-            <Products
-              onAddToCart={handleAddToCart}
-              onIncreaseQty={handleIncreaseQty}
-              onDecreaseQty={handleDecreaseQty}
-              cart={cart}
-              products={products}
-              loading={isProductsLoading}
-              collections={collections}
+            <Route
+              path="/products"
+              element={
+                <Products
+                  onAddToCart={handleAddToCart}
+                  onIncreaseQty={handleIncreaseQty}
+                  onDecreaseQty={handleDecreaseQty}
+                  cart={cart}
+                  products={products}
+                  loading={isProductsLoading}
+                  collections={collections}
+                />
+              }
             />
-          }
-        />
-        <Route
-          path="/product/:slug"
-          element={
-            <ProductDetail
-              apiBase={API_BASE}
-              onAddToCart={handleAddToCart}
-              onIncreaseQty={handleIncreaseQty}
-              onDecreaseQty={handleDecreaseQty}
-              cart={cart}
-              products={products}
-              cartLimitMessage={cartLimitMessage}
+            <Route
+              path="/:collection"
+              element={
+                <Products
+                  onAddToCart={handleAddToCart}
+                  onIncreaseQty={handleIncreaseQty}
+                  onDecreaseQty={handleDecreaseQty}
+                  cart={cart}
+                  products={products}
+                  loading={isProductsLoading}
+                  collections={collections}
+                />
+              }
             />
-          }
-        />
-        <Route
-          path="/products/:slug"
-          element={
-            <ProductDetail
-              apiBase={API_BASE}
-              onAddToCart={handleAddToCart}
-              onIncreaseQty={handleIncreaseQty}
-              onDecreaseQty={handleDecreaseQty}
-              cart={cart}
-              products={products}
-              cartLimitMessage={cartLimitMessage}
+            <Route
+              path="/product/:slug"
+              element={
+                <ProductDetail
+                  apiBase={API_BASE}
+                  onAddToCart={handleAddToCart}
+                  onBuyNow={handleBuyNow}
+                  onIncreaseQty={handleIncreaseQty}
+                  onDecreaseQty={handleDecreaseQty}
+                  cart={cart}
+                  products={products}
+                  cartLimitMessage={cartLimitMessage}
+                />
+              }
             />
-          }
-        />
-        <Route path="/products/test" element={<ProductsTest />} />
-        <Route path="/recipes" element={<RecipesPage />} />
-        <Route path="/recipes/:slug" element={<RecipeDetail />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/news" element={<NewsPage blogs={blogs} />} />
-        <Route
-          path="/news/:slug"
-          element={<BlogDetail blogs={blogs} />}
-        />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/shipping-returns" element={<ShippingReturns />} />
-        <Route path="/privacy-policy" element={<PolicyPage />} />
-        <Route path="/terms-conditions" element={<TermsConditions />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route
-          path="/checkout"
-          element={
-            <Checkout
-              cart={cart}
-              products={products}
-              subtotal={subtotal}
-              deliveryFee={deliveryFee}
-              discountAmount={discountAmount}
-              total={total}
-              onOrderSuccess={handleClearCart}
+            <Route
+              path="/products/:slug"
+              element={
+                <ProductDetail
+                  apiBase={API_BASE}
+                  onAddToCart={handleAddToCart}
+                  onBuyNow={handleBuyNow}
+                  onIncreaseQty={handleIncreaseQty}
+                  onDecreaseQty={handleDecreaseQty}
+                  cart={cart}
+                  products={products}
+                  cartLimitMessage={cartLimitMessage}
+                />
+              }
             />
-          }
-        />
-        <Route path="/order-success" element={<OrderSuccess />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-      <Footer />
+            <Route path="/products/test" element={<ProductsTest />} />
+            <Route path="/recipes" element={<RecipesPage />} />
+            <Route path="/recipes/:slug" element={<RecipeDetail />} />
+            <Route path="/about" element={<About recipes={homeRecipes} />} />
+            <Route path="/blogs" element={<NewsPage blogs={blogs} />} />
+            <Route
+              path="/blogs/:slug"
+              element={<BlogDetail blogs={blogs} />}
+            />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/shipping-returns" element={<ShippingReturns />} />
+            <Route path="/privacy-policy" element={<PolicyPage />} />
+            <Route path="/terms-conditions" element={<TermsConditions />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route
+              path="/checkout"
+              element={
+                <Checkout
+                  cart={cart}
+                  products={products}
+                  subtotal={subtotal}
+                  deliveryFee={deliveryFee}
+                  discountAmount={discountAmount}
+                  total={total}
+                  onOrderSuccess={handleClearCart}
+                />
+              }
+            />
+            <Route path="/order-success" element={<OrderSuccess />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </PageWrapper>
+      </main >
+      <div className="hidden md:block">
+        <Footer />
+      </div>
       <CartDrawer
         open={isCartOpen}
         onClose={() => { setIsCartOpen(false); setCartLimitMessage('') }}
@@ -495,7 +604,27 @@ function App() {
         apiBase={API_BASE}
         cartLimitMessage={cartLimitMessage}
       />
-    </div>
+      <MobileNavbar products={products} />
+
+      {/* Global Animation Component */}
+      {flyingItem && (
+        <FlyToCart
+          item={flyingItem}
+          startPos={flyingPos}
+          onComplete={() => {
+            if (pendingCartUpdate) {
+              commitCartUpdate(pendingCartUpdate)
+            }
+            setFlyingItem(null)
+            setFlyingPos(null)
+            setPendingCartUpdate(null)
+          }}
+        />
+      )}
+
+      {/* Profile Completion Reminder */}
+      <ProfileReminder user={user} />
+    </div >
   )
 }
 

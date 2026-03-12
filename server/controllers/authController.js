@@ -8,7 +8,6 @@ import {
 } from '../config/redis.js'
 import generateOtp from '../utils/otp.js'
 import { sendVerificationEmail } from '../utils/email.js'
-import { sendSmsOtp } from '../utils/twilio.js'
 
 const JWT_SECRET =
   process.env.JWT_SECRET ||
@@ -27,8 +26,6 @@ const toSafeUser = (user) => {
   delete u.password
   delete u.emailOtp
   delete u.emailOtpExpiresAt
-  delete u.phoneOtp
-  delete u.phoneOtpExpiresAt
   return u
 }
 
@@ -124,7 +121,8 @@ export const verifyEmail = async (req, res) => {
     const safe = toSafeUser(user)
     await setCachedUser(userId, safe)
     const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '30d' })
-    return res.json({ user: safe, token })
+    const isNewUser = (Date.now() - user.createdAt.getTime()) < 300000;
+    return res.json({ user: safe, token, isNewUser })
   } catch (err) {
     console.error('Verify email error:', err)
     return res.status(500).json({ error: 'Verification failed.' })
@@ -186,70 +184,67 @@ export const me = async (req, res) => {
   }
 };
 
-export const sendPhoneOtp = async (req, res) => {
+export const sendEmailLoginOtp = async (req, res) => {
   try {
-    const { phone } = req.body || {}
-    if (!phone) {
-      return res.status(400).json({ error: 'Phone number is required.' })
+    const { email } = req.body || {}
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required.' })
     }
 
-    // Normalize phone number (very basic, Twilio handles formatting too, but good to strip spaces)
-    let phoneNorm = String(phone).replace(/\s+/g, '')
+    const emailNorm = String(email).trim().toLowerCase()
 
-    // Find or create user
-    let user = await User.findOne({ phone: phoneNorm })
+    let user = await User.findOne({ email: emailNorm })
     if (!user) {
       user = new User({
-        phone: phoneNorm,
-        phoneVerified: false,
+        email: emailNorm,
+        emailVerified: false,
       })
     }
 
     const code = generateOtp()
-    user.phoneOtp = code
-    user.phoneOtpExpiresAt = new Date(Date.now() + OTP_EXPIRY_MS)
+    user.emailOtp = code
+    user.emailOtpExpiresAt = new Date(Date.now() + OTP_EXPIRY_MS)
 
     await user.save()
 
-    // Send SMS
-    await sendSmsOtp(phoneNorm, code)
+    await sendVerificationEmail({ to: emailNorm, code })
 
-    return res.status(200).json({ success: true, message: 'OTP sent successfully', phone: phoneNorm })
+    return res.status(200).json({ success: true, message: 'OTP sent successfully', email: emailNorm })
   } catch (err) {
-    console.error('Send Phone OTP error:', err)
+    console.error('Send Email OTP error:', err)
     return res.status(500).json({ error: err.message || 'Failed to send OTP.' })
   }
 }
 
-export const verifyPhoneOtp = async (req, res) => {
+export const verifyEmailLoginOtp = async (req, res) => {
   try {
-    const { phone, code } = req.body || {}
-    if (!phone || !code) {
-      return res.status(400).json({ error: 'Phone number and code are required.' })
+    const { email, code } = req.body || {}
+    if (!email || !code) {
+      return res.status(400).json({ error: 'Email and code are required.' })
     }
 
-    const phoneNorm = String(phone).replace(/\s+/g, '')
-    const user = await User.findOne({ phone: phoneNorm })
+    const emailNorm = String(email).trim().toLowerCase()
+    const user = await User.findOne({ email: emailNorm })
 
     if (!user) {
       return res.status(404).json({ error: 'User not found.' })
     }
 
-    if (!user.phoneOtp || !user.phoneOtpExpiresAt) {
+    if (!user.emailOtp || !user.emailOtpExpiresAt) {
       return res.status(400).json({ error: 'No OTP pending or expired. Request a new code.' })
     }
 
-    if (user.phoneOtp !== String(code).trim()) {
+    if (user.emailOtp !== String(code).trim()) {
       return res.status(400).json({ error: 'Invalid verification code.' })
     }
 
-    if (user.phoneOtpExpiresAt < new Date()) {
+    if (user.emailOtpExpiresAt < new Date()) {
       return res.status(400).json({ error: 'Code expired. Request a new code.' })
     }
 
-    user.phoneVerified = true
-    user.phoneOtp = undefined
-    user.phoneOtpExpiresAt = undefined
+    user.emailVerified = true
+    user.emailOtp = undefined
+    user.emailOtpExpiresAt = undefined
     await user.save()
 
     const userId = user._id.toString()
@@ -258,9 +253,10 @@ export const verifyPhoneOtp = async (req, res) => {
     await setCachedUser(userId, safe)
 
     const token = jwt.sign({ userId }, JWT_SECRET, { expiresIn: '30d' })
-    return res.json({ user: safe, token })
+    const isNewUser = (Date.now() - user.createdAt.getTime()) < 300000;
+    return res.json({ user: safe, token, isNewUser })
   } catch (err) {
-    console.error('Verify Phone OTP error:', err)
+    console.error('Verify Email OTP error:', err)
     return res.status(500).json({ error: 'Verification failed.' })
   }
 }

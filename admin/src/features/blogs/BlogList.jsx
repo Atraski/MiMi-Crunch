@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import RichTextEditor from '../../components/RichTextEditor.jsx'
+import Spinner from '../../components/Spinner.jsx'
 import { getAdminAuthHeaders } from '../../utils/adminAuth.js'
 
 const BlogList = ({
@@ -12,6 +13,7 @@ const BlogList = ({
   onUpdate,
   onDelete,
   apiBase,
+  siteUrl,
 }) => {
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
@@ -64,191 +66,213 @@ const BlogList = ({
         </div>
       </div>
 
-    <div className="card overflow-hidden">
-      <div className="border-b border-stone-200/60 bg-stone-50/50 px-5 py-4 sm:px-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h3 className="text-base font-semibold text-stone-900">Blog posts</h3>
-            <p className="mt-0.5 text-xs text-stone-500">Manage articles</p>
-          </div>
-          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
-            <button
-              className="btn btn-outline rounded-lg px-3 py-1.5 text-xs"
-              type="button"
-              onClick={onRefresh}
-            >
-              Refresh
-            </button>
-            <button
-              className="btn btn-primary rounded-lg px-4 py-1.5 text-sm"
-              type="button"
-              onClick={() => setIsCreateOpen(true)}
-            >
-              New blog
-            </button>
+      <div className="card overflow-hidden">
+        <div className="border-b border-stone-200/60 bg-stone-50/50 px-5 py-4 sm:px-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 className="text-base font-semibold text-stone-900">Blog posts</h3>
+              <p className="mt-0.5 text-xs text-stone-500">Manage articles</p>
+            </div>
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+              <button
+                className="btn btn-outline rounded-lg px-3 py-1.5 text-xs"
+                type="button"
+                onClick={onRefresh}
+              >
+                Refresh
+              </button>
+              <button
+                className="btn btn-primary rounded-lg px-4 py-1.5 text-sm"
+                type="button"
+                onClick={() => setIsCreateOpen(true)}
+              >
+                New blog
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {error ? <p className="px-5 pt-4 text-sm text-red-600 sm:px-6">{error}</p> : null}
-      {loading ? (
-        <p className="px-5 py-8 text-center text-sm text-stone-500 sm:px-6">Loading...</p>
-      ) : (
-        <div className="overflow-hidden">
-          <table className="w-full table-fixed text-left text-sm">
-            <thead>
-              <tr className="border-b border-stone-200 bg-stone-50/80 text-xs font-medium uppercase tracking-wider text-stone-500">
-                <th className="px-5 py-3 sm:px-6">Title</th>
-                <th className="hidden px-5 py-3 sm:px-6 md:table-cell">Slug</th>
-                <th className="hidden px-5 py-3 sm:px-6 sm:table-cell">Status</th>
-                <th className="px-5 py-3 text-right sm:px-6">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {blogs.map((blog) => (
-                <tr
-                  key={blog._id}
-                  className="border-b border-stone-100 transition-colors last:border-b-0 hover:bg-stone-50/50"
-                >
-                  <td className="px-5 py-3.5 sm:px-6">
-                    <div className="flex items-center gap-3">
-                      {blog.coverImage ? (
-                        <img
-                          src={blog.coverImage}
-                          alt={blog.title}
-                          className="h-10 w-10 shrink-0 rounded-lg border border-stone-200/80 object-cover"
-                        />
-                      ) : (
-                        <div className="h-10 w-10 shrink-0 rounded-lg border border-dashed border-stone-200 bg-stone-100" />
-                      )}
-                      <div className="min-w-0">
-                        <p className="font-medium text-stone-900">
-                          {blog.title}
-                        </p>
-                        {blog.excerpt ? (
-                          <p className="mt-0.5 line-clamp-1 text-xs text-stone-500">
-                            {blog.excerpt}
+        {error ? <p className="px-5 pt-4 text-sm text-red-600 sm:px-6">{error}</p> : null}
+        {loading ? (
+          <div className="py-20 flex flex-col items-center justify-center text-stone-400">
+            <Spinner className="h-8 w-8 mb-3" />
+            <p className="text-sm font-medium">Fetching blogs...</p>
+          </div>
+        ) : (
+          <div className="overflow-hidden">
+            <table className="w-full table-fixed text-left text-sm">
+              <thead>
+                <tr className="border-b border-stone-200 bg-stone-50/80 text-xs font-medium uppercase tracking-wider text-stone-500">
+                  <th className="px-5 py-3 sm:px-6">Title</th>
+                  <th className="hidden px-5 py-3 sm:px-6 md:table-cell">Slug</th>
+                  <th className="hidden px-5 py-3 sm:px-6 sm:table-cell">Status</th>
+                  <th className="px-5 py-3 text-right sm:px-6">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {blogs.map((blog) => (
+                  <tr
+                    key={blog._id}
+                    className="border-b border-stone-100 transition-colors last:border-b-0 hover:bg-stone-50/50"
+                  >
+                    <td className="px-5 py-3.5 sm:px-6">
+                      <div className="flex items-center gap-3">
+                        {blog.coverImage ? (
+                          <img
+                            src={blog.coverImage}
+                            alt={blog.title}
+                            className="h-10 w-10 shrink-0 rounded-lg border border-stone-200/80 object-cover"
+                          />
+                        ) : (
+                          <div className="h-10 w-10 shrink-0 rounded-lg border border-dashed border-stone-200 bg-stone-100" />
+                        )}
+                        <div className="min-w-0">
+                          <p className="font-medium text-stone-900">
+                            {blog.title}
                           </p>
-                        ) : null}
+                          {blog.excerpt ? (
+                            <p className="mt-0.5 line-clamp-1 text-xs text-stone-500">
+                              {blog.excerpt}
+                            </p>
+                          ) : null}
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="hidden px-5 py-3.5 text-xs text-stone-500 sm:px-6 md:table-cell">
-                    {blog.slug}
-                  </td>
-                  <td className="hidden px-5 py-3.5 sm:px-6 sm:table-cell">
-                    <button
-                      type="button"
-                      role="switch"
-                      aria-checked={blog.published}
-                      onClick={() => handleToggleActive(blog)}
-                      title={blog.published ? 'Active – shown on website' : 'Archived – hidden from website'}
-                      className={`relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-stone-300 focus:ring-offset-2 ${
-                        blog.published
+                    </td>
+                    <td className="hidden px-5 py-3.5 text-xs text-stone-500 sm:px-6 md:table-cell">
+                      {blog.slug}
+                    </td>
+                    <td className="hidden px-5 py-3.5 sm:px-6 sm:table-cell">
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={blog.published}
+                        onClick={() => handleToggleActive(blog)}
+                        title={blog.published ? 'Active – shown on website' : 'Archived – hidden from website'}
+                        className={`relative inline-flex h-6 w-10 shrink-0 cursor-pointer rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-stone-300 focus:ring-offset-2 ${blog.published
                           ? 'bg-emerald-500'
                           : 'bg-stone-300'
-                      }`}
-                    >
-                      <span
-                        className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${
-                          blog.published ? 'left-1 translate-x-4' : 'left-1 translate-x-0'
-                        }`}
-                      />
-                    </button>
-                  </td>
-                  <td className="px-5 py-3.5 text-right sm:px-6">
-                    <div className="inline-flex items-center gap-1">
-                      <button
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
-                        type="button"
-                        aria-label="Edit blog"
-                        disabled={editLoading}
-                        onClick={async () => {
-                          setEditLoading(true)
-                          try {
-                            const full = onFetchForEdit ? await onFetchForEdit(blog._id) : blog
-                            setEditingBlog(full || blog)
-                            setIsEditOpen(true)
-                          } finally {
-                            setEditLoading(false)
-                          }
-                        }}
+                          }`}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          className="h-4 w-4"
-                        >
-                          <path d="M13.586 3.586a2 2 0 0 1 2.828 2.828l-.793.793-2.828-2.828.793-.793Z" />
-                          <path d="M11.379 5.793 4 13.172V16h2.828l7.38-7.379-2.83-2.828Z" />
-                        </svg>
+                        <span
+                          className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform ${blog.published ? 'left-1 translate-x-4' : 'left-1 translate-x-0'
+                            }`}
+                        />
                       </button>
-                      <button
-                        className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-stone-200 bg-white text-red-600 hover:bg-red-50"
-                        type="button"
-                        aria-label="Delete blog"
-                        onClick={() => onDelete?.(blog._id)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          className="h-4 w-4"
+                    </td>
+                    <td className="px-5 py-3.5 text-right sm:px-6">
+                      <div className="inline-flex items-center gap-1">
+                        <a
+                          href={`${siteUrl}/blogs/${blog.slug}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
+                          title="Live Preview"
                         >
-                          <path d="M8.5 3a1.5 1.5 0 0 0-1.415 1H5a.75.75 0 0 0 0 1.5h10a.75.75 0 0 0 0-1.5h-2.085A1.5 1.5 0 0 0 11.5 3h-3Z" />
-                          <path d="M6.5 7.25A.75.75 0 0 1 7.25 8v6a.75.75 0 0 1-1.5 0V8a.75.75 0 0 1 .75-.75Zm3.25 0a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0V8a.75.75 0 0 1 .75-.75Zm4 .75a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0V8Z" />
-                          <path d="M5.5 6.5h9v8.25A2.25 2.25 0 0 1 12.25 17h-4.5A2.25 2.25 0 0 1 5.5 14.75V6.5Z" />
-                        </svg>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {!blogs.length ? (
-                <tr>
-                  <td className="px-6 py-6 text-sm text-stone-600" colSpan="4">
-                    No blogs yet.
-                  </td>
-                </tr>
-              ) : null}
-            </tbody>
-          </table>
-        </div>
-      )}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            className="h-4 w-4"
+                          >
+                            <path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+                            <path
+                              fillRule="evenodd"
+                              d="M.664 10.59a1.651 1.651 0 0 1 0-1.186A10.004 10.004 0 0 1 10 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0 1 10 17c-4.257 0-7.893-2.66-9.336-6.41ZM14 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </a>
+                        <button
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-600 hover:bg-stone-50"
+                          type="button"
+                          aria-label="Edit blog"
+                          disabled={editLoading}
+                          onClick={async () => {
+                            setEditLoading(true)
+                            try {
+                              const full = onFetchForEdit ? await onFetchForEdit(blog._id) : blog
+                              setEditingBlog(full || blog)
+                              setIsEditOpen(true)
+                            } finally {
+                              setEditLoading(false)
+                            }
+                          }}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            className="h-4 w-4"
+                          >
+                            <path d="M13.586 3.586a2 2 0 0 1 2.828 2.828l-.793.793-2.828-2.828.793-.793Z" />
+                            <path d="M11.379 5.793 4 13.172V16h2.828l7.38-7.379-2.83-2.828Z" />
+                          </svg>
+                        </button>
+                        <button
+                          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-stone-200 bg-white text-red-600 hover:bg-red-50"
+                          type="button"
+                          aria-label="Delete blog"
+                          onClick={() => onDelete?.(blog._id)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            className="h-4 w-4"
+                          >
+                            <path d="M8.5 3a1.5 1.5 0 0 0-1.415 1H5a.75.75 0 0 0 0 1.5h10a.75.75 0 0 0 0-1.5h-2.085A1.5 1.5 0 0 0 11.5 3h-3Z" />
+                            <path d="M6.5 7.25A.75.75 0 0 1 7.25 8v6a.75.75 0 0 1-1.5 0V8a.75.75 0 0 1 .75-.75Zm3.25 0a.75.75 0 0 1 .75.75v6a.75.75 0 0 1-1.5 0V8a.75.75 0 0 1 .75-.75Zm4 .75a.75.75 0 0 0-1.5 0v6a.75.75 0 0 0 1.5 0V8Z" />
+                            <path d="M5.5 6.5h9v8.25A2.25 2.25 0 0 1 12.25 17h-4.5A2.25 2.25 0 0 1 5.5 14.75V6.5Z" />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {!blogs.length ? (
+                  <tr>
+                    <td className="px-6 py-6 text-sm text-stone-600" colSpan="4">
+                      No blogs yet.
+                    </td>
+                  </tr>
+                ) : null}
+              </tbody>
+            </table>
+          </div>
+        )}
 
-      {isCreateOpen ? (
-        <BlogEditorModal
-          title="New blog"
-          apiBase={apiBase}
-          initialData={{
-            title: '',
-            slug: '',
-            excerpt: '',
-            contentHtml: '',
-            coverImage: '',
-            tags: [],
-            published: false,
-          }}
-          onClose={() => setIsCreateOpen(false)}
-          onSubmit={handleCreate}
-        />
-      ) : null}
+        {isCreateOpen ? (
+          <BlogEditorModal
+            title="New blog"
+            apiBase={apiBase}
+            initialData={{
+              title: '',
+              slug: '',
+              excerpt: '',
+              contentHtml: '',
+              coverImage: '',
+              tags: [],
+              published: false,
+            }}
+            onClose={() => setIsCreateOpen(false)}
+            onSubmit={handleCreate}
+          />
+        ) : null}
 
-      {isEditOpen && editingBlog ? (
-        <BlogEditorModal
-          key={editingBlog._id}
-          title="Edit blog"
-          apiBase={apiBase}
-          initialData={editingBlog}
-          onClose={() => {
-            setIsEditOpen(false)
-            setEditingBlog(null)
-          }}
-          onSubmit={handleEdit}
-        />
-      ) : null}
-    </div>
+        {isEditOpen && editingBlog ? (
+          <BlogEditorModal
+            key={editingBlog._id}
+            title="Edit blog"
+            apiBase={apiBase}
+            initialData={editingBlog}
+            onClose={() => {
+              setIsEditOpen(false)
+              setEditingBlog(null)
+            }}
+            onSubmit={handleEdit}
+          />
+        ) : null}
+      </div>
     </div>
   )
 }

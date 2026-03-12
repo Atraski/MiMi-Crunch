@@ -1,0 +1,642 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@300;400;500;600;700&display=swap');
+
+.about-page {
+  --about-bg: #FAF8F5;
+  --about-card: rgba(255, 255, 255, 0.6);
+  --about-border: rgba(126, 161, 114, 0.3);
+  --about-heading: #1B3B26;
+  --about-highlight: #F5B041;
+  --about-text: #4A5D4E;
+  --about-surface: #FFFFFF;
+
+  --grain:
+    radial-gradient(circle at 10% 20%, rgba(27, 59, 38, 0.03) 0, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(245, 176, 65, 0.04) 0, transparent 40%),
+    linear-gradient(135deg, #FAF8F5 0%, #F0EBE1 100%);
+
+  background: var(--grain);
+  color: var(--about-text);
+  overflow: clip;
+  padding-bottom: 6rem;
+  font-family: 'Manrope', system-ui, sans-serif;
+}
+
+.about-page * {
+  box-sizing: border-box;
+}
+
+.about-page h1,
+.about-page h2,
+.about-page h3 {
+  color: var(--about-heading);
+  font-family: 'Fraunces', Georgia, serif;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.about-shell {
+  margin: 0 auto;
+  max-width: 1280px;
+  padding: 0 1.5rem;
+}
+
+/* WIPE ANIMATION */
+.about-wipe {
+  background: #1B3B26;
+  inset: 0;
+  position: fixed;
+  transform-origin: top center;
+  z-index: 50;
+}
+
+/* EYEBROW */
+.eyebrow {
+  color: #7A9B80;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  display: inline-block;
+  border-bottom: 2px solid var(--about-highlight);
+  padding-bottom: 0.2rem;
+}
+
+/* HERO SECTION */
+.hero-grid {
+  align-items: center;
+  display: grid;
+  gap: 3rem;
+  grid-template-columns: 1fr;
+  padding-bottom: 4rem;
+  padding-top: 2rem;
+}
+
+.hero-heading {
+  font-size: clamp(2.5rem, 5vw + 1rem, 5.5rem);
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.05;
+}
+
+.hero-word-wrap {
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+.hero-word {
+  display: inline-block;
+}
+
+.hero-subtext {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  margin-top: 1.5rem;
+  max-width: 50ch;
+  font-weight: 400;
+  color: var(--about-text);
+  opacity: 0.9;
+}
+
+.hero-visual-frame {
+  border-radius: 2rem;
+  box-shadow: 0 40px 80px rgba(27, 59, 38, 0.15);
+  overflow: visible;
+  position: relative;
+  transform: translateZ(0);
+}
+
+.hero-visual-frame::before {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  background: conic-gradient(from 90deg, transparent, #F5B041, transparent, #1B3B26);
+  opacity: 0.15;
+  filter: blur(40px);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.hero-bowl-image {
+  aspect-ratio: 4 / 5;
+  filter: saturate(1.1) contrast(1.05);
+  object-fit: cover;
+  position: relative;
+  width: 100%;
+  border-radius: 2rem;
+  z-index: 1;
+}
+
+.about-reveal {
+  will-change: transform, opacity;
+}
+
+/* HEADINGS */
+.section-head {
+  margin-bottom: 3rem;
+  max-width: 800px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-title {
+  font-size: clamp(2rem, 3vw + 1rem, 3.5rem);
+  margin: 0;
+  font-weight: 400;
+}
+
+/* JOURNEY SECTION */
+.journey-block {
+  padding-top: 4rem;
+}
+
+.journey-track {
+  margin-top: 4rem;
+  padding: 0 1rem;
+  position: relative;
+}
+
+.journey-line {
+  background: linear-gradient(180deg, transparent 0%, rgba(27, 59, 38, 0.3) 15%, rgba(27, 59, 38, 0.3) 85%, transparent 100%);
+  border-radius: 999px;
+  bottom: 0;
+  left: 50%;
+  position: absolute;
+  top: 0;
+  width: 2px;
+}
+
+.journey-item {
+  align-items: center;
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+  margin: 0 auto;
+  max-width: 1000px;
+  padding: 3rem 0;
+  position: relative;
+}
+
+.journey-copy {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+  padding: 2.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 5;
+  position: relative;
+}
+
+.journey-copy:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.06);
+}
+
+.journey-year {
+  color: var(--about-highlight);
+  display: inline-block;
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.journey-copy h3 {
+  font-size: 1.5rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+.journey-copy p {
+  line-height: 1.8;
+  margin: 1rem 0 0;
+  color: var(--about-text);
+}
+
+.journey-media {
+  align-items: center;
+  background: #1B3B26;
+  border-radius: 1.5rem;
+  color: #FAF8F5;
+  display: flex;
+  font-size: 1rem;
+  font-weight: 600;
+  justify-content: center;
+  letter-spacing: 0.1em;
+  min-height: 250px;
+  text-transform: uppercase;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+}
+
+.journey-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80') center/cover;
+  opacity: 0.3;
+  mix-blend-mode: overlay;
+}
+
+/* MISSION SECTION */
+.mission-block {
+  padding-top: 6rem;
+}
+
+.mission-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+  margin-top: 3rem;
+}
+
+.mission-card-wrapper {
+  perspective: 1200px;
+}
+
+.mission-card {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  background: transparent;
+}
+
+.mission-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.mission-card-wrapper:hover .mission-card-inner {
+  transform: rotateY(540deg);
+}
+
+.mission-card-front,
+.mission-card-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 1.5rem;
+  overflow: hidden;
+}
+
+.mission-card-front {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.45) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px rgba(27, 59, 38, 0.05);
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.mission-card-back {
+  background: #1B3B26;
+  transform: rotateY(180deg);
+}
+
+.mission-card-back img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.mission-card-wrapper:hover .mission-card-back img {
+  transform: scale(1.05);
+}
+
+.mission-back-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(27, 59, 38, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mission-back-overlay span {
+  color: #fff;
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  text-align: center;
+  padding: 1.5rem;
+  line-height: 1.3;
+}
+
+.mission-icon {
+  align-items: center;
+  background: #1B3B26;
+  border-radius: 50%;
+  color: #F5B041;
+  display: inline-flex;
+  font-family: 'Fraunces', serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  height: 3.5rem;
+  justify-content: center;
+  width: 3.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 20px rgba(27, 59, 38, 0.2);
+}
+
+.mission-card h3 {
+  font-size: 1.5rem;
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+
+.mission-card p {
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* PARALLAX SECTION */
+.millet-parallax {
+  border-radius: 2rem;
+  margin: 8rem auto 0;
+  max-width: 1400px;
+  min-height: 600px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.millet-bg {
+  background: url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1600&q=80') center / cover no-repeat;
+  inset: -15% 0;
+  position: absolute;
+  will-change: transform;
+  filter: brightness(0.6) contrast(1.1);
+}
+
+.millet-copy {
+  color: #fff;
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 4rem 2rem;
+  position: relative;
+  text-align: center;
+  z-index: 1;
+  background: rgba(27, 59, 38, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.eyebrow-light {
+  color: var(--about-highlight);
+  border-bottom-color: rgba(255, 255, 255, 0.5);
+}
+
+.section-title-light {
+  color: #fff;
+  font-size: clamp(2rem, 4vw + 1rem, 4rem);
+  margin: 1rem 0 1.5rem;
+  font-weight: 400;
+}
+
+.millet-copy p {
+  line-height: 1.8;
+  margin: 0 auto;
+  font-size: 1.15rem;
+  max-width: 55ch;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.millet-cta {
+  background: var(--about-highlight);
+  border-radius: 999px;
+  color: #1B3B26;
+  display: inline-block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  padding: 1rem 2rem;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.3s ease;
+  will-change: transform;
+}
+
+.millet-cta:hover {
+  background: #fff;
+  transform: scale(1.05);
+}
+
+/* TEAM / RECIPES BLOCK */
+.team-block {
+  padding-top: 8rem;
+}
+
+.recipe-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr;
+  margin-top: 4rem;
+}
+
+.recipe-card {
+  background: #fff;
+  border: 1px solid rgba(27, 59, 38, 0.08);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none;
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.recipe-card:hover {
+  box-shadow: 0 20px 40px rgba(27, 59, 38, 0.08);
+  transform: translateY(-8px);
+}
+
+.recipe-media {
+  aspect-ratio: 4 / 3;
+  background: #EAE6DF;
+  overflow: hidden;
+  position: relative;
+}
+
+.recipe-media img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+  transition: transform 0.6s ease;
+}
+
+.recipe-card:hover .recipe-media img {
+  transform: scale(1.05);
+}
+
+.recipe-fallback {
+  align-items: center;
+  color: #7A9B80;
+  display: flex;
+  font-family: 'Fraunces', serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  height: 100%;
+  justify-content: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.recipe-content {
+  padding: 2rem;
+}
+
+.recipe-content h3 {
+  font-size: 1.35rem;
+  margin: 0 0 0.5rem;
+  color: var(--about-heading);
+  font-weight: 500;
+}
+
+.recipe-content p {
+  color: var(--about-text);
+  line-height: 1.6;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.recipe-badge {
+  background: var(--about-heading);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  left: 50%;
+  opacity: 0;
+  padding: 0.5rem 1rem;
+  position: absolute;
+  top: 1rem;
+  transform: translateX(-50%) translateY(-10px);
+  white-space: nowrap;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.recipe-empty {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.5);
+  border: 2px dashed rgba(27, 59, 38, 0.2);
+  border-radius: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 250px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.recipe-empty h3 {
+  font-size: 1.5rem;
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+
+.recipe-empty p {
+  margin: 0;
+  color: var(--about-text);
+}
+
+/* MEDIA QUERIES */
+@media (min-width: 768px) {
+  .hero-grid {
+    gap: 4rem;
+    grid-template-columns: 1.1fr 0.9fr;
+    padding-bottom: 6rem;
+    padding-top: 4rem;
+  }
+
+  .hero-subtext {
+    font-size: 1.25rem;
+  }
+
+  .hero-bowl-image {
+    aspect-ratio: 1 / 1;
+  }
+
+  .section-head {
+    margin-bottom: 4rem;
+  }
+
+  .journey-item {
+    gap: 6rem;
+    grid-template-columns: 1fr 1fr;
+    padding: 4rem 0;
+  }
+
+  .journey-item.left .journey-copy {
+    grid-column: 1;
+    text-align: right;
+  }
+
+  .journey-item.left .journey-media {
+    grid-column: 2;
+  }
+
+  .journey-item.right .journey-copy {
+    grid-column: 2;
+  }
+
+  .journey-item.right .journey-media {
+    grid-column: 1;
+  }
+
+  .journey-item.left::after {
+    content: '';
+    position: absolute;
+    right: 50%;
+    top: 50%;
+    transform: translate(50%, -50%);
+    width: 1.25rem;
+    height: 1.25rem;
+    background: var(--about-highlight);
+    border-radius: 50%;
+    z-index: 2;
+    box-shadow: 0 0 0 4px #FAF8F5, 0 0 0 6px var(--about-heading);
+  }
+
+  .journey-item.right::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 1.25rem;
+    height: 1.25rem;
+    background: var(--about-highlight);
+    border-radius: 50%;
+    z-index: 2;
+    box-shadow: 0 0 0 4px #FAF8F5, 0 0 0 6px var(--about-heading);
+  }
+
+  .mission-grid {
+    gap: 2rem;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .recipe-grid {
+    gap: 2rem;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

@@ -1,5 +1,5 @@
 /** Max total weight per product (same slug) in cart, in kg */
-export const MAX_WEIGHT_PER_PRODUCT_KG = 1.75
+export const MAX_WEIGHT_PER_PRODUCT_KG = 10
 
 /**
  * Parse weight string to kg. Handles "500g", "1kg", "1KG", "250g", "1.5kg", etc.

@@ -180,9 +180,30 @@ export const products = [
 ]
 
 export const recipes = [
-  { title: 'Millet Veggie Bowl', time: '15 min', type: 'Vegetarian' },
-  { title: 'Ragi Banana Pancakes', time: '10 min', type: 'Kids Friendly' },
-  { title: 'Foxtail Stir Fry', time: '20 min', type: 'Vegan' },
+  {
+    title: 'Millet Veggie Bowl',
+    time: '15 min',
+    tags: ['Vegetarian', 'High Fiber'],
+    excerpt: 'A nutrient-dense bowl featuring our kodo millet grain and garden fresh vegetables.',
+    coverImage: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=1200&auto=format&fit=crop',
+    slug: 'millet-veggie-bowl'
+  },
+  {
+    title: 'Ragi Banana Pancakes',
+    time: '12 min',
+    tags: ['Kids Friendly', 'Calcium Rich'],
+    excerpt: 'Fluffy, naturally sweet pancakes made with stone-ground ragi flour.',
+    coverImage: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?q=80&w=1200&auto=format&fit=crop',
+    slug: 'ragi-banana-pancakes'
+  },
+  {
+    title: 'Foxtail Stir Fry',
+    time: '20 min',
+    tags: ['Vegan', 'Low GI'],
+    excerpt: 'A quick, aromatic stir-fry using foxtail millet and crunchy sprouts.',
+    coverImage: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1200&auto=format&fit=crop',
+    slug: 'foxtail-stir-fry'
+  },
 ]
 
 export const news = [

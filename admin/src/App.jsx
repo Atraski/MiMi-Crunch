@@ -19,6 +19,7 @@ import useRecipes from './hooks/useRecipes.js'
 import useReviews from './hooks/useReviews.js'
 import useCoupons from './hooks/useCoupons.js'
 import useOrders from './hooks/useOrders.js'
+import useAnalytics from './hooks/useAnalytics.js'
 import AdminLayout from './layout/AdminLayout.jsx'
 import {
   clearAdminSession,
@@ -26,7 +27,9 @@ import {
   saveAdminSession,
 } from './utils/adminAuth.js'
 
-const API_BASE = import.meta.env.VITE_API_BASE
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://mimicrunch-33how.ondigitalocean.app'
+const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://mimicrunch.com'
+
 const AdminApp = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => isAdminSessionValid())
   const [authError, setAuthError] = useState('')
@@ -106,6 +109,8 @@ const AdminApp = () => {
     syncOrderToShiprocket,
     requestPickup,
   } = useOrders(API_BASE)
+
+  const { data: analyticsData } = useAnalytics(API_BASE)
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -208,6 +213,7 @@ const AdminApp = () => {
           onDelete={deleteProduct}
           onToggleActive={toggleActive}
           apiBase={API_BASE}
+          siteUrl={SITE_URL}
         />
       ) : null}
 
@@ -237,6 +243,7 @@ const AdminApp = () => {
           onUpdate={updateBlog}
           onDelete={deleteBlog}
           apiBase={API_BASE}
+          siteUrl={SITE_URL}
         />
       ) : null}
 
@@ -252,6 +259,7 @@ const AdminApp = () => {
           onUpdate={updateRecipe}
           onDelete={deleteRecipe}
           apiBase={API_BASE}
+          siteUrl={SITE_URL}
         />
       ) : null}
 
@@ -292,13 +300,13 @@ const AdminApp = () => {
       ) : null}
 
       {activeTab !== 'products' &&
-      activeTab !== 'orders' &&
-      activeTab !== 'collections' &&
-      activeTab !== 'blogs' &&
-      activeTab !== 'recipes' &&
-      activeTab !== 'reviews' &&
-      activeTab !== 'discounts' ? (
-        <StatsGrid products={products} />
+        activeTab !== 'orders' &&
+        activeTab !== 'collections' &&
+        activeTab !== 'blogs' &&
+        activeTab !== 'recipes' &&
+        activeTab !== 'reviews' &&
+        activeTab !== 'discounts' ? (
+        <StatsGrid products={products} analytics={analyticsData} />
       ) : null}
 
       <ApiEndpointCard apiBase={API_BASE} />

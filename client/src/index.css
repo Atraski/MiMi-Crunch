@@ -1,71 +1,123 @@
 @import "tailwindcss";
-@config "../tailwind.config.js";
 
 @theme {
-  --color-brand-50: #f8f6f2;
-  --color-brand-100: #f2ede4;
-  --color-brand-600: #d4833b;
-  --color-brand-900: #2d4a2a;
+  --color-brand-bg: #FDFBF7;
+  --color-brand-green: #2E7D32;
+  --color-brand-yellow: #FFD700;
+  --color-brand-text: #1C1C1C;
+  --color-brand-secondary: #5C5C5C;
+
+  --font-family-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
 @layer base {
-  :root {
-    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-    text-rendering: optimizeLegibility;
+  body {
+    background-color: var(--color-brand-bg);
+    color: var(--color-brand-text);
+    font-family: var(--font-family-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  }
-
-  body {
-    @apply bg-brand-50 text-stone-900;
-  }
-
-  a {
-    @apply text-inherit no-underline;
-  }
-
-  img {
-    @apply block max-w-full;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
 @layer components {
+  .glass-morphism {
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
   .btn {
-    @apply inline-flex items-center justify-center rounded-full px-5 py-2 text-sm font-semibold transition hover:-translate-y-0.5 hover:shadow-lg;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    font-weight: 700;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+  }
+
+  .btn:active {
+    transform: scale(0.95);
   }
 
   .btn-primary {
-    @apply bg-brand-600 text-white hover:bg-orange-700;
+    background-color: var(--color-brand-green);
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(46, 125, 50, 0.1), 0 4px 6px -2px rgba(46, 125, 50, 0.05);
+  }
+
+  .btn-primary:hover {
+    filter: brightness(0.9);
   }
 
   .btn-ghost {
-    @apply border border-stone-300 text-stone-800 hover:bg-stone-100;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: var(--color-brand-green);
+    border: 1px solid rgba(46, 125, 50, 0.1);
   }
 
-  .btn-dark {
-    @apply bg-stone-900 text-white hover:bg-stone-800;
-  }
-
-  .pill {
-    @apply inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800;
-  }
-
-  .input {
-    @apply rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-800 placeholder:text-stone-400 focus:border-stone-300 focus:outline-none;
-  }
-}
-
-@keyframes footer-line-scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
+  .btn-ghost:hover {
+    background-color: #f1f8e9;
   }
 }
 
 @layer utilities {
-  .footer-line-art {
-    animation: footer-line-scroll 30s linear infinite;
+  .tap-highlight-none {
+    -webkit-tap-highlight-color: transparent;
   }
+
+  .haptic-feedback {
+    transition: transform 0.1s ease;
+  }
+
+  .haptic-feedback:active {
+    transform: scale(0.95);
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .bottom-nav-safe {
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 20px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+}
+
+.nav-icon-container {
+  will-change: transform;
+}
+
+.loader-liquid-fill {
+  background: linear-gradient(to top, var(--color-brand-yellow) var(--p, 0%), transparent var(--p, 0%));
 }

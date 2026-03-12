@@ -14,6 +14,11 @@ const defaultForm = {
   benefits: '',
   trust: '',
   faqContent: '',
+  faqs: [],
+  metaData: '',
+  metaTitle: '',
+  metaDescription: '',
+  schemaMarkup: '',
 }
 
 const createVariant = () => ({
@@ -58,6 +63,28 @@ const ProductForm = ({
       }
       return next
     })
+  }
+
+  const handleFAQChange = (index, field, value) => {
+    setForm((prev) => {
+      const nextFaqs = [...prev.faqs]
+      nextFaqs[index] = { ...nextFaqs[index], [field]: value }
+      return { ...prev, faqs: nextFaqs }
+    })
+  }
+
+  const handleAddFAQ = () => {
+    setForm((prev) => ({
+      ...prev,
+      faqs: [...prev.faqs, { question: '', answer: '' }],
+    }))
+  }
+
+  const handleRemoveFAQ = (index) => {
+    setForm((prev) => ({
+      ...prev,
+      faqs: prev.faqs.filter((_, i) => i !== index),
+    }))
   }
 
   const handleVariantChange = (index, field, value) => {
@@ -144,23 +171,28 @@ const ProductForm = ({
       benefits: initialProduct.benefits || '',
       trust: initialProduct.trust || '',
       faqContent: initialProduct.faqContent || '',
+      faqs: Array.isArray(initialProduct.faqs) ? initialProduct.faqs : [],
+      metaData: initialProduct.metaData || '',
+      metaTitle: initialProduct.metaTitle || '',
+      metaDescription: initialProduct.metaDescription || '',
+      schemaMarkup: initialProduct.schemaMarkup || '',
     })
     const seedVariants = initialProduct.variants?.length
       ? initialProduct.variants
       : [
-          {
-            weight: initialProduct.weight,
-            price: initialProduct.price,
-            compareAtPrice: initialProduct.compareAtPrice,
-            images: initialProduct.images || [],
-          },
-        ]
+        {
+          weight: initialProduct.weight,
+          price: initialProduct.price,
+          compareAtPrice: initialProduct.compareAtPrice,
+          images: initialProduct.images || [],
+        },
+      ]
     setVariants(
       seedVariants.map((variant) => ({
         weight: variant.weight || '',
         price: variant.price ? String(variant.price) : '',
         stock: variant.stock ? String(variant.stock) : '0', // Load stock
-    sku: variant.sku || '',                             // Load SKU
+        sku: variant.sku || '',                             // Load SKU
         compareAtPrice: variant.compareAtPrice ? String(variant.compareAtPrice) : '',
         images: (variant.images || []).map((url) => ({ url })),
         usePrimaryImages: false,
@@ -255,7 +287,7 @@ const ProductForm = ({
           weight: variant.weight.trim(),
           price: Number(variant.price),
           stock: Number(variant.stock || 0),
-    sku: variant.sku || '',
+          sku: variant.sku || '',
           compareAtPrice: variant.compareAtPrice
             ? Number(variant.compareAtPrice)
             : undefined,
@@ -266,10 +298,10 @@ const ProductForm = ({
       const handler = isEditing ? onUpdate : onCreate
       const success = handler
         ? await handler({
-            ...form,
-            variants: payloadVariants,
-            _id: initialProduct?._id,
-          })
+          ...form,
+          variants: payloadVariants,
+          _id: initialProduct?._id,
+        })
         : false
       if (success) {
         variants.forEach((variant) =>
@@ -392,10 +424,11 @@ const ProductForm = ({
       <div className="grid gap-4 md:grid-cols-2">
         <div>
           <p className="label">Description</p>
+          <p className="mt-1 text-xs text-stone-500">Plain text or HTML supported.</p>
           <textarea
-            className="input mt-2 min-h-[120px]"
+            className="input mt-2 min-h-[120px] font-mono text-sm"
             name="description"
-            placeholder="Short description"
+            placeholder="Short description or <p>HTML</p>"
             rows="4"
             value={form.description}
             onChange={handleChange}
@@ -403,51 +436,13 @@ const ProductForm = ({
         </div>
         <div>
           <p className="label">Additional Information</p>
+          <p className="mt-1 text-xs text-stone-500">Plain text or HTML supported.</p>
           <textarea
-            className="input mt-2 min-h-[120px]"
+            className="input mt-2 min-h-[120px] font-mono text-sm"
             name="additionalInfo"
-            placeholder="Additional information"
+            placeholder="Additional info or <ul><li>...</li></ul>"
             rows="4"
             value={form.additionalInfo}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        <div>
-          <p className="label">Benefits</p>
-          <p className="mt-1 text-xs text-stone-500">Plain text. Rendered as normal text on the product page.</p>
-          <textarea
-            className="input mt-2 min-h-[100px]"
-            name="benefits"
-            placeholder="e.g. High in fibre, Gluten-free, Supports digestion..."
-            rows="4"
-            value={form.benefits}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <p className="label">Trust</p>
-          <p className="mt-1 text-xs text-stone-500">HTML supported. Add icons with &lt;img src=&quot;icon-url&quot; class=&quot;w-8 h-8&quot; alt=&quot;&quot; /&gt; or use emoji.</p>
-          <textarea
-            className="input mt-2 min-h-[120px] font-mono text-sm"
-            name="trust"
-            placeholder="<p>Trust badges, certifications...</p>"
-            rows="6"
-            value={form.trust}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <p className="label">FAQ content</p>
-          <p className="mt-1 text-xs text-stone-500">HTML supported. Use headings and paragraphs for Q&amp;A.</p>
-          <textarea
-            className="input mt-2 min-h-[120px] font-mono text-sm"
-            name="faqContent"
-            placeholder="<h4>Question?</h4><p>Answer...</p>"
-            rows="6"
-            value={form.faqContent}
             onChange={handleChange}
           />
         </div>
@@ -503,26 +498,26 @@ const ProductForm = ({
               </div>
 
               {/* Stock for this specific variant */}
-    <div>
-      <label className="block text-xs font-bold mb-1 text-orange-600">Stock</label>
-      <input 
-        type="number" 
-        value={variant.stock} 
-        onChange={(e) => handleVariantChange(index, 'stock', e.target.value)}
-        className="w-full p-2 border border-orange-200 rounded focus:ring-orange-500" 
-      />
-    </div>
+              <div>
+                <label className="block text-xs font-bold mb-1 text-orange-600">Stock</label>
+                <input
+                  type="number"
+                  value={variant.stock}
+                  onChange={(e) => handleVariantChange(index, 'stock', e.target.value)}
+                  className="w-full p-2 border border-orange-200 rounded focus:ring-orange-500"
+                />
+              </div>
 
-    {/* SKU/ID (Optional) */}
-    <div>
-      <label className="block text-xs font-bold mb-1">SKU</label>
-      <input 
-        type="text" 
-        value={variant.sku || ''} 
-        onChange={(e) => handleVariantChange(index, 'sku', e.target.value)}
-        className="w-full p-2 border rounded" 
-      />
-    </div>
+              {/* SKU/ID (Optional) */}
+              <div>
+                <label className="block text-xs font-bold mb-1">SKU</label>
+                <input
+                  type="text"
+                  value={variant.sku || ''}
+                  onChange={(e) => handleVariantChange(index, 'sku', e.target.value)}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
               <div>
                 <p className="label">Compare at</p>
                 <input
@@ -565,25 +560,25 @@ const ProductForm = ({
               <div className="mt-3 flex flex-wrap gap-3">
                 {!variant.usePrimaryImages
                   ? variant.images.map((item, imageIndex) => (
-                  <div
-                    key={`${item.url}-${imageIndex}`}
-                    className="group relative h-[80px] w-[80px] overflow-hidden rounded-2xl border border-stone-200 bg-stone-100"
-                  >
-                    <img
-                      className="h-full w-full object-cover"
-                      src={item.url}
-                      alt="Variant"
-                    />
-                    <button
-                      type="button"
-                      className="absolute right-1 top-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/90 text-xs font-semibold text-stone-700 shadow-sm"
-                      onClick={() => handleRemoveVariantImage(index, imageIndex)}
-                      aria-label="Remove image"
+                    <div
+                      key={`${item.url}-${imageIndex}`}
+                      className="group relative h-[80px] w-[80px] overflow-hidden rounded-2xl border border-stone-200 bg-stone-100"
                     >
-                      ×
-                    </button>
-                  </div>
-                ))
+                      <img
+                        className="h-full w-full object-cover"
+                        src={item.url}
+                        alt="Variant"
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-1 top-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/90 text-xs font-semibold text-stone-700 shadow-sm"
+                        onClick={() => handleRemoveVariantImage(index, imageIndex)}
+                        aria-label="Remove image"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))
                   : null}
                 {!variant.usePrimaryImages ? (
                   <label className="flex h-[80px] w-[80px] cursor-pointer items-center justify-center rounded-2xl border border-dashed border-stone-300 bg-white text-2xl text-stone-500">
@@ -611,6 +606,171 @@ const ProductForm = ({
         ) : null}
       </div>
 
+      <div className="space-y-6 pt-10 border-t-4 border-[#1B3B26]/10">
+        <div>
+          <h2 className="text-2xl font-[Fraunces] text-[#1B3B26]">SEO & Rich Content</h2>
+          <p className="mt-1 text-sm text-stone-500">Manage technical info, benefits, FAQs, and search presence.</p>
+        </div>
+
+        <div className="grid gap-8 md:grid-cols-2">
+          <div>
+            <p className="label">Benefits</p>
+            <p className="mt-1 text-xs text-stone-500 font-medium">Plain text or HTML supported. e.g. High in fibre, or &lt;ul&gt;&lt;li&gt;...&lt;/li&gt;&lt;/ul&gt;</p>
+            <textarea
+              className="input mt-2 min-h-[120px] font-mono text-sm bg-stone-50"
+              name="benefits"
+              placeholder="e.g. High in fibre, Gluten-free or <p>HTML</p>"
+              rows="4"
+              value={form.benefits}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <p className="label">Trust Indicators</p>
+            <p className="mt-1 text-xs text-stone-500 font-medium">Add icons or certifications with &lt;img /&gt; or use emoji.</p>
+            <textarea
+              className="input mt-2 min-h-[120px] font-mono text-sm bg-stone-50"
+              name="trust"
+              placeholder="<p>Trust badges, certifications...</p>"
+              rows="4"
+              value={form.trust}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        <div className="grid gap-8 md:grid-cols-2">
+          <div>
+            <p className="label font-bold text-[#1B3B26]">Product Metadata / Nutrition</p>
+            <p className="mt-1 text-xs text-stone-500 font-medium italic">Tables or lists for scientific data.</p>
+            <textarea
+              className="input mt-2 min-h-[120px] font-mono text-sm bg-brand-green/5 border-brand-green/20"
+              name="metaData"
+              placeholder="<table>...</table>"
+              rows="4"
+              value={form.metaData}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <p className="label">Legacy FAQ Content</p>
+            <p className="mt-1 text-xs text-stone-500 font-medium">Headings and paragraphs for simple Q&A.</p>
+            <textarea
+              className="input mt-2 min-h-[120px] font-mono text-sm bg-red-50/30"
+              name="faqContent"
+              placeholder="<h4>Question?</h4><p>Answer...</p>"
+              rows="4"
+              value={form.faqContent}
+              onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        {/* Product Specific FAQs */}
+        <div className="space-y-4 rounded-3xl bg-[#1B3B26]/5 p-6 border border-[#1B3B26]/10">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-lg font-[Fraunces] text-[#1B3B26]">Structured FAQs</p>
+              <p className="text-xs text-[#1B3B26]/60 font-medium">Add dedicated Q&A pairs that appear as an accordion on the site.</p>
+            </div>
+            <button
+              type="button"
+              className="btn btn-primary bg-[#1B3B26] hover:bg-[#1B3B26]/90 text-white px-5 py-2.5 rounded-xl shadow-lg shadow-[#1B3B26]/20 transition-all active:scale-95"
+              onClick={handleAddFAQ}
+            >
+              + Add FAQ Item
+            </button>
+          </div>
+          <div className="grid gap-6">
+            {(form.faqs || []).map((faq, index) => (
+              <div key={index} className="group rounded-2xl border border-stone-200 bg-white p-6 relative transition-all hover:border-brand-green/30 hover:shadow-xl hover:shadow-brand-green/5">
+                <button
+                  type="button"
+                  className="absolute right-4 top-4 h-8 w-8 flex items-center justify-center rounded-full bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm active:scale-95"
+                  onClick={() => handleRemoveFAQ(index)}
+                  title="Remove FAQ"
+                >
+                  ×
+                </button>
+                <div className="grid gap-4">
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-[#1B3B26]/40">Question {index + 1}</p>
+                    <input
+                      className="input bg-stone-50/50 focus:bg-white transition-colors text-base font-semibold"
+                      placeholder="e.g. Is this gluten-free?"
+                      value={faq.question}
+                      onChange={(e) => handleFAQChange(index, 'question', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-[#1B3B26]/40">Answer {index + 1}</p>
+                    <textarea
+                      className="input bg-stone-50/50 focus:bg-white transition-colors min-h-[100px] py-3 leading-relaxed"
+                      placeholder="Explain in detail..."
+                      value={faq.answer}
+                      onChange={(e) => handleFAQChange(index, 'answer', e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+            {(!form.faqs || form.faqs.length === 0) && (
+              <div className="text-center py-10 border-2 border-dashed border-stone-200 rounded-[2.5rem] bg-white/50">
+                <p className="text-stone-400 text-sm font-medium">No custom FAQs added yet.</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* SEO Metadata Section */}
+        <div className="space-y-4 rounded-3xl bg-[#F5B041]/5 p-6 border border-[#F5B041]/20">
+          <div>
+            <h3 className="text-xl font-[Fraunces] text-[#1B3B26]">Search Engine Optimization (SEO)</h3>
+            <p className="mt-1 text-sm text-stone-500 font-medium">Define how Google and others see this page.</p>
+          </div>
+          <div className="grid gap-6">
+            <div>
+              <p className="label text-stone-700">Meta Title</p>
+              <p className="mt-1 text-[10px] text-[#F5B041] font-black uppercase tracking-wider">Optimal length: 50-60 chars</p>
+              <input
+                className="input mt-2 border-[#F5B041]/20 focus:border-[#F5B041]/50"
+                name="metaTitle"
+                placeholder="Product Name - Buy Online at Mimi Crunch"
+                value={form.metaTitle}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <p className="label text-stone-700">Meta Description</p>
+              <p className="mt-1 text-[10px] text-[#F5B041] font-black uppercase tracking-wider">Optimal length: 150-160 chars</p>
+              <textarea
+                className="input mt-2 min-h-[100px] border-[#F5B041]/20 focus:border-[#F5B041]/50"
+                name="metaDescription"
+                placeholder="Briefly describe the product for search results..."
+                rows="3"
+                value={form.metaDescription}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Schema Markup Section */}
+        <div>
+          <p className="label font-bold text-[#1B3B26]">Advanced SEO: Schema Markup (JSON-LD)</p>
+          <p className="mt-1 text-xs text-stone-500 font-medium">Product/FAQ structured data. Valid JSON only.</p>
+          <textarea
+            className="input mt-2 min-h-[160px] font-mono text-sm bg-stone-900 text-[#F5B041] border-none rounded-2xl"
+            name="schemaMarkup"
+            placeholder='{"@context":"https://schema.org","@type":"Product","name":"..."}'
+            rows="8"
+            value={form.schemaMarkup}
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+
+
       <div className="flex items-center justify-between">
         <button
           className="btn btn-outline"
@@ -627,8 +787,8 @@ const ProductForm = ({
           {uploading
             ? 'Uploading...'
             : isEditing
-            ? 'Update Product'
-            : 'Add Product'}
+              ? 'Update Product'
+              : 'Add Product'}
         </button>
       </div>
     </form>

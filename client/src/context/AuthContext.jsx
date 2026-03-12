@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000'
+const API_BASE = import.meta.env.VITE_API_BASE || 'https://mimicrunch-33how.ondigitalocean.app'
 const TOKEN_KEY = 'mimi_auth_token'
 
 const AuthContext = createContext(null)
@@ -113,6 +113,9 @@ export const AuthProvider = ({ children }) => {
     }
     setToken(data.token)
     setUser(data.user)
+    if (data.isNewUser && (!data.user.name || !data.user.address)) {
+      sessionStorage.setItem('show_profile_reminder', 'true');
+    }
     return data
   }, [setToken])
 
@@ -129,6 +132,37 @@ export const AuthProvider = ({ children }) => {
     return data
   }, [])
 
+  const sendEmailLoginOtp = useCallback(async (email) => {
+    const res = await fetch(`${API_BASE}/api/auth/send-email-login-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: String(email).trim() }),
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      throw new Error(data.error || 'Failed to send OTP')
+    }
+    return data
+  }, [])
+
+  const verifyEmailLoginOtp = useCallback(async (email, code) => {
+    const res = await fetch(`${API_BASE}/api/auth/verify-email-login-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: String(email).trim(), code: String(code).trim() }),
+    })
+    const data = await res.json()
+    if (!res.ok) {
+      throw new Error(data.error || 'Invalid or expired OTP')
+    }
+    setToken(data.token)
+    setUser(data.user)
+    if (data.isNewUser && (!data.user.name || !data.user.address)) {
+      sessionStorage.setItem('show_profile_reminder', 'true');
+    }
+    return data
+  }, [setToken])
+
   const logout = useCallback(() => {
     setToken(null)
   }, [setToken])
@@ -142,6 +176,8 @@ export const AuthProvider = ({ children }) => {
     signup,
     verifyEmail,
     resendOtp,
+    sendEmailLoginOtp,
+    verifyEmailLoginOtp,
     logout,
     setUser,
   }

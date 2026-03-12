@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { getAdminAuthHeaders } from '../../utils/adminAuth.js'
+import Spinner from '../../components/Spinner.jsx'
 
 const CollectionList = ({
   collections,
@@ -77,153 +78,156 @@ const CollectionList = ({
         </div>
       </div>
 
-    <div className="card overflow-hidden">
-      <div className="border-b border-stone-200/60 bg-stone-50/50 px-5 py-4 sm:px-6">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h3 className="text-base font-semibold text-stone-900">Collections</h3>
-            <p className="mt-0.5 text-xs text-stone-500">Group products for the store</p>
-          </div>
-          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
-            <button
-              className="btn btn-outline rounded-lg px-3 py-1.5 text-xs"
-              type="button"
-              onClick={onRefresh}
-            >
-              Refresh
-            </button>
-            <button
-              className="btn btn-primary rounded-lg px-4 py-1.5 text-sm"
-              type="button"
-              onClick={() => setIsCreateOpen(true)}
-            >
-              Add collection
-            </button>
+      <div className="card overflow-hidden">
+        <div className="border-b border-stone-200/60 bg-stone-50/50 px-5 py-4 sm:px-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 className="text-base font-semibold text-stone-900">Collections</h3>
+              <p className="mt-0.5 text-xs text-stone-500">Group products for the store</p>
+            </div>
+            <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+              <button
+                className="btn btn-outline rounded-lg px-3 py-1.5 text-xs"
+                type="button"
+                onClick={onRefresh}
+              >
+                Refresh
+              </button>
+              <button
+                className="btn btn-primary rounded-lg px-4 py-1.5 text-sm"
+                type="button"
+                onClick={() => setIsCreateOpen(true)}
+              >
+                Add collection
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {error ? <p className="px-5 pt-4 text-sm text-red-600 sm:px-6">{error}</p> : null}
-      {loading ? (
-        <p className="px-5 py-8 text-center text-sm text-stone-500 sm:px-6">Loading...</p>
-      ) : (
-        <div className="overflow-hidden">
-          <table className="w-full table-fixed text-left text-sm">
-            <thead>
-              <tr className="border-b border-stone-200 bg-stone-50/80 text-xs font-medium uppercase tracking-wider text-stone-500">
-                <th className="px-5 py-3 sm:px-6">Title</th>
-                <th className="hidden px-5 py-3 sm:px-6 md:table-cell">Slug</th>
-                <th className="hidden px-5 py-3 sm:px-6 sm:table-cell">Products</th>
-                <th className="px-5 py-3 text-right sm:px-6">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {collections.map((collection) => (
-                <tr
-                  key={collection._id}
-                  className="border-b border-stone-100 transition-colors last:border-b-0 hover:bg-stone-50/50"
-                >
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      {collection.image ? (
-                        <img
-                          src={collection.image}
-                          alt={collection.title}
-                          className="h-10 w-10 rounded-xl border border-stone-200/70 object-cover"
-                        />
-                      ) : (
-                        <div className="h-10 w-10 rounded-xl border border-dashed border-stone-200 bg-stone-50" />
-                      )}
-                      <div>
-                        <p className="font-semibold text-stone-900">
-                          {collection.title}
-                        </p>
-                        {collection.description ? (
-                          <p className="mt-1 text-xs text-stone-500">
-                            {collection.description}
+        {error ? <p className="px-5 pt-4 text-sm text-red-600 sm:px-6">{error}</p> : null}
+        {loading ? (
+          <div className="py-20 flex flex-col items-center justify-center text-stone-400">
+            <Spinner className="h-8 w-8 mb-3" />
+            <p className="text-sm font-medium">Sorting collections...</p>
+          </div>
+        ) : (
+          <div className="overflow-hidden">
+            <table className="w-full table-fixed text-left text-sm">
+              <thead>
+                <tr className="border-b border-stone-200 bg-stone-50/80 text-xs font-medium uppercase tracking-wider text-stone-500">
+                  <th className="px-5 py-3 sm:px-6">Title</th>
+                  <th className="hidden px-5 py-3 sm:px-6 md:table-cell">Slug</th>
+                  <th className="hidden px-5 py-3 sm:px-6 sm:table-cell">Products</th>
+                  <th className="px-5 py-3 text-right sm:px-6">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {collections.map((collection) => (
+                  <tr
+                    key={collection._id}
+                    className="border-b border-stone-100 transition-colors last:border-b-0 hover:bg-stone-50/50"
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        {collection.image ? (
+                          <img
+                            src={collection.image}
+                            alt={collection.title}
+                            className="h-10 w-10 rounded-xl border border-stone-200/70 object-cover"
+                          />
+                        ) : (
+                          <div className="h-10 w-10 rounded-xl border border-dashed border-stone-200 bg-stone-50" />
+                        )}
+                        <div>
+                          <p className="font-semibold text-stone-900">
+                            {collection.title}
                           </p>
-                        ) : null}
+                          {collection.description ? (
+                            <p className="mt-1 text-xs text-stone-500">
+                              {collection.description}
+                            </p>
+                          ) : null}
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="hidden px-6 py-4 text-xs text-stone-600 md:table-cell">
-                    {collection.slug}
-                  </td>
-                  <td className="hidden px-6 py-4 text-xs text-stone-600 sm:table-cell">
-                    {collection.productSlugs?.length || 0}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <button
-                      className="btn btn-soft mr-2 px-3 py-1 text-xs"
-                      type="button"
-                      disabled={editLoading}
-                      onClick={async () => {
-                        setEditLoading(true)
-                        try {
-                          const full = onFetchForEdit ? await onFetchForEdit(collection._id) : collection
-                          setEditingCollection(full || collection)
-                          setIsEditOpen(true)
-                        } finally {
-                          setEditLoading(false)
-                        }
-                      }}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="btn btn-soft px-3 py-1 text-xs"
-                      type="button"
-                      onClick={() => onDelete?.(collection._id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {!collections.length ? (
-                <tr>
-                  <td className="px-6 py-6 text-sm text-stone-600" colSpan="4">
-                    No collections yet.
-                  </td>
-                </tr>
-              ) : null}
-            </tbody>
-          </table>
-        </div>
-      )}
+                    </td>
+                    <td className="hidden px-6 py-4 text-xs text-stone-600 md:table-cell">
+                      {collection.slug}
+                    </td>
+                    <td className="hidden px-6 py-4 text-xs text-stone-600 sm:table-cell">
+                      {collection.productSlugs?.length || 0}
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <button
+                        className="btn btn-soft mr-2 px-3 py-1 text-xs"
+                        type="button"
+                        disabled={editLoading}
+                        onClick={async () => {
+                          setEditLoading(true)
+                          try {
+                            const full = onFetchForEdit ? await onFetchForEdit(collection._id) : collection
+                            setEditingCollection(full || collection)
+                            setIsEditOpen(true)
+                          } finally {
+                            setEditLoading(false)
+                          }
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-soft px-3 py-1 text-xs"
+                        type="button"
+                        onClick={() => onDelete?.(collection._id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {!collections.length ? (
+                  <tr>
+                    <td className="px-6 py-6 text-sm text-stone-600" colSpan="4">
+                      No collections yet.
+                    </td>
+                  </tr>
+                ) : null}
+              </tbody>
+            </table>
+          </div>
+        )}
 
-      {isCreateOpen ? (
-        <CollectionEditorModal
-          title="Add Collection"
-          productOptions={productOptions}
-          apiBase={apiBase}
-          initialData={{
-            title: '',
-            slug: '',
-            description: '',
-            image: '',
-            productSlugs: [],
-          }}
-          onClose={() => setIsCreateOpen(false)}
-          onSubmit={handleCreate}
-        />
-      ) : null}
+        {isCreateOpen ? (
+          <CollectionEditorModal
+            title="Add Collection"
+            productOptions={productOptions}
+            apiBase={apiBase}
+            initialData={{
+              title: '',
+              slug: '',
+              description: '',
+              image: '',
+              productSlugs: [],
+            }}
+            onClose={() => setIsCreateOpen(false)}
+            onSubmit={handleCreate}
+          />
+        ) : null}
 
-      {isEditOpen && editingCollection ? (
-        <CollectionEditorModal
-          key={editingCollection._id}
-          title="Edit Collection"
-          productOptions={productOptions}
-          apiBase={apiBase}
-          initialData={editingCollection}
-          onClose={() => {
-            setIsEditOpen(false)
-            setEditingCollection(null)
-          }}
-          onSubmit={handleEdit}
-        />
-      ) : null}
-    </div>
+        {isEditOpen && editingCollection ? (
+          <CollectionEditorModal
+            key={editingCollection._id}
+            title="Edit Collection"
+            productOptions={productOptions}
+            apiBase={apiBase}
+            initialData={editingCollection}
+            onClose={() => {
+              setIsEditOpen(false)
+              setEditingCollection(null)
+            }}
+            onSubmit={handleEdit}
+          />
+        ) : null}
+      </div>
     </div>
   )
 }

@@ -1,15 +1,14 @@
-import { mailTransport, nodemailer } from '../config/mailer.js'
+import resend from '../config/resend.js';
 
 /**
  * Send verification code for user registration/OTP
  */
 export const sendVerificationEmail = async ({ to, code }) => {
   try {
-    const info = await mailTransport.sendMail({
-      from: 'MiMi Crunch <no-reply@mimi-crunch.test>',
+    const { data, error } = await resend.emails.send({
+      from: 'MiMi Crunch <otp@admin.mimicrunch.com>',
       to,
       subject: 'Verify your email for MiMi Crunch',
-      text: `Your 6-digit verification code is ${code}. It expires in 10 minutes.`,
       html: `<div style="font-family: sans-serif; border: 1px solid #ddd; padding: 20px; max-width: 500px; margin: auto;">
               <h2 style="color: #ff6b6b; text-align: center;">Welcome to MiMi Crunch!</h2>
               <p>Someone (hopefully you!) requested a verification code for your account.</p>
@@ -21,18 +20,20 @@ export const sendVerificationEmail = async ({ to, code }) => {
                 This code expires in 10 minutes. If you didn't request this, please ignore this email.
               </p>
             </div>`,
-    })
+    });
 
-    const previewUrl = nodemailer.getTestMessageUrl(info)
-    if (previewUrl) {
-      console.log('Verification Email Preview URL:', previewUrl)
+    if (error) {
+      console.error("Resend Verification Email Error:", error);
+      throw error;
     }
-    return info
+
+    console.log('Verification Email sent via Resend:', data.id);
+    return data;
   } catch (error) {
-    console.error("Verification Email Error:", error)
-    throw error
+    console.error("Verification Email Error:", error);
+    throw error;
   }
-}
+};
 
 /**
  * Send order confirmation email after order is placed
@@ -52,8 +53,8 @@ export const sendOrderConfirmationEmail = async ({ to, orderData }) => {
       </tr>
     `).join('');
 
-    const info = await mailTransport.sendMail({
-      from: 'MiMi Crunch <orders@mimi-crunch.test>',
+    const { data, error } = await resend.emails.send({
+      from: 'MiMi Crunch <support@mimicrunch.com>',
       to,
       subject: `Order Confirmed! (#${orderData._id.toString().slice(-6).toUpperCase()})`,
       html: `
@@ -99,15 +100,16 @@ export const sendOrderConfirmationEmail = async ({ to, orderData }) => {
           </p>
         </div>
       `,
-    })
+    });
 
-    const previewUrl = nodemailer.getTestMessageUrl(info)
-    if (previewUrl) {
-      console.log('Order Email Preview URL:', previewUrl)
+    if (error) {
+      console.error("Resend Order Confirmation Email Error:", error);
+      return;
     }
-    return info
+
+    console.log('Order Confirmation Email sent via Resend:', data.id);
+    return data;
   } catch (error) {
-    console.error("Order Confirmation Email Error:", error)
-    // Don't throw so order creation is not blocked
+    console.error("Order Confirmation Email Error:", error);
   }
-}
+};

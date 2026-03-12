@@ -17,7 +17,7 @@ const CLOUDINARY_TRANSFORM = 'w_1000,h_1000,c_fill,g_auto,q_auto,f_auto'
  * @returns {string} - URL with transformations, or original if not Cloudinary
  */
 export function getOptimizedImage(url) {
-  if (!url || typeof url !== 'string') return url || ''
+  if (!url || typeof url !== 'string') return null
   if (!url.includes('cloudinary.com') || !url.includes('/upload/')) return url
   return url.replace('/upload/', `/upload/${CLOUDINARY_TRANSFORM}/`)
 }

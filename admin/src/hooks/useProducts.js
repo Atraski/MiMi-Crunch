@@ -59,11 +59,16 @@ const useProducts = (apiBase) => {
       images: primaryVariant?.images || [],
       variants: form.variants || [],
       inventory: {
-        stock: form.stock ? Number(form.stock) : 0,
+        lowStockThreshold: form.lowStockThreshold ? Number(form.lowStockThreshold) : 5,
       },
       benefits: form.benefits ?? '',
       trust: form.trust ?? '',
       faqContent: form.faqContent ?? '',
+      faqs: (form.faqs || []).filter((f) => f.question?.trim() && f.answer?.trim()),
+      metaData: form.metaData ?? '',
+      metaTitle: form.metaTitle ?? '',
+      metaDescription: form.metaDescription ?? '',
+      schemaMarkup: form.schemaMarkup ?? '',
     }
   }
 
@@ -99,12 +104,13 @@ const useProducts = (apiBase) => {
         body: JSON.stringify(payload),
       })
       if (!res.ok) {
-        throw new Error('Update failed')
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || 'Update failed')
       }
       await fetchProducts()
       return true
     } catch (err) {
-      setError('Failed to update product.')
+      setError(err.message || 'Failed to update product.')
       return false
     }
   }

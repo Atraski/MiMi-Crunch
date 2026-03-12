@@ -4,7 +4,6 @@ import { getProductSlugFromCartItem } from '../utils/cartUtils'
 import { getOptimizedImage } from '../utils/imageUtils'
 
 const FREE_DELIVERY_MIN = 499
-const DELIVERY_FEE_AMOUNT = 49
 
 const ProceedButton = ({ onClose }) => {
   const navigate = useNavigate()
@@ -15,9 +14,9 @@ const ProceedButton = ({ onClose }) => {
         onClose?.()
         navigate('/checkout')
       }}
-      className="w-full rounded-lg bg-blue-600 py-3.5 text-sm font-semibold text-white hover:bg-blue-700"
+      className="w-full rounded-2xl bg-emerald-600 py-4 text-sm font-black uppercase tracking-widest text-white shadow-lg shadow-emerald-600/20 transition-all active:scale-95 hover:bg-emerald-700 hover:shadow-xl"
     >
-      Proceed
+      Proceed to Secure Payment
     </button>
   )
 }
@@ -88,35 +87,25 @@ const CartDrawer = ({
     return () => { cancelled = true }
   }, [open, apiBase, cart.length])
 
-  // Robust page scroll lock while cart is open. Uses position:fixed to lock
-  // page scroll and restores scroll position on close. This approach works
-  // for desktop wheel and mobile touch scrolling while allowing the cart
-  // drawer (asideRef) to scroll internally.
   useEffect(() => {
     if (!open) return
 
     const scrollY = window.scrollY || window.pageYOffset || 0
-
-    // Save original inline styles to restore later
     const origBodyPosition = document.body.style.position
     const origBodyTop = document.body.style.top
     const origBodyWidth = document.body.style.width
     const origDocOverflow = document.documentElement.style.overflow
 
-    // Lock scroll
     document.body.style.position = 'fixed'
     document.body.style.top = `-${scrollY}px`
     document.body.style.width = '100%'
     document.documentElement.style.overflow = 'hidden'
 
     return () => {
-      // Restore
       document.body.style.position = origBodyPosition || ''
       document.body.style.top = origBodyTop || ''
       document.body.style.width = origBodyWidth || ''
       document.documentElement.style.overflow = origDocOverflow || ''
-
-      // Restore scroll to previous position
       window.scrollTo(0, scrollY)
     }
   }, [open])
@@ -145,224 +134,264 @@ const CartDrawer = ({
   const freeDeliveryUnlocked = sub >= FREE_DELIVERY_MIN
   const progressPercent = Math.min(100, (sub / FREE_DELIVERY_MIN) * 100)
 
-  if (!open) {
-    return null
-  }
+  if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    <div className="fixed inset-0 z-[200] overflow-hidden">
       <button
-        className="absolute inset-0 bg-black/30"
+        className="absolute inset-0 bg-stone-900/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
         aria-label="Close cart"
         type="button"
       />
-      <aside ref={asideRef} className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-white shadow-2xl z-40">
-        <div className="flex items-center justify-between border-b border-stone-200 px-5 py-4 shrink-0">
-          <h2 className="text-lg font-bold uppercase tracking-wide text-stone-900">
-            Your Cart ({cartItemCount})
-          </h2>
+      <aside
+        ref={asideRef}
+        className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-[#FDFBF7] shadow-2xl z-[210] transition-transform duration-500 ease-out"
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-stone-100 bg-white px-6 py-5 shrink-0">
+          <div>
+            <h2 className="text-xl font-black uppercase tracking-tight text-stone-900">
+              Bag <span className="text-emerald-600">({cartItemCount})</span>
+            </h2>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-stone-400">Your curated selection</p>
+          </div>
           <button
-            className="flex h-10 w-10 items-center justify-center rounded-full text-stone-500 hover:bg-stone-100 hover:text-stone-700"
+            className="group flex h-10 w-10 items-center justify-center rounded-full bg-stone-50 text-stone-400 transition-all hover:bg-red-50 hover:text-red-500"
             onClick={onClose}
             type="button"
             aria-label="Close cart"
           >
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+            <svg
+              className="h-5 w-5 transition-transform group-hover:rotate-90"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto overscroll-contain px-5 py-4">
+        {/* Scrollable Content */}
+        <div
+          className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar scroll-smooth touch-pan-y"
+          data-lenis-prevent
+        >
           {cart.length === 0 ? (
-            <div className="px-5 py-8">
-              <p className="text-sm text-stone-600">Your cart is empty. Add products to see them here.</p>
+            <div className="flex h-full flex-col items-center justify-center px-10 text-center">
+              <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-stone-50 text-stone-200">
+                <svg className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+              </div>
+              <p className="text-lg font-bold text-stone-900">Hungry for some crunch?</p>
+              <p className="mt-2 text-sm text-stone-500">Your cart is feeling a bit lonely. Let's find something delicious!</p>
+              <button
+                onClick={onClose}
+                className="mt-8 rounded-full border border-stone-200 px-8 py-3 text-xs font-black uppercase tracking-widest text-stone-900 hover:bg-stone-900 hover:text-white transition-all"
+              >
+                Start Shopping
+              </button>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="pb-10 pt-2">
+              {/* Notifications / Alerts */}
               {cartLimitMessage ? (
-                <div className="rounded-xl bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">
-                  {cartLimitMessage}
+                <div className="mx-6 mb-4 rounded-2xl bg-amber-50 px-5 py-4 text-sm font-bold text-amber-900 border border-amber-100 flex gap-4 items-center">
+                  <span className="shrink-0 text-xl">⚠️</span>
+                  <p className="leading-tight">{cartLimitMessage}</p>
                 </div>
               ) : null}
-              <div className="bg-stone-900 px-4 py-2.5 text-center text-sm font-medium text-white">
-                Delivery in 2–5 days
-              </div>
 
-              <div className="mx-4 mt-4 rounded-xl bg-emerald-50 px-4 py-3">
-                <p className="text-sm font-medium text-emerald-800">
-                  Free delivery on orders above ₹{FREE_DELIVERY_MIN}
-                </p>
-                <div className="mt-2 flex items-center gap-2">
-                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-emerald-200">
-                    <div
-                      className="h-full rounded-full bg-emerald-600 transition-all"
-                      style={{ width: `${progressPercent}%` }}
-                    />
-                  </div>
+              {/* Free Delivery Goal */}
+              <div className="mx-6 mb-6 rounded-2xl bg-white p-5 border border-stone-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
+                <div className="flex items-center justify-between">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-800">
+                    {freeDeliveryUnlocked ? 'Shipping Unlocked' : 'Shipping goal'}
+                  </p>
+                  <p className="text-[10px] font-bold text-stone-400">
+                    Free Shipping: ₹{FREE_DELIVERY_MIN}
+                  </p>
+                </div>
+
+                <div className="relative mt-3 h-2.5 overflow-hidden rounded-full bg-stone-50">
+                  <div
+                    className={`h-full transition-all duration-700 ease-out rounded-full ${freeDeliveryUnlocked ? 'bg-gradient-to-r from-emerald-500 to-emerald-400' : 'bg-gradient-to-r from-stone-300 to-stone-200'}`}
+                    style={{ width: `${progressPercent}%` }}
+                  />
+                </div>
+
+                <div className="mt-3 flex items-center justify-between">
                   {freeDeliveryUnlocked ? (
-                    <span className="shrink-0 text-emerald-700" aria-label="Unlocked">
-                      <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                    </span>
+                    <div className="flex items-center gap-2 text-xs font-bold text-emerald-700">
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100">
+                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </span>
+                      You've got Free Delivery!
+                    </div>
                   ) : (
-                    <span className="text-xs text-emerald-700">₹{moreForFreeDelivery} to go</span>
+                    <p className="text-xs font-medium text-stone-600">
+                      Add <span className="font-bold text-stone-900">₹{moreForFreeDelivery}</span> more for free shipping
+                    </p>
                   )}
+                  <p className="text-[10px] font-black uppercase text-stone-300">Fast Shipping</p>
                 </div>
               </div>
 
-              {availableCoupons.length > 0 && (
+              {/* Rewards Teaser */}
+              {availableCoupons.length > 0 && !appliedCoupon && (
                 <button
                   type="button"
                   onClick={() => couponsSectionRef.current?.scrollIntoView({ behavior: 'smooth' })}
-                  className="mx-4 mt-3 flex w-[calc(100%-2rem)] items-center justify-between rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-emerald-600"
+                  className="mx-6 mb-6 flex w-[calc(100%-3rem)] items-center justify-between rounded-2xl bg-stone-900 p-4 shadow-xl transition-all hover:-translate-y-1 active:scale-95"
                 >
-                  <span className="flex items-center gap-2">
-                    <span className="text-lg">%</span>
-                    {availableCoupons.length} coupon{availableCoupons.length !== 1 ? 's' : ''} available
-                  </span>
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-xl">✨</div>
+                    <div className="text-left">
+                      <p className="text-xs font-black uppercase tracking-widest text-white">{availableCoupons.length} Exclusive Offer{availableCoupons.length !== 1 ? 's' : ''}</p>
+                      <p className="text-[10px] font-medium text-stone-400">Available just for you</p>
+                    </div>
+                  </div>
+                  <svg className="h-5 w-5 text-stone-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
               )}
 
-              <div className="space-y-4 px-5 py-4">
+              {/* Product List */}
+              <div className="px-6 space-y-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400">Items in your bag</h3>
+                </div>
                 {cart.map((item) => {
-                  const slug = getProductSlugFromCartItem(item) || item.slug || ''
                   return (
                     <div
                       key={item.id}
-                      role="button"
-                      tabIndex={0}
                       onClick={() => handleViewProduct(item)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault()
-                          handleViewProduct(item)
-                        }
-                      }}
-                      className="flex cursor-pointer gap-4 rounded-xl border border-stone-200 bg-white p-3 shadow-sm transition hover:border-stone-300 hover:shadow-md"
+                      className="group flex gap-5 rounded-2xl border border-stone-100 bg-white p-4 shadow-sm transition-all hover:border-emerald-200 hover:shadow-md active:scale-[0.98] cursor-pointer"
                     >
-                      <div className="h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-stone-200 bg-stone-50">
+                      <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-stone-50 border border-stone-50">
                         {item.image ? (
-                          <img src={getOptimizedImage(item.image)} alt={item.name} className="h-full w-full object-cover" />
+                          <img src={getOptimizedImage(item.image)} alt={item.name} className="h-full w-full object-cover transition-transform group-hover:scale-110" />
                         ) : (
-                          <div className="h-full w-full bg-stone-200" />
+                          <div className="h-full w-full flex items-center justify-center text-stone-200">
+                            <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                          </div>
                         )}
                       </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-start justify-between gap-2">
-                          <p className="font-semibold text-stone-900 line-clamp-2">{item.name}</p>
-                          {onRemoveItem && (
+                      <div className="min-w-0 flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-start justify-between gap-2">
+                            <p className="text-sm font-black text-stone-900 line-clamp-2 leading-tight">{item.name}</p>
                             <button
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation()
-                                onRemoveItem(item)
+                                onRemoveItem?.(item)
                               }}
-                              className="shrink-0 rounded p-1 text-stone-400 hover:bg-stone-100 hover:text-red-600"
+                              className="shrink-0 flex h-7 w-7 items-center justify-center rounded-full bg-stone-50 text-stone-300 hover:bg-red-50 hover:text-red-500 transition-colors"
                               aria-label={`Remove ${item.name}`}
                             >
-                              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                               </svg>
                             </button>
-                          )}
+                          </div>
+                          {item.size && <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-stone-400">{item.size}</p>}
                         </div>
-                        {item.size && <p className="mt-0.5 text-xs text-stone-500">{item.size}</p>}
-                        <div className="mt-2 flex items-center justify-between gap-2">
+
+                        <div className="mt-4 flex items-center justify-between">
                           <div
-                            className="inline-flex items-center gap-1 rounded-full border border-stone-200 bg-stone-50 px-2 py-1 text-sm"
+                            className="flex items-center rounded-lg bg-stone-50 p-1"
                             onClick={(e) => e.stopPropagation()}
-                            onKeyDown={(e) => e.stopPropagation()}
                           >
                             <button
                               type="button"
-                              className="text-stone-600 hover:text-stone-900"
+                              className="flex h-7 w-7 items-center justify-center rounded-md font-bold text-stone-400 hover:bg-white hover:text-stone-900 transition-all disabled:opacity-30"
+                              disabled={item.qty <= 1}
                               onClick={(e) => {
                                 e.stopPropagation()
                                 onDecreaseQty(item)
                               }}
-                              aria-label={`Decrease ${item.name}`}
                             >
                               −
                             </button>
-                            <span className="min-w-[1.25rem] text-center font-medium text-stone-800">{item.qty}</span>
+                            <span className="min-w-[2rem] text-center text-xs font-black text-stone-950">{item.qty}</span>
                             <button
                               type="button"
-                              className="text-stone-600 hover:text-stone-900"
+                              className="flex h-7 w-7 items-center justify-center rounded-md font-bold text-stone-400 hover:bg-white hover:text-stone-900 transition-all"
                               onClick={(e) => {
                                 e.stopPropagation()
                                 onIncreaseQty(item)
                               }}
-                              aria-label={`Increase ${item.name}`}
                             >
                               +
                             </button>
                           </div>
-                          <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                            {slug ? (
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  handleViewProduct(item)
-                                }}
-                                className="shrink-0 rounded-lg border border-stone-200 bg-stone-50 px-2.5 py-1 text-xs font-semibold text-stone-700 hover:bg-stone-100"
-                              >
-                                View
-                              </button>
-                            ) : null}
-                            <p className="text-sm font-semibold text-stone-900">₹{item.price * item.qty}</p>
-                          </div>
+                          <p className="text-sm font-black text-stone-900">₹{item.price * item.qty}</p>
                         </div>
                       </div>
                     </div>
                   )
                 })}
+              </div>
 
-              <div ref={couponsSectionRef} className="border-t border-stone-200 pt-4 px-5 shrink-0">
-                <div className="mb-2 flex items-center gap-2">
-                  <span className="text-lg">🎟️</span>
-                  <h3 className="text-sm font-bold text-stone-900">Apply Coupon</h3>
+              {/* Coupon Section */}
+              <div ref={couponsSectionRef} className="mt-10 px-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="flex h-1.5 w-8 rounded-full bg-stone-200" />
+                  <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400">Apply Coupon</h3>
                 </div>
-                <p className="mb-3 text-xs text-stone-500">Only one discount applicable at a time.</p>
+
                 {!appliedCoupon ? (
-                  <form onSubmit={handleApply} className="mb-4 flex gap-2">
+                  <form onSubmit={handleApply} className="group relative flex items-center">
                     <input
                       ref={couponInputRef}
                       type="text"
                       value={couponInput}
                       onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
-                      placeholder="Enter coupon code"
-                      className="flex-1 rounded-lg border border-stone-200 bg-stone-50 px-3 py-2.5 text-sm placeholder:text-stone-400"
-                      aria-label="Coupon code"
+                      placeholder="ENTER PROMO CODE"
+                      className="w-full rounded-2xl border border-stone-200 bg-white px-5 py-4 text-xs font-bold tracking-widest placeholder:text-stone-300 focus:border-emerald-500 focus:outline-none focus:ring-4 focus:ring-emerald-50/50 transition-all"
                     />
                     <button
                       type="submit"
                       disabled={applying || !couponInput.trim()}
-                      className="shrink-0 rounded-lg bg-stone-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-stone-800 disabled:opacity-50"
+                      className="absolute right-2 rounded-xl bg-stone-900 px-5 py-2.5 text-[10px] font-black uppercase tracking-widest text-white hover:bg-emerald-600 disabled:opacity-30 transition-all"
                     >
-                      {applying ? 'Apply…' : 'Apply'}
+                      {applying ? '...' : 'Apply'}
                     </button>
                   </form>
                 ) : (
-                  <div className="mb-4 flex items-center justify-between rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm">
-                    <span className="font-medium text-emerald-800">{appliedCoupon.code} applied</span>
-                    <button type="button" onClick={onRemoveCoupon} className="font-semibold text-orange-600 hover:underline">
+                  <div className="flex items-center justify-between rounded-2xl border-2 border-dashed border-emerald-200 bg-emerald-50/50 px-5 py-4 shadow-sm">
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg">🎉</span>
+                      <div>
+                        <p className="text-xs font-black text-emerald-800 tracking-widest">{appliedCoupon.code}</p>
+                        <p className="text-[10px] font-medium text-emerald-600">Coupon Successfully Applied</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={onRemoveCoupon}
+                      className="text-[10px] font-black uppercase tracking-widest text-orange-600 hover:text-orange-700 underline underline-offset-4"
+                    >
                       Remove
                     </button>
                   </div>
                 )}
-                {couponError ? <p className="mb-3 text-sm text-red-600">{couponError}</p> : null}
+                {couponError ? <p className="mt-2 ml-4 text-[10px] font-bold text-red-500">{couponError}</p> : null}
 
+                {/* Available Offers */}
                 {couponsLoading ? (
-                  <p className="text-xs text-stone-500">Loading offers…</p>
+                  <div className="mt-4 px-4 py-2 text-[10px] font-bold text-stone-400 animate-pulse tracking-widest uppercase">Fetching best offers...</div>
                 ) : availableCoupons.length > 0 ? (
-                  <div className="space-y-2">
+                  <div className="mt-6 space-y-3">
                     {availableCoupons.map((coupon) => {
                       const minOrder = coupon.minOrder || 0
                       const isApplicable = sub >= minOrder
@@ -370,41 +399,45 @@ const CartDrawer = ({
                       return (
                         <div
                           key={coupon.code}
-                          className={`flex items-start gap-3 rounded-lg border px-3 py-2.5 text-left text-sm ${
-                            isApplied
-                              ? 'border-emerald-300 bg-emerald-50'
-                              : isApplicable
-                                ? 'cursor-pointer border-sky-200 bg-sky-50/80 hover:border-sky-300 hover:bg-sky-50'
-                                : 'cursor-not-allowed border-stone-200 bg-stone-100 opacity-75'
-                          }`}
                           onClick={() => {
                             if (isApplied) return
                             if (isApplicable && !applying) handleApplyCouponByCode(coupon.code)
                           }}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter' && isApplicable && !isApplied) {
-                              e.preventDefault()
-                              handleApplyCouponByCode(coupon.code)
-                            }
-                          }}
-                          role={isApplicable && !isApplied ? 'button' : undefined}
-                          tabIndex={isApplicable && !isApplied ? 0 : -1}
-                          aria-disabled={!isApplicable}
+                          className={`relative overflow-hidden rounded-2xl border transition-all ${isApplied
+                            ? 'border-emerald-500 bg-emerald-50 shadow-inner'
+                            : isApplicable
+                              ? 'cursor-pointer border-stone-100 bg-white hover:border-emerald-200 hover:shadow-md'
+                              : 'cursor-not-allowed border-stone-50 bg-stone-50/10 grayscale opacity-50'
+                            } p-4`}
                         >
-                          <span className="mt-0.5 shrink-0 text-base">🎟️</span>
-                          <div className="min-w-0 flex-1">
-                            <p className={isApplicable ? 'font-medium text-stone-900' : 'text-stone-600'}>
-                              {getCouponDescription(coupon)}
-                            </p>
-                            {!isApplicable && minOrder > 0 && (
-                              <p className="mt-1 text-xs text-stone-500">
-                                Add ₹{minOrder - sub} more to use this offer
-                              </p>
-                            )}
-                            {isApplied && (
-                              <p className="mt-1 text-xs font-medium text-emerald-700">Applied</p>
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex items-start gap-4">
+                              <div className={`mt-1 h-8 w-8 flex items-center justify-center rounded-lg ${isApplied ? 'bg-emerald-500 text-white' : 'bg-stone-50 text-stone-400'}`}>
+                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3">
+                                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12z" />
+                                </svg>
+                              </div>
+                              <div className="min-w-0">
+                                <p className={`text-xs font-black uppercase tracking-widest ${isApplied ? 'text-emerald-700' : 'text-stone-900'}`}>
+                                  {coupon.code}
+                                </p>
+                                <p className="mt-1 text-xs font-medium text-stone-500 leading-tight">
+                                  {getCouponDescription(coupon)}
+                                </p>
+                                {!isApplicable && (
+                                  <p className="mt-2 text-[10px] font-black text-amber-600">
+                                    Add ₹{minOrder - sub} for this offer
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            {isApplicable && !isApplied && (
+                              <button className="text-[10px] font-black uppercase tracking-widest text-emerald-600 transition-colors hover:text-emerald-700">Apply</button>
                             )}
                           </div>
+                          {isApplied && (
+                            <div className="absolute top-0 right-0 py-1.5 px-3 bg-emerald-500 rounded-bl-xl text-[8px] font-black uppercase text-white tracking-widest">Active</div>
+                          )}
                         </div>
                       )
                     })}
@@ -412,55 +445,65 @@ const CartDrawer = ({
                 ) : null}
               </div>
 
-              </div>
+              {/* Final Invoice Card */}
+              <div className="mt-12 px-6">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="flex h-1.5 w-8 rounded-full bg-stone-200" />
+                  <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-stone-400">Billing details</h3>
+                </div>
 
-              <div className="mt-6 border-t border-stone-200 px-5 pb-4 pt-4">
-                <h3 className="text-sm font-bold text-stone-900">Price details</h3>
-                <p className="mb-3 text-xs text-stone-500">Prices are inclusive of all taxes.</p>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between text-stone-700">
-                    <span>Total MRP</span>
-                    <span>₹{Math.round(subtotal ?? 0)}</span>
+                <div className="rounded-3xl border border-stone-100 bg-white p-6 space-y-4 shadow-[0_4px_25px_rgba(0,0,0,0.02)]">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="font-medium text-stone-500">Order Subtotal</span>
+                    <span className="font-bold text-stone-900">₹{Math.round(subtotal ?? 0)}</span>
                   </div>
                   {discountAmount > 0 && (
-                    <div className="flex justify-between text-emerald-700">
-                      <span>Coupon discount</span>
-                      <span>-₹{Math.round(discountAmount)}</span>
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="font-medium text-emerald-600">Coupon Discount</span>
+                      <span className="font-bold text-emerald-600 underline decoration-emerald-200 decoration-4 underline-offset-4">-₹{Math.round(discountAmount)}</span>
                     </div>
                   )}
-                  {!appliedCoupon && discountAmount === 0 && (
-                    <div className="flex justify-between text-stone-500">
-                      <span>Coupon discount</span>
-                      <button type="button" onClick={() => couponInputRef.current?.focus()} className="font-medium text-orange-600 hover:underline">
-                        Apply coupon
-                      </button>
-                    </div>
-                  )}
-                  <div className="flex justify-between text-stone-700">
-                    <span>Delivery charges</span>
-                    <span>{deliveryFee === 0 && (subtotal ?? 0) > 0 ? 'Free' : `₹${Math.round(deliveryFee ?? 0)}`}</span>
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="font-medium text-stone-500">Service Fee & Shipping</span>
+                    <span className="font-bold text-stone-900">
+                      {deliveryFee === 0 && (subtotal ?? 0) > 0 ? (
+                        <span className="text-emerald-600 uppercase text-[10px] font-black tracking-widest bg-emerald-50 px-2 py-0.5 rounded-full">Free</span>
+                      ) : (
+                        `₹${Math.round(deliveryFee ?? 0)}`
+                      )}
+                    </span>
+                  </div>
+                  <div className="h-px bg-stone-50" />
+                  <div className="flex justify-between items-center pt-2">
+                    <span className="text-base font-black text-stone-900">Estimated Total</span>
+                    <span className="text-xl font-black text-stone-950 tracking-tight">₹{Math.round(total ?? 0)}</span>
                   </div>
                 </div>
+
+                <p className="mt-4 px-4 text-center text-[10px] font-medium text-stone-400">
+                  Prices include GST. Final total calculated on checkout page.
+                </p>
               </div>
             </div>
           )}
         </div>
 
+        {/* Checkout Footer */}
         {cart.length > 0 && (
-          <div className="border-t border-stone-200 bg-stone-900 px-5 py-4 text-white">
-            <p className="text-center text-xs font-medium text-stone-300">Unlock more discounts on Checkout</p>
-            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-xs text-stone-400">Estimated total</p>
-                <p className="text-xl font-bold">₹{Math.round(total ?? 0)}</p>
+          <div className="border-t border-stone-100 bg-white px-6 py-6 shrink-0 shadow-[0_-10px_40px_rgba(0,0,0,0.04)]">
+            <div className="mb-5 flex flex-col gap-1 items-start">
+              <div className="flex items-center gap-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-stone-400">Total to pay</p>
                 {discountAmount > 0 && (
-                  <p className="mt-1 text-sm font-semibold text-emerald-400">You saved ₹{Math.round(discountAmount)}!</p>
+                  <div className="rounded-full bg-emerald-100 px-3 py-0.5 text-[8px] font-black uppercase text-emerald-700 tracking-widest animate-pulse">
+                    You Saved ₹{Math.round(discountAmount)}
+                  </div>
                 )}
               </div>
-              <div className="w-full sm:w-auto sm:min-w-[140px]">
-                <ProceedButton onClose={onClose} />
-              </div>
+              <p className="text-3xl font-black text-stone-950 tracking-tight">₹{Math.round(total ?? 0)}</p>
             </div>
+
+            <ProceedButton onClose={onClose} />
           </div>
         )}
       </aside>

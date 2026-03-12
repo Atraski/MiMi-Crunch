@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMemo } from 'react'
 import ProductForm from './ProductForm.jsx'
+import Spinner from '../../components/Spinner.jsx'
 
 const ProductList = ({
   products = [],
@@ -13,6 +14,7 @@ const ProductList = ({
   onDelete,
   onToggleActive,
   apiBase,
+  siteUrl,
 }) => {
   const [isCreateOpen, setIsCreateOpen] = useState(false)
   const [isEditOpen, setIsEditOpen] = useState(false)
@@ -38,7 +40,7 @@ const ProductList = ({
     const total = products.length
     const live = products.filter((p) => p.isActive !== false).length
     const archived = total - live
-    
+
     // Check if any variant is out of stock
     const outOfStock = products.filter((p) => {
       if (p.variants && p.variants.length > 0) {
@@ -51,7 +53,7 @@ const ProductList = ({
   }, [products])
 
   const filteredProducts = useMemo(() => {
-    return products.filter(p => 
+    return products.filter(p =>
       (p.name || p.title || '').toLowerCase().includes(searchQuery.toLowerCase())
     )
   }, [products, searchQuery])
@@ -116,9 +118,12 @@ const ProductList = ({
 
         {/* --- Table Section --- */}
         {error ? <p className="p-6 text-sm text-red-600 font-medium bg-red-50">{error}</p> : null}
-        
+
         {loading ? (
-          <div className="py-20 text-center text-stone-400 animate-pulse">Fetching inventory...</div>
+          <div className="py-20 flex flex-col items-center justify-center text-stone-400">
+            <Spinner className="h-8 w-8 mb-3" />
+            <p className="text-sm font-medium">Fetching inventory...</p>
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left" style={{ minWidth: 640 }}>
@@ -142,15 +147,15 @@ const ProductList = ({
                 {filteredProducts.map((item) => {
                   const isActive = item.isActive !== false
                   const primaryImage = item.images?.[0] || item.variants?.[0]?.images?.[0] || ''
-                  
+
                   return (
                     <tr key={item._id} className="hover:bg-stone-50/50 transition-colors">
                       <td className="px-4 py-4 sm:px-6">
                         <div className="flex items-center gap-4">
-                          <img 
-                            src={primaryImage || 'https://via.placeholder.com/150'} 
-                            className="h-12 w-12 rounded-xl border object-cover bg-stone-100" 
-                            alt="" 
+                          <img
+                            src={primaryImage || 'https://via.placeholder.com/150'}
+                            className="h-12 w-12 rounded-xl border object-cover bg-stone-100"
+                            alt=""
                           />
                           <div className="min-w-0 flex-1">
                             <p className="text-sm font-bold text-stone-900 break-words">{item.title || item.name}</p>
@@ -175,35 +180,55 @@ const ProductList = ({
                         </label>
                       </td>
                       <td className="px-4 py-4 sm:px-6">
-  <div className="flex flex-wrap gap-2">
-    {item.variants && item.variants.length > 0 ? (
-      item.variants.map((v, idx) => (
-        <div 
-          key={idx} 
-          className={`rounded-lg border px-2 py-1 text-[10px] font-bold ${
-            (v.stock || 0) <= 5 
-              ? 'bg-amber-50 border-amber-200 text-amber-700' 
-              : 'bg-stone-50 border-stone-100 text-stone-600'
-          }`}
-        >
-          {/* Variant label: weight and stock */}
-          {v.weight} <span className="text-stone-900 ml-1">{v.stock ?? 0}</span>
-        </div>
-      ))
-    ) : (
-      <span className="text-xs text-stone-400 font-medium">No variants found</span>
-    )}
-  </div>
-</td>
+                        <div className="flex flex-wrap gap-2">
+                          {item.variants && item.variants.length > 0 ? (
+                            item.variants.map((v, idx) => (
+                              <div
+                                key={idx}
+                                className={`rounded-lg border px-2 py-1 text-[10px] font-bold ${(v.stock || 0) <= 5
+                                  ? 'bg-amber-50 border-amber-200 text-amber-700'
+                                  : 'bg-stone-50 border-stone-100 text-stone-600'
+                                  }`}
+                              >
+                                {/* Variant label: weight and stock */}
+                                {v.weight} <span className="text-stone-900 ml-1">{v.stock ?? 0}</span>
+                              </div>
+                            ))
+                          ) : (
+                            <span className="text-xs text-stone-400 font-medium">No variants found</span>
+                          )}
+                        </div>
+                      </td>
                       <td className="hidden px-4 py-4 sm:px-6 lg:table-cell">
                         <span className="inline-block rounded-md bg-stone-100 px-2 py-1 text-[10px] font-bold text-stone-500">
                           {item.collection || 'General'}
                         </span>
                       </td>
                       <td className="px-4 py-4 text-right sm:px-6">
-                        <div className="flex justify-end gap-2">
+                        <div className="flex justify-end gap-2 text-stone-600">
+                          <a
+                            href={`${siteUrl}/products/${item.slug}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="h-9 w-9 flex items-center justify-center rounded-xl border border-stone-200 bg-white hover:bg-stone-900 hover:text-white transition-all shadow-sm"
+                            title="Live Preview"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              className="h-4 w-4"
+                            >
+                              <path d="M10 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+                              <path
+                                fillRule="evenodd"
+                                d="M.664 10.59a1.651 1.651 0 0 1 0-1.186A10.004 10.004 0 0 1 10 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0 1 10 17c-4.257 0-7.893-2.66-9.336-6.41ZM14 10a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                          </a>
                           <button
-                            className="h-9 w-9 flex items-center justify-center rounded-xl border border-stone-200 text-stone-600 hover:bg-stone-900 hover:text-white transition-all shadow-sm"
+                            className="h-9 w-9 flex items-center justify-center rounded-xl border border-stone-200 bg-white hover:bg-stone-900 hover:text-white transition-all shadow-sm"
                             onClick={async () => {
                               setEditLoading(true)
                               const full = onFetchForEdit ? await onFetchForEdit(item._id) : item
@@ -212,8 +237,19 @@ const ProductList = ({
                               setEditLoading(false)
                             }}
                           >
-                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                              />
                             </svg>
                           </button>
                           <button

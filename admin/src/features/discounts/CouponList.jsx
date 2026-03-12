@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import Spinner from '../../components/Spinner.jsx'
 
 const formatDate = (d) => {
   if (!d) return '—'
@@ -92,7 +93,10 @@ const CouponList = ({
 
         {error ? <p className="px-5 pt-4 text-sm text-red-600 sm:px-6">{error}</p> : null}
         {loading ? (
-          <p className="px-5 py-8 text-center text-sm text-stone-500 sm:px-6">Loading...</p>
+          <div className="py-20 flex flex-col items-center justify-center text-stone-400">
+            <Spinner className="h-8 w-8 mb-3" />
+            <p className="text-sm font-medium">Validating coupons...</p>
+          </div>
         ) : (
           <div className="overflow-hidden">
             <table className="w-full table-fixed text-left text-sm">
@@ -135,11 +139,10 @@ const CouponList = ({
                     </td>
                     <td className="px-6 py-4">
                       <span
-                        className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
-                          coupon.active
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : 'bg-stone-200 text-stone-600'
-                        }`}
+                        className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${coupon.active
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : 'bg-stone-200 text-stone-600'
+                          }`}
                       >
                         {coupon.active ? 'Active' : 'Inactive'}
                       </span>
