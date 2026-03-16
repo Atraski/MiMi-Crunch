@@ -10,10 +10,12 @@ import { Route, Routes, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import FlyToCart from './components/FlyToCart'
 import ProfileReminder from './components/ProfileReminder'
+import CustomCursor from './components/CustomCursor'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Home from './pages/Home'
 import NewsPage from './pages/NewsPage'
+import BuildYourOwnProtein from './pages/BuildYourOwnProtein'
 import BlogDetail from './pages/BlogDetail'
 import ProductDetail from './pages/ProductDetail'
 import Products from './pages/Products'
@@ -34,7 +36,7 @@ import Lenis from 'lenis'
 import OrderSuccess from './pages/OrderSuccess'
 import { getProductSlugFromCartItem, wouldExceedWeightLimit } from './utils/cartUtils'
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://mimicrunch-33how.ondigitalocean.app'
+const API_BASE = import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'
 
 function App() {
   const navigate = useNavigate()
@@ -45,6 +47,17 @@ function App() {
   // Scroll to top on every route change
   useEffect(() => {
     window.scrollTo(0, 0)
+    if (window.lenis) {
+      window.lenis.scrollTo(0, { immediate: true })
+    }
+    
+    // Fallback for async content/layouts
+    const timer = setTimeout(() => {
+      window.scrollTo(0, 0)
+      if (window.lenis) window.lenis.scrollTo(0, { immediate: true })
+    }, 10)
+    
+    return () => clearTimeout(timer)
   }, [location.pathname])
 
   useEffect(() => {
@@ -68,31 +81,46 @@ function App() {
 
     const recordVisit = async () => {
       try {
+        const deviceType = window.innerWidth < 768 ? 'mobile' : window.innerWidth < 1024 ? 'tablet' : 'desktop'
         await fetch(`${API_BASE}/api/analytics/visit`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             visitorId,
             source: document.referrer || 'direct',
-            path: window.location.pathname
+            path: window.location.pathname,
+            deviceType
           })
         })
-      } catch (err) {
-        // silently fail
-      }
+      } catch (err) { }
     }
 
     recordVisit()
+  }, [location.pathname]) // Record view on every route change
 
-    const intervalId = setInterval(() => {
+  useEffect(() => {
+    const visitorId = sessionStorage.getItem('mimi_visitor_id')
+    if (!visitorId) return
+
+    const sendPing = () => {
       fetch(`${API_BASE}/api/analytics/ping`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ visitorId })
+        body: JSON.stringify({ visitorId }),
+        keepalive: true // Important for cleanup pings
       }).catch(() => { })
-    }, 30000)
+    }
 
-    return () => clearInterval(intervalId)
+    const intervalId = setInterval(sendPing, 30000)
+    
+    // Also ping when user leaves or changes tab to capture last few seconds
+    window.addEventListener('beforeunload', sendPing)
+
+    return () => {
+      clearInterval(intervalId)
+      window.removeEventListener('beforeunload', sendPing)
+      sendPing() // Final ping on component unmount
+    }
   }, [])
 
   // Restore initial state from localStorage
@@ -127,6 +155,10 @@ function App() {
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     })
+    
+    // Make lenis accessible globally for programmatic scrolling
+    window.lenis = lenis
+
     let rafId = 0
     function raf(time) {
       lenis.raf(time)
@@ -136,6 +168,7 @@ function App() {
     return () => {
       cancelAnimationFrame(rafId)
       lenis.destroy()
+      window.lenis = null
     }
   }, [])
 
@@ -453,6 +486,7 @@ function App() {
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg md:bg-white transition-colors duration-500">
+      <CustomCursor />
       {isProductsLoading && <Loader />}
       {/* Desktop Header */}
       <div className="hidden md:block">
@@ -548,6 +582,7 @@ function App() {
               }
             />
             <Route path="/products/test" element={<ProductsTest />} />
+            <Route path="/build-your-protein" element={<PageWrapper><BuildYourOwnProtein /></PageWrapper>} />
             <Route path="/recipes" element={<RecipesPage />} />
             <Route path="/recipes/:slug" element={<RecipeDetail />} />
             <Route path="/about" element={<About recipes={homeRecipes} />} />

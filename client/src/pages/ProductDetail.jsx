@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext'
 import { getOptimizedImage } from '../utils/imageUtils'
 import { getProductColor, getContrastColor } from '../utils/productColors'
 
-const API_BASE_FALLBACK = import.meta.env.VITE_API_BASE || 'https://mimicrunch-33how.ondigitalocean.app'
+const API_BASE_FALLBACK = import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'
 
 const ProductDetail = ({
   apiBase = API_BASE_FALLBACK,
@@ -235,6 +235,10 @@ const ProductDetail = ({
 
   // animate entrance when slug changes
   useEffect(() => {
+    window.scrollTo(0, 0)
+    if (window.lenis) {
+      window.lenis.scrollTo(0, { immediate: true })
+    }
     if (!containerRef.current) return
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -545,12 +549,7 @@ const ProductDetail = ({
               Verified Superfood
             </span>
 
-            {product.desc ? (
-              <div
-                className="mt-6 text-[#4A5D4E] prose prose-stone prose-p:my-2 max-w-none text-base leading-relaxed relative z-10"
-                dangerouslySetInnerHTML={{ __html: product.desc }}
-              />
-            ) : null}
+{/* Description moved to its own section below */}
 
             {product.metaData ? (
               <div
@@ -799,7 +798,69 @@ const ProductDetail = ({
           </div>
         ) : null}
 
-        {/* 3. REVIEWS & RECIPES */}
+                {/* NEW DESCRIPTION SECTION */}
+        {product.desc ? (
+          <section className="pt-12 pb-8">
+            <div className="backdrop-blur-xl bg-white/50 border border-white/60 shadow-sm rounded-[2.5rem] p-8 lg:p-10 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-64 h-64 bg-white/40 rounded-full blur-3xl transform -translate-x-32 -translate-y-32 pointer-events-none"></div>
+              <h2 className="text-3xl lg:text-4xl font-[Fraunces] font-medium text-[#1B3B26] mb-6 relative z-10">About this product</h2>
+              <div
+                className="prose prose-stone max-w-none text-[#4A5D4E] prose-p:leading-relaxed text-lg relative z-10"
+                dangerouslySetInnerHTML={{ __html: product.desc }}
+              />
+            </div>
+          </section>
+        ) : null}
+
+{/* 5. FAQs SECTION */}
+        {product.faqs?.length || product.faqContent ? (
+          <section className="pt-20 pb-16">
+            <div className="grid gap-12 lg:grid-cols-2 lg:gap-20 items-start">
+              <div className="space-y-6">
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#F5B041]">Knowledge Base</span>
+                <h2 className="text-4xl lg:text-6xl font-[Fraunces] font-normal text-[#1B3B26] leading-[1.1]">Everything you need to know.</h2>
+                <p className="text-[#4A5D4E] text-lg max-w-md">Common questions about {product.name} sourcing, nutrition, and usage.</p>
+              </div>
+
+              <div className="space-y-4">
+                {product.faqs?.length ? (
+                  product.faqs.map((faq, idx) => (
+                    <div
+                      key={idx}
+                      className={`overflow-hidden rounded-[2rem] border transition-all duration-300 ${faqOpenIndex === idx ? 'bg-white border-stone-200 shadow-lg' : 'bg-white/40 border-white/60 hover:bg-white/60'}`}
+                    >
+                      <button
+                        className="flex w-full items-center justify-between p-6 text-left"
+                        onClick={() => setFaqOpenIndex(faqOpenIndex === idx ? -1 : idx)}
+                      >
+                        <span className="text-base font-[Fraunces] font-medium text-[#1B3B26]">{faq.question}</span>
+                        <span className={`text-2xl transition-transform duration-300 ${faqOpenIndex === idx ? 'rotate-45 text-[#F5B041]' : 'text-[#4A5D4E]'}`}>+</span>
+                      </button>
+                      <div
+                        className={`overflow-hidden transition-all duration-300 ease-in-out ${faqOpenIndex === idx ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+                      >
+                        <div className="p-6 pt-0 text-sm leading-relaxed text-[#4A5D4E] border-t border-stone-50">
+                          {faq.answer}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="backdrop-blur-xl bg-[#1B3B26] text-white shadow-xl rounded-[3rem] p-10 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-[#F5B041] opacity-10 rounded-full blur-3xl transform translate-x-32 -translate-y-32 pointer-events-none"></div>
+                    <div
+                      className="relative z-10 prose prose-invert max-w-none text-[#EAE6DF] 
+                                 prose-headings:font-[Fraunces] prose-headings:font-normal prose-headings:text-[#F5B041] 
+                                 prose-p:text-lg prose-p:leading-relaxed"
+                      dangerouslySetInnerHTML={{ __html: product.faqContent }}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        ) : null}
+{/* 3. REVIEWS & RECIPES */}
         <section className="pt-8">
           <div className="mb-10 flex flex-col items-center text-center">
             <h2 className="text-4xl lg:text-5xl font-[Fraunces] font-medium text-[#1B3B26]">Reviews & testimonials</h2>
@@ -1064,55 +1125,7 @@ const ProductDetail = ({
           </section>
         )}
 
-        {/* 5. FAQs SECTION */}
-        {product.faqs?.length || product.faqContent ? (
-          <section className="pt-20 pb-16">
-            <div className="grid gap-12 lg:grid-cols-2 lg:gap-20 items-start">
-              <div className="space-y-6">
-                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#F5B041]">Knowledge Base</span>
-                <h2 className="text-4xl lg:text-6xl font-[Fraunces] font-normal text-[#1B3B26] leading-[1.1]">Everything you need to know.</h2>
-                <p className="text-[#4A5D4E] text-lg max-w-md">Common questions about {product.name} sourcing, nutrition, and usage.</p>
               </div>
-
-              <div className="space-y-4">
-                {product.faqs?.length ? (
-                  product.faqs.map((faq, idx) => (
-                    <div
-                      key={idx}
-                      className={`overflow-hidden rounded-[2rem] border transition-all duration-300 ${faqOpenIndex === idx ? 'bg-white border-stone-200 shadow-lg' : 'bg-white/40 border-white/60 hover:bg-white/60'}`}
-                    >
-                      <button
-                        className="flex w-full items-center justify-between p-6 text-left"
-                        onClick={() => setFaqOpenIndex(faqOpenIndex === idx ? -1 : idx)}
-                      >
-                        <span className="text-base font-[Fraunces] font-medium text-[#1B3B26]">{faq.question}</span>
-                        <span className={`text-2xl transition-transform duration-300 ${faqOpenIndex === idx ? 'rotate-45 text-[#F5B041]' : 'text-[#4A5D4E]'}`}>+</span>
-                      </button>
-                      <div
-                        className={`overflow-hidden transition-all duration-300 ease-in-out ${faqOpenIndex === idx ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
-                      >
-                        <div className="p-6 pt-0 text-sm leading-relaxed text-[#4A5D4E] border-t border-stone-50">
-                          {faq.answer}
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="backdrop-blur-xl bg-[#1B3B26] text-white shadow-xl rounded-[3rem] p-10 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-[#F5B041] opacity-10 rounded-full blur-3xl transform translate-x-32 -translate-y-32 pointer-events-none"></div>
-                    <div
-                      className="relative z-10 prose prose-invert max-w-none text-[#EAE6DF] 
-                                 prose-headings:font-[Fraunces] prose-headings:font-normal prose-headings:text-[#F5B041] 
-                                 prose-p:text-lg prose-p:leading-relaxed"
-                      dangerouslySetInnerHTML={{ __html: product.faqContent }}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
-        ) : null}
-      </div>
     </main>
   )
 }

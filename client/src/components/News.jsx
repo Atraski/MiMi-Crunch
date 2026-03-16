@@ -93,10 +93,10 @@ const News = ({ news }) => {
             {items.map((item, idx) => (
               <SwiperSlide key={idx}>
                 <article
-                  className="group flex flex-col h-[480px] bg-white border border-stone-100 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-brand-green/5"
+                  className="group flex flex-col h-[500px] bg-white border border-stone-100 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-brand-green/5"
                 >
                   {/* Image Container */}
-                  <div className="h-[50%] w-full shrink-0 relative overflow-hidden bg-stone-50">
+                  <div className="aspect-video w-full shrink-0 relative overflow-hidden bg-stone-50">
                     {item.coverImage ? (
                       <img
                         src={item.coverImage}
@@ -111,7 +111,7 @@ const News = ({ news }) => {
                     )}
 
                     {item.date && (
-                      <div className="absolute top-5 left-5 z-20 px-3 py-1.5 bg-white/95 backdrop-blur-md rounded-xl shadow-sm">
+                      <div className="absolute bottom-3 right-5 z-20 px-3 py-1.5 bg-white/95 backdrop-blur-md rounded-xl shadow-sm">
                         <span className="text-[9px] font-black uppercase tracking-widest text-brand-green">{item.date}</span>
                       </div>
                     )}

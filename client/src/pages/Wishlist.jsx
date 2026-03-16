@@ -4,7 +4,7 @@ import BackButton from '../components/BackButton'
 import { useAuth } from '../context/AuthContext'
 import { products } from '../data/homeData'
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://mimicrunch-33how.ondigitalocean.app'
+const API_BASE = import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'
 
 const Wishlist = () => {
   const { user, loading: authLoading } = useAuth()

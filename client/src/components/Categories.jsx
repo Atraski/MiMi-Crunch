@@ -54,6 +54,7 @@ const Categories = ({ collections = [] }) => {
     if (t.includes('sweet') || t.includes('dessert') || t.includes('halwa')) return '🍩';
     if (t.includes('combo') || t.includes('pack') || t.includes('bundle')) return '🎁';
     if (t.includes('seed') || t.includes('nut')) return '🥜';
+    if (t.includes('protein')) return '⚡';
     return '🍃';
   };
 
@@ -115,7 +116,7 @@ const Categories = ({ collections = [] }) => {
                   </div>
                   <p className="text-stone-500 text-sm leading-relaxed mb-6 line-clamp-2">{item.desc}</p>
                   <span className="text-[10px] font-black uppercase tracking-widest text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">
-                    {item.count || 0} Products
+                    {typeof item.count === 'number' ? `${item.count} Products` : item.count}
                   </span>
                 </div>
               </Link>

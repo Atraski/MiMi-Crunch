@@ -9,12 +9,17 @@ const useAnalytics = (apiBase) => {
     })
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState('')
+    const [dateRange, setDateRange] = useState({
+        startDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        endDate: new Date().toISOString().split('T')[0]
+    })
 
     const fetchAnalytics = async () => {
         try {
             const session = getStoredAdminSession()
             const token = session ? session.token : ''
-            const res = await fetch(`${apiBase}/api/analytics/stats`, {
+            const query = `?startDate=${dateRange.startDate}&endDate=${dateRange.endDate}`
+            const res = await fetch(`${apiBase}/api/analytics/stats${query}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -25,6 +30,8 @@ const useAnalytics = (apiBase) => {
                 activeUsers: result.activeUsers || 0,
                 sourceStats: result.sourceStats || {},
                 dailyTraffic: result.dailyTraffic || [],
+                avgTimePerUser: result.avgTimePerUser || 0,
+                keywordStats: result.keywordStats || [],
             })
             setError('')
         } catch (err) {
@@ -36,11 +43,11 @@ const useAnalytics = (apiBase) => {
 
     useEffect(() => {
         fetchAnalytics()
-        const interval = setInterval(fetchAnalytics, 10000) // Poll every 10s for live feel
+        const interval = setInterval(fetchAnalytics, 15000)
         return () => clearInterval(interval)
-    }, [apiBase])
+    }, [apiBase, dateRange]) // Re-fetch when dateRange changes
 
-    return { data, loading, error, refresh: fetchAnalytics }
+    return { data, loading, error, dateRange, setDateRange, refresh: fetchAnalytics }
 }
 
 export default useAnalytics

@@ -154,7 +154,7 @@ const Checkout = ({
       }
 
       const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE || 'https://mimicrunch-33how.ondigitalocean.app'}/api/orders`,
+        `${import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'}/api/orders`,
         orderPayload,
         { headers: token ? { Authorization: `Bearer ${token}` } : {} }
       );

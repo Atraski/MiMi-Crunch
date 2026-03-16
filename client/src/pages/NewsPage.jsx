@@ -41,10 +41,10 @@ const NewsPage = ({ blogs }) => {
           {posts.map((item) => (
             <article
               key={item.title}
-              className="group flex flex-col h-[420px] backdrop-blur-xl bg-white/70 border border-white/60 shadow-[0_15px_40px_-15px_rgba(27,59,38,0.06)] rounded-[2rem] overflow-hidden transition-all hover:shadow-[0_24px_50px_-15px_rgba(27,59,38,0.12)] hover:-translate-y-1"
+              className="group flex flex-col h-[450px] backdrop-blur-xl bg-white/70 border border-white/60 shadow-[0_15px_40px_-15px_rgba(27,59,38,0.06)] rounded-[2rem] overflow-hidden transition-all hover:shadow-[0_24px_50px_-15px_rgba(27,59,38,0.12)] hover:-translate-y-1"
             >
-              {/* Image Container - Using 50% height of the card instead of fixed small padding */}
-              <div className="h-1/2 w-full shrink-0 relative bg-[#EAE6DF] overflow-hidden">
+              {/* Image Container - Using aspect-video for rectangular look */}
+              <div className="aspect-video w-full shrink-0 relative bg-[#EAE6DF] overflow-hidden">
                 {item.coverImage ? (
                   <img
                     src={item.coverImage}
@@ -53,16 +53,14 @@ const NewsPage = ({ blogs }) => {
                     loading="lazy"
                   />
                 ) : null}
-              </div>
 
-              {/* Content Container */}
+                {item.date && (
+                  <div className="absolute bottom-2 right-4 z-20 px-2.5 py-1 bg-white/95 backdrop-blur-md rounded-lg shadow-sm border border-[#1B3B26]/10">
+                    <span className="text-[9px] font-black uppercase tracking-widest text-[#1B3B26]">{item.date}</span>
+                  </div>
+                )}
+              </div>              {/* Content Container */}
               <div className="flex flex-col flex-1 p-6">
-                {item.date ? (
-                  <p className="text-[10px] font-bold text-[#1B3B26] uppercase tracking-wider mb-2 bg-[#1B3B26]/5 w-fit px-2 py-1 rounded-md border border-[#1B3B26]/10">
-                    {item.date}
-                  </p>
-                ) : null}
-
                 <h3 className="text-xl font-[Fraunces] font-medium text-[#1B3B26] leading-tight line-clamp-2 group-hover:text-[#F5B041] transition-colors">
                   {item.title}
                 </h3>

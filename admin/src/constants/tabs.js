@@ -7,6 +7,7 @@ const tabs = [
   { id: 'blogs', label: 'Blogs' },
   { id: 'recipes', label: 'Recipes' },
   { id: 'reviews', label: 'Reviews' },
+  { id: 'customDemands', label: 'Custom Demands' },
   { id: 'customers', label: 'Customers' },
   { id: 'settings', label: 'Settings' },
 ]

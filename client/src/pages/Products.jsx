@@ -143,7 +143,7 @@ const Products = ({
       <div className="absolute top-[-10%] left-[10%] w-[40%] h-[40%] rounded-full bg-[#1B3B26] opacity-[0.04] blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-[20%] right-[-5%] w-[35%] h-[40%] rounded-full bg-[#F5B041] opacity-[0.06] blur-[100px] pointer-events-none"></div>
 
-      <div className="mx-auto max-w-6xl relative z-10">
+      <div className="mx-auto max-w-7xl relative z-10">
         <BackButton className="mb-8 text-[#1B3B26]" />
 
         {activeCollection ? (
@@ -196,7 +196,7 @@ const ProductGrid = ({
     </div>
 
     {loading ? (
-      <div className="grid grid-cols-2 gap-4 sm:gap-8 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-4 sm:gap-8 lg:grid-cols-4">
         {[1, 2, 3].map((n) => (
           <div key={n} className="flex animate-pulse space-x-4">
             <div className="h-[300px] bg-[#EAE6DF]/60 rounded-3xl w-full"></div>
@@ -204,7 +204,7 @@ const ProductGrid = ({
         ))}
       </div>
     ) : products.length ? (
-      <div className="grid grid-cols-2 gap-4 sm:gap-8 lg:grid-cols-3">
+      <div className="grid grid-cols-2 gap-4 sm:gap-8 lg:grid-cols-4">
         {products.map((item) => (
           <ProductCard
             key={item.slug}

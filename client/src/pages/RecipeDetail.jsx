@@ -2,7 +2,7 @@ import BackButton from '../components/BackButton'
 import { Link, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://mimicrunch-33how.ondigitalocean.app'
+const API_BASE = import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'
 
 const RecipeDetail = () => {
   const { slug } = useParams()

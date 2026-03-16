@@ -1,8 +1,25 @@
 import React from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import footerBg from '../assets/MiMi footer.webp'
 import footerGif from '../assets/MIMI Mobile Footer.gif'
 
 const Footer = () => {
+  const { pathname } = useLocation();
+
+  const getLinkClasses = (path) => {
+    const isActive = path === '/' ? pathname === '/' : pathname.startsWith(path);
+    return `text-sm transition-all duration-300 flex items-center gap-2 ${
+      isActive 
+        ? 'text-emerald-400 font-bold translate-x-1' 
+        : 'text-emerald-200/70 hover:text-emerald-400 hover:translate-x-1'
+    }`;
+  };
+
+  const renderIndicator = (path) => {
+    const isActive = path === '/' ? pathname === '/' : pathname.startsWith(path);
+    return isActive ? <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]" /> : null;
+  };
+
   return (
     <div className="relative text-emerald-50 bg-emerald-950 overflow-hidden">
       {/* Mobile: GIF background */}
@@ -62,21 +79,21 @@ const Footer = () => {
           <div>
             <h3 className="text-xs font-black uppercase tracking-widest text-emerald-400">Company</h3>
             <ul className="mt-6 space-y-4">
-              <li><a href="/" className="text-sm text-emerald-200/70 hover:text-emerald-400 transition-colors">Home</a></li>
-              <li><a href="/products" className="text-sm text-emerald-200/70 hover:text-emerald-400 transition-colors">Products</a></li>
-              <li><a href="/recipes" className="text-sm text-emerald-200/70 hover:text-emerald-400 transition-colors">Recipes</a></li>
-              <li><a href="/about" className="text-sm text-emerald-200/70 hover:text-emerald-400 transition-colors">About Us</a></li>
-              <li><a href="/blogs" className="text-sm text-emerald-200/70 hover:text-emerald-400 transition-colors">Blogs</a></li>
-              <li><a href="/contact" className="text-sm text-emerald-200/70 hover:text-emerald-400 transition-colors">Contact</a></li>
+              <li><Link to="/" className={getLinkClasses('/')}>{renderIndicator('/')} Home</Link></li>
+              <li><Link to="/products" className={getLinkClasses('/products')}>{renderIndicator('/products')} Products</Link></li>
+              <li><Link to="/recipes" className={getLinkClasses('/recipes')}>{renderIndicator('/recipes')} Recipes</Link></li>
+              <li><Link to="/about" className={getLinkClasses('/about')}>{renderIndicator('/about')} About Us</Link></li>
+              <li><Link to="/blogs" className={getLinkClasses('/blogs')}>{renderIndicator('/blogs')} Blogs</Link></li>
+              <li><Link to="/contact" className={getLinkClasses('/contact')}>{renderIndicator('/contact')} Contact</Link></li>
             </ul>
           </div>
 
           <div>
             <h3 className="text-xs font-black uppercase tracking-widest text-emerald-400">Support</h3>
             <ul className="mt-6 space-y-4">
-              <li><a href="/shipping-returns" className="text-sm text-emerald-200/70 hover:text-emerald-400 transition-colors">Order Help</a></li>
-              <li><a href="/privacy-policy" className="text-sm text-emerald-200/70 hover:text-emerald-400 transition-colors">Privacy</a></li>
-              <li><a href="/terms-conditions" className="text-sm text-emerald-200/70 hover:text-emerald-400 transition-colors">Terms</a></li>
+              <li><Link to="/shipping-returns" className={getLinkClasses('/shipping-returns')}>{renderIndicator('/shipping-returns')} Order Help</Link></li>
+              <li><Link to="/privacy-policy" className={getLinkClasses('/privacy-policy')}>{renderIndicator('/privacy-policy')} Privacy</Link></li>
+              <li><Link to="/terms-conditions" className={getLinkClasses('/terms-conditions')}>{renderIndicator('/terms-conditions')} Terms</Link></li>
             </ul>
           </div>
 
@@ -89,12 +106,12 @@ const Footer = () => {
                 </div>
                 support@mimicrunch.com
               </li>
-              <li className="flex items-center gap-3 text-emerald-200/70">
+              {/* <li className="flex items-center gap-3 text-emerald-200/70">
                 <div className="w-8 h-8 rounded-lg bg-emerald-900/50 flex items-center justify-center text-emerald-400">
                   <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                 </div>
                 +91 9157165523
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>

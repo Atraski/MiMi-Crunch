@@ -21,28 +21,57 @@ const sourceIcons = {
   ),
   other: (
     <svg className="w-4 h-4 mr-2 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 0 0 0 7.07 7.07l1.71-1.71"></path>
     </svg>
   )
 }
 
-const StatsGrid = ({ products, analytics }) => {
+const StatsGrid = ({ products, analytics, dateRange, setDateRange }) => {
   const lowStockCount = products.filter(
     (item) => (item.inventory?.stock ?? 0) <= 5,
   ).length
 
   const stats = [
     { label: 'Active Products', value: products.length || '0' },
-    { label: 'Low Stock', value: lowStockCount || '0' },
     { label: 'Live Users', value: analytics?.activeUsers || '0' },
-    { label: 'Total Traffic (30d)', value: analytics?.dailyTraffic?.reduce((sum, day) => sum + day.visitors, 0) || '0' },
+    { label: 'Range Total', value: analytics?.dailyTraffic?.reduce((sum, day) => sum + day.visitors, 0) || '0' },
+    { label: 'Low Stock', value: lowStockCount || '0' },
   ]
 
   const sources = analytics?.sourceStats || {}
   const totalSources = Object.values(sources).reduce((a, b) => a + b, 0) || 1
+  const keywordStats = analytics?.keywordStats || []
 
   return (
     <div className="space-y-6">
+      {/* Date Range Selector */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 bg-white rounded-2xl border border-stone-200 gap-4">
+        <div className="space-y-1">
+          <h3 className="text-sm font-bold text-stone-900 uppercase tracking-tight">Analytics Period</h3>
+          <p className="text-[10px] text-stone-500 font-bold uppercase tracking-widest">Filter results by date</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="relative group">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-stone-400 uppercase pointer-events-none">From</span>
+            <input 
+              type="date" 
+              className="pl-12 pr-4 py-2 bg-stone-50 border border-stone-100 rounded-xl text-xs font-bold text-stone-700 outline-none focus:border-emerald-500 transition-all"
+              value={dateRange?.startDate}
+              onChange={(e) => setDateRange(prev => ({ ...prev, startDate: e.target.value }))}
+            />
+          </div>
+          <div className="relative group">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-stone-400 uppercase pointer-events-none">To</span>
+            <input 
+              type="date" 
+              className="pl-8 pr-4 py-2 bg-stone-50 border border-stone-100 rounded-xl text-xs font-bold text-stone-700 outline-none focus:border-emerald-500 transition-all"
+              value={dateRange?.endDate}
+              onChange={(e) => setDateRange(prev => ({ ...prev, endDate: e.target.value }))}
+            />
+          </div>
+        </div>
+      </div>
+
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((item) => (
           <div
@@ -88,30 +117,61 @@ const StatsGrid = ({ products, analytics }) => {
               )
             })}
           </div>
+
+          {/* Keywords Section */}
+          <div className="mt-8 border-t border-stone-100 pt-6">
+            <h4 className="text-xs font-black uppercase tracking-widest text-stone-400 mb-4">Top Search Keywords</h4>
+            <div className="space-y-2">
+              {keywordStats.length > 0 ? keywordStats.map((item, idx) => (
+                <div key={idx} className="flex items-center justify-between py-1">
+                  <span className="text-sm font-bold text-stone-700">“{item._id}”</span>
+                  <span className="text-xs font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">{item.count}</span>
+                </div>
+              )) : (
+                <p className="text-xs text-stone-400 italic">No search keywords captured yet. (Direct traffic or encrypted search)</p>
+              )}
+            </div>
+            <p className="mt-4 text-[10px] text-stone-400 leading-tight">Note: Keywords are extracted from UTM parameters or non-encrypted referrals. Most Google organic search keywords are hidden for privacy.</p>
+          </div>
         </div>
 
         {/* Traffic Chart Placeholder / Basic Info */}
         <div className="rounded-2xl border border-stone-200/80 bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.05)] flex flex-col">
-          <h3 className="text-lg font-semibold text-stone-900 mb-4">Daily Traffic (Past 30 Days)</h3>
-          <div className="flex-1 flex items-end justify-between space-x-1 border-b border-stone-100 pb-2 h-40">
-            {/* Simple visual bar chart using recent 14 days or so */}
-            {analytics?.dailyTraffic?.slice(-14).map((day, idx) => {
-              const maxTraffic = Math.max(...analytics.dailyTraffic.map(d => d.visitors), 1)
-              const height = `${(day.visitors / maxTraffic) * 100}%`
+          <div className="flex justify-between items-start mb-4">
+            <div className="space-y-1">
+              <h3 className="text-lg font-semibold text-stone-900 leading-none">Traffic vs Units</h3>
+              <p className="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Height: Visitors | Number: Items Sold</p>
+            </div>
+            <span className="text-[10px] font-black bg-stone-100 text-stone-500 px-2 py-1 rounded-md uppercase">
+              {dateRange?.startDate} — {dateRange?.endDate}
+            </span>
+          </div>
+          <div className="flex-1 flex items-end justify-between space-x-1 border-b border-stone-100 pb-2 h-48">
+            {analytics?.dailyTraffic?.map((day, idx) => {
+              const maxTraffic = Math.max(...analytics.dailyTraffic.map(d => d.visitors || 0), 1)
+              const height = `${Math.max(((day.visitors || 0) / maxTraffic) * 100, 4)}%`
               return (
-                <div key={idx} className="flex-1 flex flex-col items-center group relative cursor-pointer">
-                  <div className="w-full bg-brand-primary/20 rounded-t-sm transition-all hover:bg-brand-primary" style={{ height: height || '4px' }} />
+                <div key={idx} className="flex-1 flex flex-col items-center group relative cursor-pointer h-full justify-end pb-1">
+                  {/* Items Sold above bar */}
+                  <span className="text-[10px] font-black text-emerald-600 mb-1 opacity-0 group-hover:opacity-100 md:opacity-100 transition-opacity">
+                    {day.totalItems || 0}
+                  </span>
+                  
+                  <div className="w-full bg-emerald-500/20 rounded-t-sm transition-all hover:bg-emerald-500" style={{ height: height }} />
 
                   {/* Tooltip */}
-                  <div className="opacity-0 group-hover:opacity-100 pointer-events-none absolute -top-8 bg-stone-900 text-white text-xs py-1 px-2 rounded whitespace-nowrap z-10 transition-opacity">
-                    {day._id}: {day.visitors} visitors
+                  <div className="opacity-0 group-hover:opacity-100 pointer-events-none absolute -top-14 bg-stone-900 text-white text-[10px] py-2 px-3 rounded-lg whitespace-nowrap z-10 transition-opacity font-bold shadow-xl border border-stone-800">
+                    <p className="text-emerald-400">Total Sales: ₹{(day.sales || 0).toLocaleString()}</p>
+                    <p className="text-blue-400">Items Sold: {day.totalItems || 0}</p>
+                    <p className="text-stone-400">Visitors: {day.visitors || 0}</p>
+                    <p className="text-[8px] mt-1 text-stone-500 border-t border-stone-800 pt-1">{day._id}</p>
                   </div>
                 </div>
               )
             })}
             {(!analytics?.dailyTraffic || analytics.dailyTraffic.length === 0) && (
               <div className="w-full text-center text-sm text-stone-400 mb-10">
-                No traffic data yet
+                No data for this period
               </div>
             )}
           </div>

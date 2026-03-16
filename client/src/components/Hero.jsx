@@ -151,7 +151,7 @@ const Hero = ({ products = [] }) => {
               </div>
               <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.5em] text-brand-green/70">Mimi Crunch</p>
-                <p className="text-[11px] font-bold text-brand-text/40">ESTD 2024</p>
+                <p className="text-[11px] font-bold text-brand-text/40">ESTD 2025</p>
               </div>
             </div>
 

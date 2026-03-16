@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://mimicrunch-33how.ondigitalocean.app'
+const API_BASE = import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'
 gsap.registerPlugin(ScrollTrigger)
 
 const RecipesPage = () => {
@@ -390,82 +390,142 @@ const RecipesPage = () => {
           </div>
         )}
 
-        <section className="submit-panel mt-14 rounded-[2rem] border border-emerald-100 bg-white/90 p-6 shadow-[0_16px_50px_rgba(20,35,25,0.08)] backdrop-blur-sm lg:p-8">
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold text-stone-900 lg:text-3xl">Submit Your Recipe</h2>
-            <p className="mt-1 text-sm text-stone-600">
-              Community recipes are reviewed by our team before they appear on the public recipe page.
-            </p>
-          </div>
-          <form className="grid gap-3 md:grid-cols-2" onSubmit={onSubmissionSubmit}>
-            <input className="input" name="title" placeholder="Recipe title*" value={submission.title} onChange={onSubmissionChange} required />
-            <input className="input" name="time" placeholder="Time (e.g. 20 mins)" value={submission.time} onChange={onSubmissionChange} />
-            <input className="input" name="submittedBy" placeholder="Your name" value={submission.submittedBy} onChange={onSubmissionChange} />
-            <input className="input" type="email" name="submitterEmail" placeholder="Your email" value={submission.submitterEmail} onChange={onSubmissionChange} />
-            <input className="input md:col-span-2" name="coverImage" placeholder="Cover image URL (optional)" value={submission.coverImage} onChange={onSubmissionChange} />
-            <input className="input md:col-span-2" name="videoUrl" placeholder="Video URL (optional)" value={submission.videoUrl} onChange={onSubmissionChange} />
-            <div className="md:col-span-2 rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50/70 via-white to-amber-50/60 p-4">
-              <p className="text-sm font-semibold text-stone-800">Upload Media (Optional)</p>
-              <p className="mt-1 text-xs text-stone-500">
-                You can upload cover image/video to Cloudinary. We store only URL in MongoDB.
-              </p>
-              <div className="mt-4 grid gap-4 md:grid-cols-2">
-                <div className="rounded-xl border border-dashed border-stone-300 bg-white p-3">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-stone-600">Cover Image</p>
-                  <label className="mt-2 inline-flex cursor-pointer rounded-full border border-stone-300 px-3 py-1.5 text-xs font-semibold text-stone-700 hover:bg-stone-100">
-                    Choose Image
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={onCoverFileChange}
-                    />
-                  </label>
-                  {coverFile ? (
-                    <p className="mt-2 text-xs text-stone-600">{coverFile.name}</p>
-                  ) : null}
-                  {coverPreviewUrl ? (
-                    <img
-                      src={coverPreviewUrl}
-                      alt="Cover preview"
-                      className="mt-2 h-24 w-full rounded-lg object-cover"
-                    />
-                  ) : null}
-                </div>
-                <div className="rounded-xl border border-dashed border-stone-300 bg-white p-3">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-stone-600">Recipe Video</p>
-                  <label className="mt-2 inline-flex cursor-pointer rounded-full border border-stone-300 px-3 py-1.5 text-xs font-semibold text-stone-700 hover:bg-stone-100">
-                    Choose Video
-                    <input
-                      type="file"
-                      accept="video/*"
-                      className="hidden"
-                      onChange={onVideoFileChange}
-                    />
-                  </label>
-                  {videoFile ? (
-                    <p className="mt-2 text-xs text-stone-600">{videoFile.name}</p>
-                  ) : null}
-                  {videoPreviewUrl ? (
-                    <video
-                      src={videoPreviewUrl}
-                      className="mt-2 h-24 w-full rounded-lg bg-black/10 object-cover"
-                      controls
-                      muted
-                    />
-                  ) : null}
-                </div>
+        <section className="submit-panel mt-14 overflow-hidden rounded-[3rem] border border-white/60 bg-white/70 shadow-[0_32px_64px_-16px_rgba(20,35,25,0.12)] backdrop-blur-xl">
+          <div className="bg-brand-green p-8 text-white md:p-12">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="space-y-2">
+                <span className="inline-block rounded-full bg-white/20 px-3 py-1 text-[10px] font-black uppercase tracking-widest">Community Hub</span>
+                <h2 className="text-3xl font-[Fraunces] md:text-5xl">Submit Your <span className="italic opacity-80">Recipe</span></h2>
+                <p className="text-emerald-100/80 text-sm max-w-md italic">Share your secret millet recipes with the Mimi family. Every approved dish earns a spot in our hall of fame.</p>
+              </div>
+              <div className="flex gap-2">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className={`h-1.5 w-8 rounded-full transition-all duration-300 ${ (i === 1 && !submission.title) || (i === 2 && submission.title && !submission.contentHtml) ? 'bg-white' : 'bg-white/30' }`} />
+                ))}
               </div>
             </div>
-            <textarea className="input min-h-[80px] md:col-span-2" name="excerpt" placeholder="Short summary" value={submission.excerpt} onChange={onSubmissionChange} />
-            <textarea className="input min-h-[140px] md:col-span-2" name="contentHtml" placeholder="Recipe steps/details" value={submission.contentHtml} onChange={onSubmissionChange} />
-            <div className="md:col-span-2 flex flex-wrap items-center gap-3">
-              <button type="submit" className="btn btn-primary" disabled={submitLoading}>
-                {submitLoading ? 'Submitting...' : 'Send for Approval'}
-              </button>
-              {uploadMessage ? <p className="text-sm text-stone-600">{uploadMessage}</p> : null}
-              {submitMessage ? <p className="text-sm text-emerald-700">{submitMessage}</p> : null}
-              {submitError ? <p className="text-sm text-red-600">{submitError}</p> : null}
+          </div>
+
+          <form className="p-8 md:p-12" onSubmit={onSubmissionSubmit}>
+            <div className="grid gap-10 lg:grid-cols-12">
+              {/* Left Column: Form Fields */}
+              <div className="lg:col-span-12 space-y-10">
+                
+                {/* Section 1: Basic Info */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 text-sm font-black">01</div>
+                    <h3 className="text-lg font-bold text-stone-900 uppercase tracking-tight">The Basics</h3>
+                  </div>
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <div className="space-y-2">
+                      <label className="ml-1 text-[10px] font-black uppercase tracking-widest text-stone-400">Recipe Title *</label>
+                      <input className="w-full rounded-2xl border border-stone-100 bg-stone-50/50 p-5 text-sm font-bold placeholder:text-stone-300 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all" name="title" placeholder="e.g. Ragi Chocolate Mug Cake" value={submission.title} onChange={onSubmissionChange} required />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="ml-1 text-[10px] font-black uppercase tracking-widest text-stone-400">Prep Time</label>
+                      <input className="w-full rounded-2xl border border-stone-100 bg-stone-50/50 p-5 text-sm font-bold placeholder:text-stone-300 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all" name="time" placeholder="e.g. 15 mins" value={submission.time} onChange={onSubmissionChange} />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="ml-1 text-[10px] font-black uppercase tracking-widest text-stone-400">Chef Name</label>
+                      <input className="w-full rounded-2xl border border-stone-100 bg-stone-50/50 p-5 text-sm font-bold placeholder:text-stone-300 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all" name="submittedBy" placeholder="Your name" value={submission.submittedBy} onChange={onSubmissionChange} />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="ml-1 text-[10px] font-black uppercase tracking-widest text-stone-400">Chef Email</label>
+                      <input className="w-full rounded-2xl border border-stone-100 bg-stone-50/50 p-5 text-sm font-bold placeholder:text-stone-300 focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all" type="email" name="submitterEmail" placeholder="example@email.com" value={submission.submitterEmail} onChange={onSubmissionChange} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 2: Media */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-amber-700 text-sm font-black">02</div>
+                    <h3 className="text-lg font-bold text-stone-900 uppercase tracking-tight">Visuals</h3>
+                  </div>
+                  
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <div className={`relative group flex flex-col items-center justify-center border-2 border-dashed rounded-[2rem] p-8 transition-all ${coverFile ? 'border-emerald-500 bg-emerald-50/30' : 'border-stone-200 bg-stone-50/50 hover:border-emerald-300'}`}>
+                      <input type="file" accept="image/*" className="absolute inset-0 cursor-pointer opacity-0" onChange={onCoverFileChange} />
+                      <div className="text-center space-y-3">
+                        <div className="mx-auto w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">📸</div>
+                        <div>
+                          <p className="text-sm font-black text-stone-900 uppercase tracking-widest">Cover Image</p>
+                          <p className="text-[10px] text-stone-400 font-bold uppercase mt-1">{coverFile ? coverFile.name : 'Upload .jpg or .png'}</p>
+                        </div>
+                      </div>
+                      {coverPreviewUrl && (
+                        <div className="mt-4 w-full h-32 rounded-xl overflow-hidden shadow-md">
+                          <img src={coverPreviewUrl} className="w-full h-full object-cover" alt="preview" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className={`relative group flex flex-col items-center justify-center border-2 border-dashed rounded-[2rem] p-8 transition-all ${videoFile ? 'border-amber-500 bg-amber-50/30' : 'border-stone-200 bg-stone-50/50 hover:border-amber-300'}`}>
+                      <input type="file" accept="video/*" className="absolute inset-0 cursor-pointer opacity-0" onChange={onVideoFileChange} />
+                      <div className="text-center space-y-3">
+                        <div className="mx-auto w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">🎥</div>
+                        <div>
+                          <p className="text-sm font-black text-stone-900 uppercase tracking-widest">Recipe Video</p>
+                          <p className="text-[10px] text-stone-400 font-bold uppercase mt-1">{videoFile ? videoFile.name : 'Upload .mp4'}</p>
+                        </div>
+                      </div>
+                      {videoPreviewUrl && (
+                        <div className="mt-4 w-full h-32 rounded-xl overflow-hidden bg-black/10 shadow-md">
+                          <video src={videoPreviewUrl} className="w-full h-full object-cover" muted />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 text-center">- OR PASTE EXTERNAL LINKS -</p>
+                    <div className="grid gap-4 md:grid-cols-2">
+                       <input className="w-full rounded-2xl border border-stone-100 bg-stone-50/50 p-4 text-xs font-bold outline-none" name="coverImage" placeholder="Image URL (Unsplash, Google Drive, etc.)" value={submission.coverImage} onChange={onSubmissionChange} />
+                       <input className="w-full rounded-2xl border border-stone-100 bg-stone-50/50 p-4 text-xs font-bold outline-none" name="videoUrl" placeholder="Video URL (YouTube, Vimeo, etc.)" value={submission.videoUrl} onChange={onSubmissionChange} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 3: Content */}
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-stone-900 text-white text-sm font-black">03</div>
+                    <h3 className="text-lg font-bold text-stone-900 uppercase tracking-tight">The Secret Sauce</h3>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="ml-1 text-[10px] font-black uppercase tracking-widest text-stone-400">Short Summary</label>
+                      <textarea className="w-full rounded-2xl border border-stone-100 bg-stone-50/50 p-5 text-sm font-bold min-h-[80px] outline-none focus:border-emerald-500 focus:bg-white transition-all" name="excerpt" placeholder="What makes this recipe special?" value={submission.excerpt} onChange={onSubmissionChange} />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="ml-1 text-[10px] font-black uppercase tracking-widest text-stone-400">Recipe Steps</label>
+                      <textarea className="w-full rounded-[2rem] border border-stone-100 bg-stone-50/50 p-6 text-sm font-bold min-h-[220px] outline-none focus:border-emerald-500 focus:bg-white transition-all" name="contentHtml" placeholder="List ingredients and step-by-step instructions..." value={submission.contentHtml} onChange={onSubmissionChange} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Submit Action */}
+                <div className="pt-6">
+                  <div className="flex flex-col items-center gap-6">
+                    <button type="submit" className="btn btn-primary w-full md:w-auto min-w-[300px] h-16 rounded-[1.5rem] shadow-xl hover:scale-105 active:scale-95 transition-all" disabled={submitLoading}>
+                      {submitLoading ? 'Cooking up your submission...' : '🚀 Submit My Recipe'}
+                    </button>
+                    {uploadMessage && <p className="text-sm font-bold text-emerald-600 animate-pulse">{uploadMessage}</p>}
+                    {submitMessage && (
+                      <div className="bg-emerald-50 text-emerald-700 p-6 rounded-[1.5rem] border border-emerald-100 text-center">
+                        <p className="font-bold text-lg">Hooray! Recipe Received!</p>
+                        <p className="text-sm mt-1">{submitMessage}</p>
+                      </div>
+                    )}
+                    {submitError && (
+                      <div className="bg-red-50 text-red-700 p-6 rounded-[1.5rem] border border-red-100">
+                        <p className="font-bold">Oops! {submitError}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </form>
         </section>

@@ -12,6 +12,7 @@ import RecipeList from './features/recipes/RecipeList.jsx'
 import ReviewList from './features/reviews/ReviewList.jsx'
 import CouponList from './features/discounts/CouponList.jsx'
 import OrderList from './features/orders/OrderList.jsx'
+import CustomDemandList from './features/customDemands/CustomDemandList.jsx'
 import useProducts from './hooks/useProducts.js'
 import useCollections from './hooks/useCollections.js'
 import useBlogs from './hooks/useBlogs.js'
@@ -27,8 +28,8 @@ import {
   saveAdminSession,
 } from './utils/adminAuth.js'
 
-const API_BASE = import.meta.env.VITE_API_BASE || 'https://mimicrunch-33how.ondigitalocean.app'
-const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://mimicrunch.com'
+const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:5000'
+const SITE_URL = import.meta.env.VITE_SITE_URL || 'http://localhost:5173'
 
 const AdminApp = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => isAdminSessionValid())
@@ -110,7 +111,8 @@ const AdminApp = () => {
     requestPickup,
   } = useOrders(API_BASE)
 
-  const { data: analyticsData } = useAnalytics(API_BASE)
+  const analytics = useAnalytics(API_BASE)
+  const { data: analyticsData } = analytics
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -298,6 +300,10 @@ const AdminApp = () => {
           onRequestPickup={requestPickup}
         />
       ) : null}
+      
+      {activeTab === 'customDemands' ? (
+        <CustomDemandList />
+      ) : null}
 
       {activeTab !== 'products' &&
         activeTab !== 'orders' &&
@@ -305,8 +311,14 @@ const AdminApp = () => {
         activeTab !== 'blogs' &&
         activeTab !== 'recipes' &&
         activeTab !== 'reviews' &&
+        activeTab !== 'customDemands' &&
         activeTab !== 'discounts' ? (
-        <StatsGrid products={products} analytics={analyticsData} />
+        <StatsGrid 
+          products={products} 
+          analytics={analyticsData} 
+          dateRange={analytics.dateRange}
+          setDateRange={analytics.setDateRange}
+        />
       ) : null}
 
       <ApiEndpointCard apiBase={API_BASE} />

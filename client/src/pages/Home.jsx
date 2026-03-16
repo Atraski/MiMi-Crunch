@@ -30,7 +30,7 @@ const Home = ({ products, collections, blogs, recipes, onAddToCart }) => {
         return acc
       }, {})
 
-      return Object.entries(collectionGroups).map(
+      const groups = Object.entries(collectionGroups).map(
         ([collection, items]) => ({
           title: formatCollectionTitle(collection),
           slug: slugifyCollection(collection),
@@ -39,7 +39,20 @@ const Home = ({ products, collections, blogs, recipes, onAddToCart }) => {
           desc: `Explore our ${collection} collection.`,
         }),
       )
+      return groups
     })();
+
+  // Add Custom "Protein Bars" Card
+  const allCollectionCards = [
+    ...(collectionCards || []),
+    {
+      title: 'Protein Bars',
+      slug: 'build-your-protein',
+      desc: 'Build your own custom millet protein bars for your specific fitness goals.',
+      count: 'BYO',
+      image: null
+    }
+  ]
 
   const newsItems =
     Array.isArray(blogs) && blogs.length
@@ -83,7 +96,7 @@ const Home = ({ products, collections, blogs, recipes, onAddToCart }) => {
   return (
     <>
       <Hero products={heroProducts} />
-      <Categories collections={collectionCards} />
+      <Categories collections={allCollectionCards} />
       <FeaturedProducts featured={featuredItems} onAddToCart={onAddToCart} />
       <Story />
       <Recipes recipes={homepageRecipes} />
