@@ -18,6 +18,8 @@ const createBlog = async (req, res) => {
       coverImage,
       tags,
       published,
+      metaTitle,
+      metaDescription,
     } = req.body || {}
     if (!title) {
       return res.status(400).json({ error: 'Title is required.' })
@@ -33,6 +35,8 @@ const createBlog = async (req, res) => {
       tags: Array.isArray(tags) ? tags : [],
       published: Boolean(published),
       publishedAt: published ? now : undefined,
+      metaTitle,
+      metaDescription,
     })
     return res.status(201).json(blog)
   } catch (err) {

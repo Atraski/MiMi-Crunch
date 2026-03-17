@@ -10,6 +10,8 @@ const blogSchema = new mongoose.Schema(
     tags: [{ type: String, trim: true }],
     published: { type: Boolean, default: false },
     publishedAt: { type: Date },
+    metaTitle: { type: String, trim: true },
+    metaDescription: { type: String, trim: true },
   },
   { timestamps: true, suppressReservedKeysWarning: true },
 )

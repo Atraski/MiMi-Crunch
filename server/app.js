@@ -20,6 +20,7 @@ import adminRoutes from './routes/admin.js'
 import orderRoutes from './routes/orders.js'
 import analyticsRoutes from './routes/analytics.js'
 import customDemandRoutes from './routes/customDemands.js'
+import seoRoutes from './routes/seo.js'
 
 const app = express()
 app.set('trust proxy', 1)
@@ -89,6 +90,7 @@ app.use('/api', analyticsRoutes)
 // Order management (guest and registered users)
 app.use('/api/orders', orderRoutes)
 app.use('/api/custom-demands', customDemandRoutes)
+app.use(seoRoutes)
 
 // Error handler (must be after all routes)
 app.use(errorHandler)

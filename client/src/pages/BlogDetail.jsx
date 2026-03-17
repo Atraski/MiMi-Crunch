@@ -1,9 +1,26 @@
 import BackButton from '../components/BackButton'
 import { useParams } from 'react-router-dom'
+import { useEffect } from 'react'
 
 const BlogDetail = ({ blogs }) => {
   const { slug } = useParams()
   const blog = (blogs || []).find((item) => item.slug === slug)
+
+  useEffect(() => {
+    if (blog) {
+      // Set Document Title
+      document.title = `${blog.metaTitle || blog.title} | Mimi Crunch`
+      
+      // Set Meta Description
+      let metaDescription = document.querySelector('meta[name="description"]')
+      if (!metaDescription) {
+        metaDescription = document.createElement('meta')
+        metaDescription.name = 'description'
+        document.head.appendChild(metaDescription)
+      }
+      metaDescription.content = blog.metaDescription || blog.excerpt || ''
+    }
+  }, [blog])
 
   if (!blog) {
     return (
