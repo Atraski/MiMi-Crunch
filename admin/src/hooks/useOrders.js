@@ -78,20 +78,33 @@ const useOrders = (apiBase) => {
   const requestPickup = useCallback(
     async (orderId) => {
       setError('')
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 45000)
       try {
         const res = await fetch(`${apiBase}/api/orders/${orderId}/pickup`, {
           method: 'POST',
           headers: getAdminAuthHeaders(),
+          signal: controller.signal,
         })
+        clearTimeout(timeoutId)
         const data = await res.json().catch(() => ({}))
         if (!res.ok) {
-          throw new Error(data.error || data.details || 'Failed to request pickup.')
+          const msg =
+            res.status === 504
+              ? 'Pickup request is taking too long. Try again or request pickup from Shiprocket dashboard.'
+              : (data.error || data.details || 'Failed to request pickup.')
+          throw new Error(msg)
         }
         if (data.order) replaceOrderInState(data.order)
         return { success: true, data }
       } catch (err) {
-        setError(err.message || 'Failed to request pickup.')
-        return { success: false, error: err.message || 'Failed to request pickup.' }
+        clearTimeout(timeoutId)
+        const message =
+          err.name === 'AbortError'
+            ? 'Pickup request timed out. Try again or request pickup from Shiprocket dashboard.'
+            : err.message || 'Failed to request pickup.'
+        setError(message)
+        return { success: false, error: message }
       }
     },
     [apiBase, replaceOrderInState],

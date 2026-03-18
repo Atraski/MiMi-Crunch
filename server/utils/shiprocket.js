@@ -244,7 +244,7 @@ export const requestPickupForShipment = async (shipmentId) => {
       { shipment_id: [Number(shipmentId)] },
       {
         headers: getAuthHeaders(token),
-        timeout: 25000,
+        timeout: 12000,
       },
     )
 
@@ -259,9 +259,13 @@ export const requestPickupForShipment = async (shipmentId) => {
     }
   } catch (error) {
     console.error('Shiprocket pickup request error:', error.response?.data || error.message)
+    const isTimeout = error.code === 'ECONNABORTED' || error.message?.includes('timeout')
+    const errMsg = isTimeout
+      ? 'Shiprocket took too long to respond. Please try again or request pickup from Shiprocket dashboard.'
+      : (error.response?.data?.message || error.response?.data || error.message || 'Failed to request pickup')
     return {
       success: false,
-      error: error.response?.data || error.message || 'Failed to request pickup',
+      error: errMsg,
     }
   }
 }

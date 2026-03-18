@@ -365,6 +365,8 @@ const syncOrderToShiprocket = async (req, res) => {
   }
 }
 
+const PICKUP_REQUEST_TIMEOUT_MS = 15000
+
 const requestPickup = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
@@ -381,7 +383,16 @@ const requestPickup = async (req, res) => {
       })
     }
 
-    const pickupResult = await requestPickupForShipment(shipmentId)
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(
+        () => reject(new Error('PICKUP_TIMEOUT')),
+        PICKUP_REQUEST_TIMEOUT_MS
+      )
+    )
+    const pickupResult = await Promise.race([
+      requestPickupForShipment(shipmentId),
+      timeoutPromise,
+    ])
     if (!pickupResult.success) {
       mergeShippingPartner(order, {
         pickupRequested: false,
@@ -417,7 +428,13 @@ const requestPickup = async (req, res) => {
       pickup: pickupResult.data,
     })
   } catch (err) {
-    console.error('Pickup request error:', err)
+    console.error('Pickup request error:', err?.message || err)
+    if (err?.message === 'PICKUP_TIMEOUT') {
+      return res.status(504).json({
+        success: false,
+        error: 'Pickup request is taking too long. Please try again or request pickup from Shiprocket dashboard.',
+      })
+    }
     return res.status(500).json({ success: false, error: 'Failed to request pickup' })
   }
 }

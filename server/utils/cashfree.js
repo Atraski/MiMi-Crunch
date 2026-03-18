@@ -60,8 +60,20 @@ export const createPaymentSession = async ({
     throw err;
   }
 
-  const baseUrl = process.env.SITE_URL || "http://localhost:5173";
-  const apiBase = process.env.API_URL || "http://localhost:5000";
+  let baseUrl = (process.env.SITE_URL || "http://localhost:5173").trim().replace(/\/$/, "");
+  let apiBase = (process.env.API_URL || "http://localhost:5000").trim().replace(/\/$/, "");
+
+  if (useProduction) {
+    const badBase = !baseUrl.startsWith("https://") || /localhost|127\.0\.0\.1/.test(baseUrl);
+    const badApi = !apiBase.startsWith("https://") || /localhost|127\.0\.0\.1/.test(apiBase);
+    if (badBase || badApi) {
+      const err = new Error(
+        "Cashfree production requires HTTPS URLs. Set SITE_URL and API_URL in your server .env to your production URLs (e.g. SITE_URL=https://mimicrunch.com, API_URL=https://mimicrunch-33how.ondigitalocean.app)."
+      );
+      err.code = "CASHFREE_INVALID_URL";
+      throw err;
+    }
+  }
 
   const phone = String(customerDetails.phone || "9999999999")
     .replace(/\D/g, "")

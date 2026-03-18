@@ -35,7 +35,7 @@ import Checkout from './pages/Checkout'
 import Lenis from 'lenis'
 import OrderSuccess from './pages/OrderSuccess'
 import { getProductSlugFromCartItem, wouldExceedWeightLimit } from './utils/cartUtils'
-import { Toaster } from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 
 const API_BASE = import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'
 
