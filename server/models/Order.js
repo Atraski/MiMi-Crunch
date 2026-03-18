@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 const orderSchema = new mongoose.Schema({
+  orderId: { type: String, unique: true, sparse: true }, // MiMi-100000, MiMi-100001, ...
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null }, // null for guest orders
   items: [{
     productId: String,

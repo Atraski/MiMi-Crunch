@@ -1,8 +1,20 @@
 import Order from '../models/Order.js'
 import Product from '../models/Product.js'
 import User from '../models/User.js'
-import { sendOrderConfirmationEmail } from '../utils/email.js' 
-import { updateStock } from './productController.js' 
+import { getNextOrderSequence } from '../models/OrderCounter.js'
+import { sendOrderConfirmationEmail } from '../utils/email.js'
+import { updateStock } from './productController.js'
+
+const hasOrderEmail = (email) =>
+  typeof email === 'string' && email.trim().length > 0 && email.includes('@') && email.length < 200
+
+/** Find order by MongoDB _id (24 hex) or by orderId (e.g. MiMi-100001) */
+const findOrderByIdOrOrderId = async (id) => {
+  if (!id) return null
+  const s = String(id).trim()
+  if (/^[a-fA-F0-9]{24}$/.test(s)) return Order.findById(s)
+  return Order.findOne({ orderId: s })
+} 
 import {
   requestPickupForShipment,
   syncOrderToShiprocket as pushOrderToShiprocket,
@@ -100,8 +112,12 @@ const createOrder = async (req, res) => {
       ? Number(total)
       : Math.max(safeSubtotal - safeDiscount, 0) + safeDeliveryFee
 
-    // 5. Order Creation
+    // 5. Order ID (MiMi-100000, MiMi-100001, ...) and Order Creation
+    const orderSeq = await getNextOrderSequence()
+    const humanOrderId = `MiMi-${orderSeq}`
+
     const order = await Order.create({
+      orderId: humanOrderId,
       userId: finalUserId, 
       items, 
       shippingAddress: {
@@ -118,11 +134,11 @@ const createOrder = async (req, res) => {
       status: 'Pending'
     })
 
-    // 5.5. Handle ONLINE Payment Session
+    // 5.5. Handle ONLINE Payment Session (Cashfree uses human orderId)
     if (paymentMethod === 'ONLINE') {
       try {
         const cfSession = await createPaymentSession({
-          orderId: order._id.toString(),
+          orderId: humanOrderId,
           amount: safeTotal,
           customerDetails: {
             customerId: finalUserId ? finalUserId.toString() : `GUEST${Date.now()}`,
@@ -138,7 +154,7 @@ const createOrder = async (req, res) => {
           success: true,
           paymentRequired: true,
           sessionId: cfSession.payment_session_id,
-          orderId: order._id
+          orderId: humanOrderId
         })
       } catch (cfErr) {
         console.error(
@@ -206,22 +222,22 @@ const createOrder = async (req, res) => {
       });
     }
 
-    // 8. Email Confirmation (Async)
+    // 8. Order confirmation email – only if user filled email on checkout
     try {
-      if (finalEmail) {
+      if (hasOrderEmail(finalEmail)) {
         await sendOrderConfirmationEmail({
-          to: finalEmail,
+          to: finalEmail.trim(),
           orderData: order
         })
       }
     } catch (mailErr) {
-      console.error("Notification failed:", mailErr)
+      console.error("Order confirmation email failed:", mailErr)
     }
 
     return res.status(201).json({
       success: true,
       message: 'Order placed successfully!',
-      orderId: order._id,
+      orderId: humanOrderId,
       shippingSynced: order.shippingPartner?.synced === true,
       shippingError: order.shippingPartner?.lastError || null,
       shiprocket: shiprocketAutoSync?.success
@@ -299,7 +315,7 @@ const updateOrderStatus = async (req, res) => {
       })
     }
 
-    const order = await Order.findById(req.params.id)
+    const order = await findOrderByIdOrOrderId(req.params.id)
     if (!order) return res.status(404).json({ error: 'Order not found' })
 
     order.status = status
@@ -308,7 +324,7 @@ const updateOrderStatus = async (req, res) => {
     let shiprocketRes = null
     const alreadySynced = order.shippingPartner?.synced === true
     if (status === 'Shipped' && !alreadySynced) {
-      console.log(`Syncing order ${order._id} to Shiprocket`)
+      console.log(`Syncing order ${order.orderId || order._id} to Shiprocket`)
       shiprocketRes = await pushOrderToShiprocket(order)
       mergeShippingPartner(order, buildShiprocketUpdate(shiprocketRes))
       order.shipmentId = shiprocketRes?.data?.shipmentId
@@ -336,7 +352,7 @@ const updateOrderStatus = async (req, res) => {
 
 const syncOrderToShiprocket = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id)
+    const order = await findOrderByIdOrOrderId(req.params.id)
     if (!order) {
       return res.status(404).json({ error: 'Order not found' })
     }
@@ -369,7 +385,7 @@ const PICKUP_REQUEST_TIMEOUT_MS = 15000
 
 const requestPickup = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id)
+    const order = await findOrderByIdOrOrderId(req.params.id)
     if (!order) {
       return res.status(404).json({ error: 'Order not found' })
     }
@@ -444,10 +460,11 @@ const verifyCashfreePayment = async (req, res) => {
     const { orderId } = req.body;
     if (!orderId) return res.status(400).json({ error: 'Order ID is required' });
 
-    const order = await Order.findById(orderId);
+    const order = await findOrderByIdOrOrderId(orderId);
     if (!order) return res.status(404).json({ error: 'Order not found' });
 
-    const payments = await verifyPayment(orderId);
+    const cfOrderId = order.orderId || order._id.toString();
+    const payments = await verifyPayment(cfOrderId);
     const successfulPayment = Array.isArray(payments) 
       ? payments.find(p => p.payment_status === 'SUCCESS')
       : null;
@@ -463,16 +480,17 @@ const verifyCashfreePayment = async (req, res) => {
       }
       await order.save();
 
-       // Email Confirmation (Async) - since it was paid now
+       // Order confirmation email – only if user had filled email at checkout
        try {
-        if (order.shippingAddress?.email) {
+        const toEmail = order.shippingAddress?.email
+        if (hasOrderEmail(toEmail)) {
           await sendOrderConfirmationEmail({
-            to: order.shippingAddress.email,
+            to: toEmail.trim(),
             orderData: order
           })
         }
       } catch (mailErr) {
-        console.error("Paid Order Notification failed:", mailErr)
+        console.error("Order confirmation email failed:", mailErr)
       }
 
       return res.json({ success: true, message: 'Payment verified', order });
@@ -492,21 +510,18 @@ const verifyCashfreePayment = async (req, res) => {
 }
 
 const cashfreeWebhook = async (req, res) => {
-  // Cashfree sends a POST request with the payment details
-  // For production, we should verify the signature. 
-  // For test/sandbox, we can just process it or call verify API.
+  // Cashfree sends a POST request with the payment details (order_id = our MiMi-100001)
   try {
     const { order_id } = req.body?.data?.order || {};
     if (order_id) {
        console.log(`Cashfree Webhook received for ${order_id}`);
-       // We'll use our verify logic to be safe
        const payments = await verifyPayment(order_id);
        const successfulPayment = Array.isArray(payments) 
          ? payments.find(p => p.payment_status === 'SUCCESS')
          : null;
 
        if (successfulPayment) {
-          const order = await Order.findById(order_id);
+          const order = await findOrderByIdOrOrderId(order_id);
           if (order && order.paymentStatus !== 'Paid') {
             order.paymentStatus = 'Paid';
             order.transactionId = successfulPayment.cf_payment_id;

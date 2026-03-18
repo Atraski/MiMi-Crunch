@@ -56,12 +56,12 @@ export const sendOrderConfirmationEmail = async ({ to, orderData }) => {
     const { data, error } = await resend.emails.send({
       from: 'MiMi Crunch <support@mimicrunch.com>',
       to,
-      subject: `Order Confirmed! (#${orderData._id.toString().slice(-6).toUpperCase()})`,
+      subject: `Order Confirmed! (${orderData.orderId || orderData._id.toString().slice(-6).toUpperCase()})`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; padding: 25px; border-radius: 15px;">
           <div style="text-align: center; margin-bottom: 20px;">
             <h1 style="color: #2ecc71; margin-bottom: 5px;">Order Placed!</h1>
-            <p style="color: #666; margin: 0;">Order ID: #${orderData._id.toString().slice(-6).toUpperCase()}</p>
+            <p style="color: #666; margin: 0;">Order ID: ${orderData.orderId || ('#' + orderData._id.toString().slice(-6).toUpperCase())}</p>
           </div>
           
           <p>Hi <b>${orderData.shippingAddress.fullName}</b>,</p>

@@ -61,8 +61,8 @@ const buildPrintableSlip = (order) => {
   const pincode = order?.shippingAddress?.pincode || '—'
   const payment = getPaymentStatus(order)
   const status = order?.status || 'Pending'
-  const orderId = order?._id || '—'
-  const shortOrderId = `#${String(orderId).slice(-8)}`
+  const orderId = order?.orderId || order?._id || '—'
+  const shortOrderId = order?.orderId ? order.orderId : `#${String(order?._id || '').slice(-8)}`
 
   const items = Array.isArray(order?.items) ? order.items : []
   const mrpSubtotal = items.reduce(
@@ -374,8 +374,8 @@ const OrderList = ({
                         className="cursor-pointer transition-colors hover:bg-stone-50/60"
                       >
                         <td className="px-4 py-5 sm:px-6">
-                          <p className="font-semibold text-stone-900">#{String(order._id).slice(-8)}</p>
-                          <p className="mt-0.5 truncate text-[11px] text-stone-400">{order._id}</p>
+                          <p className="font-semibold text-stone-900">{order.orderId || `#${String(order._id).slice(-8)}`}</p>
+                          <p className="mt-0.5 truncate text-[11px] text-stone-400">{order.orderId || order._id}</p>
                         </td>
                         <td className="hidden px-4 py-5 sm:px-6 md:table-cell">
                           <p className="text-sm font-medium text-stone-900">{customerName}</p>

@@ -305,7 +305,7 @@ const Profile = () => {
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
                         <div>
                           <p className="text-xs font-bold text-[#F5B041] uppercase tracking-wider mb-1">
-                            Order #{order._id.slice(-6).toUpperCase()}
+                            Order #{order.orderId || order._id?.slice?.(-6)?.toUpperCase?.() || order._id}
                           </p>
                           <p className="text-xl font-[Fraunces] font-medium text-[#1B3B26]">₹{order.totalAmount}</p>
                         </div>

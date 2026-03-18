@@ -48,7 +48,7 @@ const mapOrderPayload = (order) => {
   const discount = getNumeric(order?.discountAmount, 0)
 
   return {
-    order_id: `MC-${order._id.toString()}`,
+    order_id: order.orderId || `MC-${order._id.toString()}`,
     order_date: new Date(order.createdAt || Date.now()).toISOString().slice(0, 10),
     pickup_location: process.env.SHIPROCKET_PICKUP_LOCATION || 'Primary',
     billing_customer_name: shipping.fullName || 'Customer',
