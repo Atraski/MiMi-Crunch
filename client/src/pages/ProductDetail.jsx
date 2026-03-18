@@ -5,6 +5,7 @@ import gsap from 'gsap'
 import { useAuth } from '../context/AuthContext'
 import { getOptimizedImage } from '../utils/imageUtils'
 import { getProductColor, getContrastColor } from '../utils/productColors'
+import toast from 'react-hot-toast'
 
 const API_BASE_FALLBACK = import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'
 
@@ -356,12 +357,12 @@ const ProductDetail = ({
     const hasProduct = !!reviewProductImageFile
     if (!product?.slug) return
     if (!name) {
-      setReviewError('Name is required.')
-      return
+      toast.error('Please enter your name.');
+      return;
     }
     if (!hasText && !hasProfile && !hasProduct) {
-      setReviewError('Please add at least one: your photo, product photo, or text review.')
-      return
+      toast.error('Please add a review text or upload a photo.');
+      return;
     }
     setReviewError('')
     setReviewSubmitting(true)
@@ -389,11 +390,12 @@ const ProductDetail = ({
       setReviewForm({ rating: 5, content: '', authorName: '' })
       setReviewProfileImageFile(null)
       setReviewProductImageFile(null)
+      toast.success('Thank you for your review! It has been posted.');
       const listRes = await fetch(`${apiBase}/api/reviews?productSlug=${encodeURIComponent(product.slug)}`)
       const list = await listRes.json()
       if (Array.isArray(list)) setReviews(list)
     } catch (err) {
-      setReviewError(err.message || 'Could not submit review. Try again.')
+      toast.error(err.message || 'Could not submit review. Please try again.');
     } finally {
       setReviewSubmitting(false)
     }

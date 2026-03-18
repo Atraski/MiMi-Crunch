@@ -19,9 +19,11 @@ const orderSchema = new mongoose.Schema({
   deliveryFee: { type: Number, default: 0 },
   shipmentId: { type: String, default: '' },
   totalAmount: Number,
-  paymentMethod: { type: String, default: 'COD' },
-  status: { type: String, default: 'Pending' }, // Pending, Shipped, Delivered
-  paymentStatus: { type: String, default: 'COD' },
+   paymentMethod: { type: String, default: 'COD' },
+   status: { type: String, default: 'Pending' }, // Pending, Shipped, Delivered
+   paymentStatus: { type: String, default: 'COD' },
+   transactionId: { type: String, default: '' },
+   paymentSessionId: { type: String, default: '' },
   shippingPartner: {
     partner: { type: String, default: '' },
     synced: { type: Boolean, default: false },

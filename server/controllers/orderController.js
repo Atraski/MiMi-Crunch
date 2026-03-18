@@ -7,6 +7,7 @@ import {
   requestPickupForShipment,
   syncOrderToShiprocket as pushOrderToShiprocket,
 } from '../utils/shiprocket.js'
+import { createPaymentSession, verifyPayment } from '../utils/cashfree.js'
 
 const ALLOWED_ORDER_STATUSES = ['Pending', 'Confirmed', 'Packed', 'Shipped', 'Delivered', 'Cancelled']
 
@@ -113,9 +114,55 @@ const createOrder = async (req, res) => {
       discountAmount: safeDiscount,
       totalAmount: safeTotal, 
       paymentMethod: paymentMethod || 'COD',
-      paymentStatus: paymentMethod || 'COD',
+      paymentStatus: paymentMethod === 'ONLINE' ? 'Pending' : (paymentMethod || 'COD'),
       status: 'Pending'
     })
+
+    // 5.5. Handle ONLINE Payment Session
+    if (paymentMethod === 'ONLINE') {
+      try {
+        const cfSession = await createPaymentSession({
+          orderId: order._id.toString(),
+          amount: safeTotal,
+          customerDetails: {
+            customerId: finalUserId ? finalUserId.toString() : `GUEST${Date.now()}`,
+            phone: shippingAddress.phone || '9999999999',
+            name: finalFullName,
+            email: finalEmail
+          }
+        })
+        order.paymentSessionId = cfSession.payment_session_id;
+        await order.save();
+
+        return res.status(201).json({
+          success: true,
+          paymentRequired: true,
+          sessionId: cfSession.payment_session_id,
+          orderId: order._id
+        })
+      } catch (cfErr) {
+        console.error(
+          "Cashfree Session Creation Error:",
+          cfErr?.response?.data || cfErr?.message || cfErr
+        );
+        order.status = "Cancelled";
+        await order.save();
+        const userMessage =
+          cfErr?.code === "CASHFREE_NOT_CONFIGURED"
+            ? "Payment is not configured. Please contact support."
+            : (typeof cfErr?.message === "string" ? cfErr.message : null) ||
+              "Payment gateway error. Please try again.";
+        const statusCode =
+          cfErr?.statusCode && cfErr.statusCode >= 400 && cfErr.statusCode < 600
+            ? cfErr.statusCode
+            : 500;
+        return res.status(statusCode).json({
+          error: userMessage,
+          ...(process.env.NODE_ENV !== "production" &&
+            cfErr?.message && { debug: cfErr.message }),
+        });
+      }
+    }
 
     // 6. Auto-sync to Shiprocket right after order creation
     let shiprocketAutoSync = null
@@ -375,6 +422,93 @@ const requestPickup = async (req, res) => {
   }
 }
 
+const verifyCashfreePayment = async (req, res) => {
+  try {
+    const { orderId } = req.body;
+    if (!orderId) return res.status(400).json({ error: 'Order ID is required' });
+
+    const order = await Order.findById(orderId);
+    if (!order) return res.status(404).json({ error: 'Order not found' });
+
+    const payments = await verifyPayment(orderId);
+    const successfulPayment = Array.isArray(payments) 
+      ? payments.find(p => p.payment_status === 'SUCCESS')
+      : null;
+
+    if (successfulPayment) {
+      order.paymentStatus = 'Paid';
+      order.transactionId = successfulPayment.cf_payment_id;
+      // Also trigger Shiprocket if not already synced
+      if (order.shippingPartner?.synced !== true) {
+         const shiprocketSync = await pushOrderToShiprocket(order);
+         mergeShippingPartner(order, buildShiprocketUpdate(shiprocketSync));
+         if (shiprocketSync.success) order.status = 'Processed';
+      }
+      await order.save();
+
+       // Email Confirmation (Async) - since it was paid now
+       try {
+        if (order.shippingAddress?.email) {
+          await sendOrderConfirmationEmail({
+            to: order.shippingAddress.email,
+            orderData: order
+          })
+        }
+      } catch (mailErr) {
+        console.error("Paid Order Notification failed:", mailErr)
+      }
+
+      return res.json({ success: true, message: 'Payment verified', order });
+    } else {
+      return res.status(400).json({ success: false, message: 'Payment not successful yet' });
+    }
+  } catch (err) {
+    console.error("Verify Payment error:", err?.message || err);
+    const msg =
+      err?.code === "CASHFREE_NOT_CONFIGURED"
+        ? "Payment verification is not configured."
+        : typeof err?.message === "string" && err.message.length < 120
+          ? err.message
+          : "Verification failed. Please try again.";
+    return res.status(500).json({ error: msg });
+  }
+}
+
+const cashfreeWebhook = async (req, res) => {
+  // Cashfree sends a POST request with the payment details
+  // For production, we should verify the signature. 
+  // For test/sandbox, we can just process it or call verify API.
+  try {
+    const { order_id } = req.body?.data?.order || {};
+    if (order_id) {
+       console.log(`Cashfree Webhook received for ${order_id}`);
+       // We'll use our verify logic to be safe
+       const payments = await verifyPayment(order_id);
+       const successfulPayment = Array.isArray(payments) 
+         ? payments.find(p => p.payment_status === 'SUCCESS')
+         : null;
+
+       if (successfulPayment) {
+          const order = await Order.findById(order_id);
+          if (order && order.paymentStatus !== 'Paid') {
+            order.paymentStatus = 'Paid';
+            order.transactionId = successfulPayment.cf_payment_id;
+            if (order.shippingPartner?.synced !== true) {
+              const shiprocketSync = await pushOrderToShiprocket(order);
+              mergeShippingPartner(order, buildShiprocketUpdate(shiprocketSync));
+              if (shiprocketSync.success) order.status = 'Processed';
+            }
+            await order.save();
+          }
+       }
+    }
+    res.status(200).send('OK');
+  } catch (err) {
+    console.error("Cashfree Webhook Error:", err?.message || err);
+    res.status(500).send("Internal Server Error");
+  }
+}
+
 export {
   createOrder,
   getUserOrders,
@@ -382,4 +516,6 @@ export {
   updateOrderStatus,
   syncOrderToShiprocket,
   requestPickup,
+  verifyCashfreePayment,
+  cashfreeWebhook,
 }

@@ -385,7 +385,7 @@ const CartDrawer = ({
                     </button>
                   </div>
                 )}
-                {couponError ? <p className="mt-2 ml-4 text-[10px] font-bold text-red-500">{couponError}</p> : null}
+                {!appliedCoupon && couponError ? <p className="mt-2 ml-4 text-[10px] font-bold text-red-500">{couponError}</p> : null}
 
                 {/* Available Offers */}
                 {couponsLoading ? (

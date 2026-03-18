@@ -7,12 +7,16 @@ import {
   syncOrderToShiprocket,
   updateOrderStatus,
   requestPickup,
+  verifyCashfreePayment,
+  cashfreeWebhook,
 } from '../controllers/orderController.js'
 import { authMiddleware } from '../middleware/auth.js'
 import { adminAuthMiddleware } from '../middleware/adminAuth.js'
 
 // 1. Place order (public - guest and registered)
 router.post('/', createOrder)
+router.post('/verify-payment', verifyCashfreePayment)
+router.post('/webhook/cashfree', cashfreeWebhook)
 
 // 2. Logged-in user order history (auth required)
 router.get('/my-orders/:userId', authMiddleware, getUserOrders)

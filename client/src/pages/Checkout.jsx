@@ -6,6 +6,8 @@ import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
 import { getProductSlugFromCartItem, getCartWeightKgForProduct, parseWeightToKg, MAX_WEIGHT_PER_PRODUCT_KG } from '../utils/cartUtils'
 import { getOptimizedImage } from '../utils/imageUtils'
+import { load } from '@cashfreepayments/cashfree-js'
+import toast from 'react-hot-toast'
 
 const Checkout = ({
   cart = [],
@@ -125,15 +127,22 @@ const Checkout = ({
 
   // --- Submit Order Logic (Step 2 Implementation) ---
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setTouched({ fullName: true, phone: true, email: true, addressLine1: true, city: true, state: true, pincode: true })
-
-    if (!isValid) return
-    if (!canPlaceOrder) {
-      alert('Some items are out of stock or exceed the purchase limit. Please update your cart.')
-      return
+    e.preventDefault();
+    setTouched({ fullName: true, phone: true, email: true, addressLine1: true, city: true, state: true, pincode: true });
+    
+    if (!isValid) {
+      const missing = required.filter(k => !form[k]?.trim());
+      const labelMap = { fullName: 'Full Name', phone: 'Phone', addressLine1: 'Address', city: 'City', state: 'State', pincode: 'Pincode' };
+      toast.error(`Please provide your ${labelMap[missing[0]] || 'delivery details'}.`);
+      return;
     }
-    setPlacing(true)
+    if (!canPlaceOrder) {
+      toast.error('Some items in your cart are currently unavailable.');
+      return;
+    }
+    setPlacing(true);
+    const toastId = toast.loading("Processing your order...");
+    console.log("Starting order placement...", { paymentMethod, total });
 
     try {
       const orderPayload = {
@@ -153,23 +162,66 @@ const Checkout = ({
         paymentMethod: paymentMethod
       }
 
-      const response = await axios.post(
-        `${import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'}/api/orders`,
-        orderPayload,
-        { headers: token ? { Authorization: `Bearer ${token}` } : {} }
-      );
+      const API_URL = import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app';
+      
+      const response = await fetch(`${API_URL}/api/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify(orderPayload)
+      });
 
-      if (response.data.success) {
+      const data = await response.json();
+      console.log("Order response:", data);
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to place order');
+      }
+
+        if (data.paymentRequired && data.sessionId) {
+          toast.success("Order initiated. Redirecting to payment...", { id: toastId });
+          // Localhost = always sandbox so real money is never deducted
+          const isLocalhost =
+            typeof window !== "undefined" &&
+            /localhost|127\.0\.0\.1/.test(window.location.origin || "");
+          const cfMode =
+            !isLocalhost &&
+            (import.meta.env.VITE_CASHFREE_MODE === "production" || import.meta.env.PROD)
+              ? "production"
+              : "sandbox";
+          try {
+            const cashfree = await load({ mode: cfMode });
+            await cashfree.checkout({
+              paymentSessionId: data.sessionId,
+              redirectTarget: "_self",
+            });
+          } catch (cfErr) {
+            console.error("Cashfree Checkout Error:", cfErr);
+            const msg =
+              cfErr?.message?.includes("session") ||
+              cfErr?.message?.includes("invalid")
+                ? "Payment session expired or invalid. Please try again."
+                : cfErr?.message && cfErr.message.length < 80
+                  ? cfErr.message
+                  : "Could not load payment gateway. Please try again.";
+            toast.error(msg, { id: toastId });
+            setPlacing(false);
+          }
+          return;
+        }
+
+        toast.success("Order placed successfully!", { id: toastId });
         if (onOrderSuccess) onOrderSuccess();
         navigate('/order-success', {
-          state: { orderId: response.data.orderId, totalAmount: total }
+          state: { orderId: data.orderId, totalAmount: total }
         });
-      }
     } catch (err) {
-      console.error("Order placement error:", err)
-      alert(err.response?.data?.error || "Failed to place order. Please try again.")
+      console.error("Order placement error:", err);
+      toast.error(err.message || "Failed to place order. Please try again.", { id: toastId });
     } finally {
-      setPlacing(false)
+      setPlacing(false);
     }
   }
 
@@ -271,13 +323,13 @@ const Checkout = ({
                     <p className="text-xs text-stone-500">Pay when you receive the order.</p>
                   </div>
                 </label>
-                <div className="flex items-center gap-3 p-4 border border-stone-200 rounded-xl opacity-50 cursor-not-allowed">
-                  <input type="radio" disabled className="h-4 w-4" />
+                <label className={`flex items-center gap-3 p-4 border rounded-xl cursor-pointer transition-all ${paymentMethod === 'ONLINE' ? 'border-stone-900 bg-stone-50' : 'border-stone-200 bg-white hover:border-stone-400'}`}>
+                  <input type="radio" checked={paymentMethod === 'ONLINE'} onChange={() => setPaymentMethod('ONLINE')} className="accent-stone-900 h-4 w-4" />
                   <div className="flex-1">
                     <p className="text-sm font-bold">Online Payment / Cards</p>
-                    <p className="text-xs text-stone-500">Coming soon...</p>
+                    <p className="text-xs text-stone-500">Pay via UPI, Cards, Netbanking etc.</p>
                   </div>
-                </div>
+                </label>
               </div>
             </div>
           </div>
@@ -322,10 +374,10 @@ const Checkout = ({
 
               <button
                 type="submit"
-                disabled={!isValid || placing || !canPlaceOrder}
+                disabled={placing || !canPlaceOrder}
                 className="mt-8 w-full rounded-xl bg-stone-900 py-4 text-sm font-bold text-white transition-all active:scale-95 disabled:opacity-50 disabled:bg-stone-400"
               >
-                {placing ? 'Processing Order...' : `Confirm Order (COD)`}
+                {placing ? 'Processing Order...' : paymentMethod === 'COD' ? 'Confirm Order (COD)' : 'Pay Now & Confirm'}
               </button>
               {!canPlaceOrder && (outOfStockItemIds.size > 0 || overLimitProductSlugs.size > 0) && (
                 <p className="mt-2 text-xs text-red-600 text-center">Fix cart issues above to place order.</p>

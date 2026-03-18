@@ -1,0 +1,845 @@
+Initializing Cashfree with ID: PRESENT
+Server running on http://localhost:5000
+MongoDB connected
+Redis connected
+MongoDB and Redis connected
+--- Stock Update Process Start ---
+--- Processing Stock for: 699a184562852d672c8d60e0 (250g) ---
+--- Processing Stock for: 699a0df862852d672c8d5fa3 (1KG) ---
+Γ£à Stock updated for 699a0df862852d672c8d5fa3 (1KG)
+Γ£à Stock updated for 699a184562852d672c8d60e0 (250g)
+Stock update function finished successfully.
+Cashfree Session Creation Error: {
+  code: '_invalid',
+  help: 'Check latest errors and resolution from Merchant Dashboard API logs: https://bit.ly/4glEd0W Help Document: https://bit.ly/4eeZYO9',
+  message: ' should be request.CreateOrderRequest',
+  type: 'invalid_request_error'
+}
+Cashfree Session Creation Error: AxiosError: Request failed with status code 400
+    at settle (C:\Users\Sandip\Desktop\Atraski\Mimi Crunch\server\node_modules\cashfree-pg\node_modules\axios\dist\node\axios.cjs:2097:12)
+    at IncomingMessage.handleStreamEnd (C:\Users\Sandip\Desktop\Atraski\Mimi Crunch\server\node_modules\cashfree-pg\node_modules\axios\dist\node\axios.cjs:3305:11)
+    at IncomingMessage.emit (node:events:531:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1698:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+    at Axios.request (C:\Users\Sandip\Desktop\Atraski\Mimi Crunch\server\node_modules\cashfree-pg\node_modules\axios\dist\node\axios.cjs:4483:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async createPaymentSession (file:///C:/Users/Sandip/Desktop/Atraski/Mimi%20Crunch/server/utils/cashfree.js:32:22)
+    at async createOrder (file:///C:/Users/Sandip/Desktop/Atraski/Mimi%20Crunch/server/controllers/orderController.js:124:27) {
+  code: 'ERR_BAD_REQUEST',
+  config: {
+    transitional: {
+      silentJSONParsing: true,
+      forcedJSONParsing: true,
+      clarifyTimeoutError: false
+    },
+    adapter: [ 'xhr', 'http', 'fetch' ],
+    transformRequest: [ [Function: transformRequest] ],
+    transformResponse: [ [Function: transformResponse] ],
+    timeout: 0,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    maxContentLength: -1,
+    maxBodyLength: -1,
+    env: { FormData: [Function], Blob: [class Blob] },
+    validateStatus: [Function: validateStatus],
+    headers: Object [AxiosHeaders] {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json',
+      'x-client-secret': 'cfsk_ma_test_d1b2690691bfd2d3a9430ac9db6da650_cbeae098',
+      'x-client-id': 'TEST11020395951aa59dcb99d50db83c59302011',
+      'x-sdk-platform': 'nodejssdk-5.1.0',
+      'x-api-version': '2025-01-01',
+      'x-request-id': '[object Object]',
+      'User-Agent': 'axios/1.12.2',
+      'Content-Length': '12',
+      'Accept-Encoding': 'gzip, compress, deflate, br'
+    },
+    method: 'post',
+    data: '"2023-08-01"',
+    url: 'https://sandbox.cashfree.com/pg/orders',
+    allowAbsoluteUrls: true
+  },
+  request: <ref *1> ClientRequest {
+    _events: [Object: null prototype] {
+      error: [Array],
+      abort: [Function (anonymous)],
+      aborted: [Function (anonymous)],
+      connect: [Function (anonymous)],
+      socket: [Function (anonymous)],
+      timeout: [Function (anonymous)],
+      finish: [Function: requestOnFinish]
+    },
+    _eventsCount: 7,
+    _maxListeners: undefined,
+    outputData: [],
+    outputSize: 0,
+    writable: true,
+    destroyed: true,
+    _last: false,
+    chunkedEncoding: false,
+    shouldKeepAlive: true,
+    maxRequestsOnConnectionReached: false,
+    _defaultKeepAlive: true,
+    useChunkedEncodingByDefault: true,
+    sendDate: false,
+    _removedConnection: false,
+    _removedContLen: false,
+    _removedTE: false,
+    strictContentLength: false,
+    _contentLength: 12,
+    _hasBody: true,
+    _trailer: '',
+    finished: true,
+    _headerSent: true,
+    _closed: true,
+    _header: 'POST /pg/orders HTTP/1.1\r\n' +
+      'Accept: application/json, text/plain, */*\r\n' +
+      'Content-Type: application/json\r\n' +
+      'x-client-secret: cfsk_ma_test_d1b2690691bfd2d3a9430ac9db6da650_cbeae098\r\n' +
+      'x-client-id: TEST11020395951aa59dcb99d50db83c59302011\r\n' +
+      'x-sdk-platform: nodejssdk-5.1.0\r\n' +
+      'x-api-version: 2025-01-01\r\n' +
+      'x-request-id: [object Object]\r\n' +
+      'User-Agent: axios/1.12.2\r\n' +
+      'Content-Length: 12\r\n' +
+      'Accept-Encoding: gzip, compress, deflate, br\r\n' +
+      'sentry-trace: 75349e9fcb5548d6b62162ca64dd29e6-9a61041a44d9efeb\r\n' +
+      'baggage: sentry-environment=production,sentry-public_key=748d9dcfc4286488867c59651cb6121a,sentry-trace_id=75349e9fcb5548d6b62162ca64dd29e6\r\n' +
+      'Host: sandbox.cashfree.com\r\n' +
+      'Connection: keep-alive\r\n' +
+      '\r\n',
+    _keepAliveTimeout: 0,
+    _onPendingData: [Function: nop],
+    agent: Agent {
+      _events: [Object: null prototype],
+      _eventsCount: 2,
+      _maxListeners: undefined,
+      defaultPort: 443,
+      protocol: 'https:',
+      options: [Object: null prototype],
+      requests: [Object: null prototype] {},
+      sockets: [Object: null prototype] {},
+      freeSockets: [Object: null prototype],
+      keepAliveMsecs: 1000,
+      keepAlive: true,
+      maxSockets: Infinity,
+      maxFreeSockets: 256,
+      scheduling: 'lifo',
+      maxTotalSockets: Infinity,
+      totalSocketCount: 1,
+      agentKeepAliveTimeoutBuffer: 1000,
+      maxCachedSessions: 100,
+      _sessionCache: [Object],
+      [Symbol(shapeMode)]: false,
+      [Symbol(kCapture)]: false
+    },
+    socketPath: undefined,
+    method: 'POST',
+    maxHeaderSize: undefined,
+    insecureHTTPParser: undefined,
+    joinDuplicateHeaders: undefined,
+    path: '/pg/orders',
+    _ended: true,
+    res: IncomingMessage {
+      _events: [Object],
+      _readableState: [ReadableState],
+      _maxListeners: undefined,
+      socket: null,
+      httpVersionMajor: 1,
+      httpVersionMinor: 1,
+      httpVersion: '1.1',
+      complete: true,
+      rawHeaders: [Array],
+      rawTrailers: [],
+      joinDuplicateHeaders: undefined,
+      aborted: false,
+      upgrade: false,
+      url: '',
+      method: null,
+      statusCode: 400,
+      statusMessage: 'Bad Request',
+      client: [TLSSocket],
+      _consuming: false,
+      _dumped: false,
+      req: [Circular *1],
+      _eventsCount: 4,
+      responseUrl: 'https://sandbox.cashfree.com/pg/orders',
+      redirects: [],
+      [Symbol(shapeMode)]: true,
+      [Symbol(kCapture)]: false,
+      [Symbol(kHeaders)]: [Object],
+      [Symbol(kHeadersCount)]: 40,
+      [Symbol(kTrailers)]: null,
+      [Symbol(kTrailersCount)]: 0
+    },
+    aborted: false,
+    timeoutCb: null,
+    upgradeOrConnect: false,
+    parser: null,
+    maxHeadersCount: null,
+    reusedSocket: false,
+    host: 'sandbox.cashfree.com',
+    protocol: 'https:',
+    _redirectable: Writable {
+      _events: [Object],
+      _writableState: [WritableState],
+      _maxListeners: undefined,
+      _options: [Object],
+      _ended: true,
+      _ending: true,
+      _redirectCount: 0,
+      _redirects: [],
+      _requestBodyLength: 12,
+      _requestBodyBuffers: [],
+      _eventsCount: 3,
+      _onNativeResponse: [Function (anonymous)],
+      _currentRequest: [Circular *1],
+      _currentUrl: 'https://sandbox.cashfree.com/pg/orders',
+      [Symbol(shapeMode)]: true,
+      [Symbol(kCapture)]: false
+    },
+    [Symbol(shapeMode)]: false,
+    [Symbol(kCapture)]: false,
+    [Symbol(kBytesWritten)]: 0,
+    [Symbol(kNeedDrain)]: false,
+    [Symbol(corked)]: 0,
+    [Symbol(kChunkedBuffer)]: [],
+    [Symbol(kChunkedLength)]: 0,
+    [Symbol(kSocket)]: TLSSocket {
+      _tlsOptions: [Object],
+      _secureEstablished: true,
+      _securePending: false,
+      _newSessionPending: false,
+      _controlReleased: true,
+      secureConnecting: false,
+      _SNICallback: null,
+      servername: 'sandbox.cashfree.com',
+      alpnProtocol: false,
+      authorized: true,
+      authorizationError: null,
+      encrypted: true,
+      _events: [Object: null prototype],
+      _eventsCount: 9,
+      connecting: false,
+      _hadError: false,
+      _parent: null,
+      _host: 'sandbox.cashfree.com',
+      _closeAfterHandlingError: false,
+      _readableState: [ReadableState],
+      _writableState: [WritableState],
+      allowHalfOpen: false,
+      _maxListeners: undefined,
+      _sockname: null,
+      _pendingData: null,
+      _pendingEncoding: '',
+      server: undefined,
+      _server: null,
+      ssl: [TLSWrap],
+      _requestCert: true,
+      _rejectUnauthorized: true,
+      timeout: 5000,
+      parser: null,
+      _httpMessage: null,
+      autoSelectFamilyAttemptedAddresses: [Array],
+      [Symbol(alpncallback)]: null,
+      [Symbol(res)]: [TLSWrap],
+      [Symbol(verified)]: true,
+      [Symbol(pendingSession)]: null,
+      [Symbol(async_id_symbol)]: -1,
+      [Symbol(kHandle)]: [TLSWrap],
+      [Symbol(lastWriteQueueSize)]: 0,
+      [Symbol(timeout)]: Timeout {
+        _idleTimeout: 5000,
+        _idlePrev: [TimersList],
+        _idleNext: [TimersList],
+        _idleStart: 237321,
+        _onTimeout: [Function: bound ],
+        _timerArgs: undefined,
+        _repeat: null,
+        _destroyed: false,
+        [Symbol(refed)]: false,
+        [Symbol(kHasPrimitive)]: false,
+        [Symbol(asyncId)]: 9281,
+        [Symbol(triggerId)]: 9279,
+        [Symbol(kAsyncContextFrame)]: undefined
+      },
+      [Symbol(kBuffer)]: null,
+      [Symbol(kBufferCb)]: null,
+      [Symbol(kBufferGen)]: null,
+      [Symbol(shapeMode)]: true,
+      [Symbol(kCapture)]: false,
+      [Symbol(kSetNoDelay)]: false,
+      [Symbol(kSetKeepAlive)]: true,
+      [Symbol(kSetKeepAliveInitialDelay)]: 1,
+      [Symbol(kBytesRead)]: 0,
+      [Symbol(kBytesWritten)]: 0,
+      [Symbol(connect-options)]: [Object]
+    },
+    [Symbol(kOutHeaders)]: [Object: null prototype] {
+      accept: [Array],
+      'content-type': [Array],
+      'x-client-secret': [Array],
+      'x-client-id': [Array],
+      'x-sdk-platform': [Array],
+      'x-api-version': [Array],
+      'x-request-id': [Array],
+      'user-agent': [Array],
+      'content-length': [Array],
+      'accept-encoding': [Array],
+      'sentry-trace': [Array],
+      baggage: [Array],
+      host: [Array]
+    },
+    [Symbol(errored)]: null,
+    [Symbol(kHighWaterMark)]: 16384,
+    [Symbol(kRejectNonStandardBodyWrites)]: false,
+    [Symbol(kUniqueHeaders)]: null
+  },
+  response: {
+    status: 400,
+    statusText: 'Bad Request',
+    headers: Object [AxiosHeaders] {
+      'content-type': 'application/json',
+      'content-length': '240',
+      connection: 'keep-alive',
+      date: 'Tue, 17 Mar 2026 12:15:58 GMT',
+      'x-ratelimit-remaining': '29999',
+      'content-security-policy': "default-src 'self' https://o330525.ingest.sentry.io *.cashfree.com *.cashfree.net https://use.typekit.net *.cardinalcommerce.com *.modirum.com; script-src 'self' 'sha256-moDZXugPgv0is/+iXJ6gPprJMMhYYTnmr27C11GiA2Q=' 'sha256-v/2IJ060WniS8v+tlk4QomfIrpanLFe2sGUtFabcphA=' 'sha256-3xjAJj++z5Uxm7aMD6Nk4Kg4L52dxcnU6N2uKhWzjgQ=' 'sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=' 'sha256-JFH2VtdwCYoxqwSE5u/bntwX95nxk3Bx53Qi5LbadJY=' 'sha256-2diUMSJnDvRh7e4kBVGmy78TGg6mKonHz6F5gkf/b4Y=' 'sha256-NPlefNsTS+ZGz/OVpBocUV8PR5HbD3nAFF8dRVYqfyQ=' 'sha256-a7j3v6BV6ydq2cvdOmxPWgqNgf9FB3dO6uO7P54W5z0=' 'sha256-fLqd6Ffch3uBx5DLb+szFA856OemuYuOgkZByLMfBMU=' *.cashfree.com *.cashfree.net http://localhost:3190 https://code.jquery.com/ https://cdn.jsdelivr.net/ *.sentry-cdn.com; style-src 'unsafe-inline' 'self' https://cdn.jsdelivr.net/ https://fonts.googleapis.com; img-src http: data:; font-src https://fonts.gstatic.com;",
+      'strict-transport-security': 'max-age=3600; includeSubdomains',
+      'x-api-version': '2025-01-01',
+      'x-content-type-options': 'nosniff',
+      'x-frame-options': 'SAMEORIGIN',
+      'x-request-id': '[object Object]',
+      'x-robots-tag': 'none, nosnippet, notranslate',
+      'x-xss-protection': '1; mode=block',
+      'x-ratelimit-type': 'app_id',
+      'x-ratelimit-retry': '0',
+      'x-ratelimit-limit': '30000',
+      'x-cache': 'Error from cloudfront',
+      via: '1.1 20174e507664142b8a97f4a740ee13de.cloudfront.net (CloudFront)',
+      'x-amz-cf-pop': 'DEL51-P5',
+      'x-amz-cf-id': 'LTnODNmKhvbWFQ_y-MkJ5Lq3O7pNzwPR3zR0QkY0lIoFmdzjSB6Lng=='
+    },
+    config: {
+      transitional: [Object],
+      adapter: [Array],
+      transformRequest: [Array],
+      transformResponse: [Array],
+      timeout: 0,
+      xsrfCookieName: 'XSRF-TOKEN',
+      xsrfHeaderName: 'X-XSRF-TOKEN',
+      maxContentLength: -1,
+      maxBodyLength: -1,
+      env: [Object],
+      validateStatus: [Function: validateStatus],
+      headers: [Object [AxiosHeaders]],
+      method: 'post',
+      data: '"2023-08-01"',
+      url: 'https://sandbox.cashfree.com/pg/orders',
+      allowAbsoluteUrls: true
+    },
+    request: <ref *1> ClientRequest {
+      _events: [Object: null prototype],
+      _eventsCount: 7,
+      _maxListeners: undefined,
+      outputData: [],
+      outputSize: 0,
+      writable: true,
+      destroyed: true,
+      _last: false,
+      chunkedEncoding: false,
+      shouldKeepAlive: true,
+      maxRequestsOnConnectionReached: false,
+      _defaultKeepAlive: true,
+      useChunkedEncodingByDefault: true,
+      sendDate: false,
+      _removedConnection: false,
+      _removedContLen: false,
+      _removedTE: false,
+      strictContentLength: false,
+      _contentLength: 12,
+      _hasBody: true,
+      _trailer: '',
+      finished: true,
+      _headerSent: true,
+      _closed: true,
+      _header: 'POST /pg/orders HTTP/1.1\r\n' +
+        'Accept: application/json, text/plain, */*\r\n' +
+        'Content-Type: application/json\r\n' +
+        'x-client-secret: cfsk_ma_test_d1b2690691bfd2d3a9430ac9db6da650_cbeae098\r\n' +
+        'x-client-id: TEST11020395951aa59dcb99d50db83c59302011\r\n' +
+        'x-sdk-platform: nodejssdk-5.1.0\r\n' +
+        'x-api-version: 2025-01-01\r\n' +
+        'x-request-id: [object Object]\r\n' +
+        'User-Agent: axios/1.12.2\r\n' +
+        'Content-Length: 12\r\n' +
+        'Accept-Encoding: gzip, compress, deflate, br\r\n' +
+        'sentry-trace: 75349e9fcb5548d6b62162ca64dd29e6-9a61041a44d9efeb\r\n' +
+        'baggage: sentry-environment=production,sentry-public_key=748d9dcfc4286488867c59651cb6121a,sentry-trace_id=75349e9fcb5548d6b62162ca64dd29e6\r\n' +
+        'Host: sandbox.cashfree.com\r\n' +
+        'Connection: keep-alive\r\n' +
+        '\r\n',
+      _keepAliveTimeout: 0,
+      _onPendingData: [Function: nop],
+      agent: [Agent],
+      socketPath: undefined,
+      method: 'POST',
+      maxHeaderSize: undefined,
+      insecureHTTPParser: undefined,
+      joinDuplicateHeaders: undefined,
+      path: '/pg/orders',
+      _ended: true,
+      res: [IncomingMessage],
+      aborted: false,
+      timeoutCb: null,
+      upgradeOrConnect: false,
+      parser: null,
+      maxHeadersCount: null,
+      reusedSocket: false,
+      host: 'sandbox.cashfree.com',
+      protocol: 'https:',
+      _redirectable: [Writable],
+      [Symbol(shapeMode)]: false,
+      [Symbol(kCapture)]: false,
+      [Symbol(kBytesWritten)]: 0,
+      [Symbol(kNeedDrain)]: false,
+      [Symbol(corked)]: 0,
+      [Symbol(kChunkedBuffer)]: [],
+      [Symbol(kChunkedLength)]: 0,
+      [Symbol(kSocket)]: [TLSSocket],
+      [Symbol(kOutHeaders)]: [Object: null prototype],
+      [Symbol(errored)]: null,
+      [Symbol(kHighWaterMark)]: 16384,
+      [Symbol(kRejectNonStandardBodyWrites)]: false,
+      [Symbol(kUniqueHeaders)]: null
+    },
+    data: {
+      code: '_invalid',
+      help: 'Check latest errors and resolution from Merchant Dashboard API logs: https://bit.ly/4glEd0W Help Document: https://bit.ly/4eeZYO9',
+      message: ' should be request.CreateOrderRequest',
+      type: 'invalid_request_error'
+    }
+  },
+  status: 400
+}
+--- Stock Update Process Start ---
+--- Processing Stock for: 699a184562852d672c8d60e0 (250g) ---
+--- Processing Stock for: 699a0df862852d672c8d5fa3 (1KG) ---
+Γ£à Stock updated for 699a0df862852d672c8d5fa3 (1KG)
+Γ£à Stock updated for 699a184562852d672c8d60e0 (250g)
+Stock update function finished successfully.
+Cashfree Session Creation Error: {
+  code: '_invalid',
+  help: 'Check latest errors and resolution from Merchant Dashboard API logs: https://bit.ly/4glEd0W Help Document: https://bit.ly/4eeZYO9',
+  message: ' should be request.CreateOrderRequest',
+  type: 'invalid_request_error'
+}
+Cashfree Session Creation Error: AxiosError: Request failed with status code 400
+    at settle (C:\Users\Sandip\Desktop\Atraski\Mimi Crunch\server\node_modules\cashfree-pg\node_modules\axios\dist\node\axios.cjs:2097:12)
+    at IncomingMessage.handleStreamEnd (C:\Users\Sandip\Desktop\Atraski\Mimi Crunch\server\node_modules\cashfree-pg\node_modules\axios\dist\node\axios.cjs:3305:11)
+    at IncomingMessage.emit (node:events:531:35)
+    at IncomingMessage.emit (node:domain:489:12)
+    at endReadableNT (node:internal/streams/readable:1698:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+    at Axios.request (C:\Users\Sandip\Desktop\Atraski\Mimi Crunch\server\node_modules\cashfree-pg\node_modules\axios\dist\node\axios.cjs:4483:41)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async createPaymentSession (file:///C:/Users/Sandip/Desktop/Atraski/Mimi%20Crunch/server/utils/cashfree.js:32:22)
+    at async createOrder (file:///C:/Users/Sandip/Desktop/Atraski/Mimi%20Crunch/server/controllers/orderController.js:124:27) {
+  code: 'ERR_BAD_REQUEST',
+  config: {
+    transitional: {
+      silentJSONParsing: true,
+      forcedJSONParsing: true,
+      clarifyTimeoutError: false
+    },
+    adapter: [ 'xhr', 'http', 'fetch' ],
+    transformRequest: [ [Function: transformRequest] ],
+    transformResponse: [ [Function: transformResponse] ],
+    timeout: 0,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    maxContentLength: -1,
+    maxBodyLength: -1,
+    env: { FormData: [Function], Blob: [class Blob] },
+    validateStatus: [Function: validateStatus],
+    headers: Object [AxiosHeaders] {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json',
+      'x-client-secret': 'cfsk_ma_test_d1b2690691bfd2d3a9430ac9db6da650_cbeae098',
+      'x-client-id': 'TEST11020395951aa59dcb99d50db83c59302011',
+      'x-sdk-platform': 'nodejssdk-5.1.0',
+      'x-api-version': '2025-01-01',
+      'x-request-id': '[object Object]',
+      'User-Agent': 'axios/1.12.2',
+      'Content-Length': '12',
+      'Accept-Encoding': 'gzip, compress, deflate, br'
+    },
+    method: 'post',
+    data: '"2023-08-01"',
+    url: 'https://sandbox.cashfree.com/pg/orders',
+    allowAbsoluteUrls: true
+  },
+  request: <ref *1> ClientRequest {
+    _events: [Object: null prototype] {
+      error: [Array],
+      abort: [Function (anonymous)],
+      aborted: [Function (anonymous)],
+      connect: [Function (anonymous)],
+      socket: [Function (anonymous)],
+      timeout: [Function (anonymous)],
+      finish: [Function: requestOnFinish]
+    },
+    _eventsCount: 7,
+    _maxListeners: undefined,
+    outputData: [],
+    outputSize: 0,
+    writable: true,
+    destroyed: true,
+    _last: false,
+    chunkedEncoding: false,
+    shouldKeepAlive: true,
+    maxRequestsOnConnectionReached: false,
+    _defaultKeepAlive: true,
+    useChunkedEncodingByDefault: true,
+    sendDate: false,
+    _removedConnection: false,
+    _removedContLen: false,
+    _removedTE: false,
+    strictContentLength: false,
+    _contentLength: 12,
+    _hasBody: true,
+    _trailer: '',
+    finished: true,
+    _headerSent: true,
+    _closed: true,
+    _header: 'POST /pg/orders HTTP/1.1\r\n' +
+      'Accept: application/json, text/plain, */*\r\n' +
+      'Content-Type: application/json\r\n' +
+      'x-client-secret: cfsk_ma_test_d1b2690691bfd2d3a9430ac9db6da650_cbeae098\r\n' +
+      'x-client-id: TEST11020395951aa59dcb99d50db83c59302011\r\n' +
+      'x-sdk-platform: nodejssdk-5.1.0\r\n' +
+      'x-api-version: 2025-01-01\r\n' +
+      'x-request-id: [object Object]\r\n' +
+      'User-Agent: axios/1.12.2\r\n' +
+      'Content-Length: 12\r\n' +
+      'Accept-Encoding: gzip, compress, deflate, br\r\n' +
+      'sentry-trace: 75349e9fcb5548d6b62162ca64dd29e6-9a61041a44d9efeb\r\n' +
+      'baggage: sentry-environment=production,sentry-public_key=748d9dcfc4286488867c59651cb6121a,sentry-trace_id=75349e9fcb5548d6b62162ca64dd29e6\r\n' +
+      'Host: sandbox.cashfree.com\r\n' +
+      'Connection: keep-alive\r\n' +
+      '\r\n',
+    _keepAliveTimeout: 0,
+    _onPendingData: [Function: nop],
+    agent: Agent {
+      _events: [Object: null prototype],
+      _eventsCount: 2,
+      _maxListeners: undefined,
+      defaultPort: 443,
+      protocol: 'https:',
+      options: [Object: null prototype],
+      requests: [Object: null prototype] {},
+      sockets: [Object: null prototype] {},
+      freeSockets: [Object: null prototype],
+      keepAliveMsecs: 1000,
+      keepAlive: true,
+      maxSockets: Infinity,
+      maxFreeSockets: 256,
+      scheduling: 'lifo',
+      maxTotalSockets: Infinity,
+      totalSocketCount: 1,
+      agentKeepAliveTimeoutBuffer: 1000,
+      maxCachedSessions: 100,
+      _sessionCache: [Object],
+      [Symbol(shapeMode)]: false,
+      [Symbol(kCapture)]: false
+    },
+    socketPath: undefined,
+    method: 'POST',
+    maxHeaderSize: undefined,
+    insecureHTTPParser: undefined,
+    joinDuplicateHeaders: undefined,
+    path: '/pg/orders',
+    _ended: true,
+    res: IncomingMessage {
+      _events: [Object],
+      _readableState: [ReadableState],
+      _maxListeners: undefined,
+      socket: null,
+      httpVersionMajor: 1,
+      httpVersionMinor: 1,
+      httpVersion: '1.1',
+      complete: true,
+      rawHeaders: [Array],
+      rawTrailers: [],
+      joinDuplicateHeaders: undefined,
+      aborted: false,
+      upgrade: false,
+      url: '',
+      method: null,
+      statusCode: 400,
+      statusMessage: 'Bad Request',
+      client: [TLSSocket],
+      _consuming: false,
+      _dumped: false,
+      req: [Circular *1],
+      _eventsCount: 4,
+      responseUrl: 'https://sandbox.cashfree.com/pg/orders',
+      redirects: [],
+      [Symbol(shapeMode)]: true,
+      [Symbol(kCapture)]: false,
+      [Symbol(kHeaders)]: [Object],
+      [Symbol(kHeadersCount)]: 40,
+      [Symbol(kTrailers)]: null,
+      [Symbol(kTrailersCount)]: 0
+    },
+    aborted: false,
+    timeoutCb: null,
+    upgradeOrConnect: false,
+    parser: null,
+    maxHeadersCount: null,
+    reusedSocket: false,
+    host: 'sandbox.cashfree.com',
+    protocol: 'https:',
+    _redirectable: Writable {
+      _events: [Object],
+      _writableState: [WritableState],
+      _maxListeners: undefined,
+      _options: [Object],
+      _ended: true,
+      _ending: true,
+      _redirectCount: 0,
+      _redirects: [],
+      _requestBodyLength: 12,
+      _requestBodyBuffers: [],
+      _eventsCount: 3,
+      _onNativeResponse: [Function (anonymous)],
+      _currentRequest: [Circular *1],
+      _currentUrl: 'https://sandbox.cashfree.com/pg/orders',
+      [Symbol(shapeMode)]: true,
+      [Symbol(kCapture)]: false
+    },
+    [Symbol(shapeMode)]: false,
+    [Symbol(kCapture)]: false,
+    [Symbol(kBytesWritten)]: 0,
+    [Symbol(kNeedDrain)]: false,
+    [Symbol(corked)]: 0,
+    [Symbol(kChunkedBuffer)]: [],
+    [Symbol(kChunkedLength)]: 0,
+    [Symbol(kSocket)]: TLSSocket {
+      _tlsOptions: [Object],
+      _secureEstablished: true,
+      _securePending: false,
+      _newSessionPending: false,
+      _controlReleased: true,
+      secureConnecting: false,
+      _SNICallback: null,
+      servername: 'sandbox.cashfree.com',
+      alpnProtocol: false,
+      authorized: true,
+      authorizationError: null,
+      encrypted: true,
+      _events: [Object: null prototype],
+      _eventsCount: 9,
+      connecting: false,
+      _hadError: false,
+      _parent: null,
+      _host: 'sandbox.cashfree.com',
+      _closeAfterHandlingError: false,
+      _readableState: [ReadableState],
+      _writableState: [WritableState],
+      allowHalfOpen: false,
+      _maxListeners: undefined,
+      _sockname: null,
+      _pendingData: null,
+      _pendingEncoding: '',
+      server: undefined,
+      _server: null,
+      ssl: [TLSWrap],
+      _requestCert: true,
+      _rejectUnauthorized: true,
+      timeout: 5000,
+      parser: null,
+      _httpMessage: null,
+      autoSelectFamilyAttemptedAddresses: [Array],
+      [Symbol(alpncallback)]: null,
+      [Symbol(res)]: [TLSWrap],
+      [Symbol(verified)]: true,
+      [Symbol(pendingSession)]: null,
+      [Symbol(async_id_symbol)]: -1,
+      [Symbol(kHandle)]: [TLSWrap],
+      [Symbol(lastWriteQueueSize)]: 0,
+      [Symbol(timeout)]: Timeout {
+        _idleTimeout: 5000,
+        _idlePrev: [TimersList],
+        _idleNext: [TimersList],
+        _idleStart: 257162,
+        _onTimeout: [Function: bound ],
+        _timerArgs: undefined,
+        _repeat: null,
+        _destroyed: false,
+        [Symbol(refed)]: false,
+        [Symbol(kHasPrimitive)]: false,
+        [Symbol(asyncId)]: 10331,
+        [Symbol(triggerId)]: 10329,
+        [Symbol(kAsyncContextFrame)]: undefined
+      },
+      [Symbol(kBuffer)]: null,
+      [Symbol(kBufferCb)]: null,
+      [Symbol(kBufferGen)]: null,
+      [Symbol(shapeMode)]: true,
+      [Symbol(kCapture)]: false,
+      [Symbol(kSetNoDelay)]: false,
+      [Symbol(kSetKeepAlive)]: true,
+      [Symbol(kSetKeepAliveInitialDelay)]: 1,
+      [Symbol(kBytesRead)]: 0,
+      [Symbol(kBytesWritten)]: 0,
+      [Symbol(connect-options)]: [Object]
+    },
+    [Symbol(kOutHeaders)]: [Object: null prototype] {
+      accept: [Array],
+      'content-type': [Array],
+      'x-client-secret': [Array],
+      'x-client-id': [Array],
+      'x-sdk-platform': [Array],
+      'x-api-version': [Array],
+      'x-request-id': [Array],
+      'user-agent': [Array],
+      'content-length': [Array],
+      'accept-encoding': [Array],
+      'sentry-trace': [Array],
+      baggage: [Array],
+      host: [Array]
+    },
+    [Symbol(errored)]: null,
+    [Symbol(kHighWaterMark)]: 16384,
+    [Symbol(kRejectNonStandardBodyWrites)]: false,
+    [Symbol(kUniqueHeaders)]: null
+  },
+  response: {
+    status: 400,
+    statusText: 'Bad Request',
+    headers: Object [AxiosHeaders] {
+      'content-type': 'application/json',
+      'content-length': '240',
+      connection: 'keep-alive',
+      date: 'Tue, 17 Mar 2026 12:16:17 GMT',
+      'x-ratelimit-remaining': '29998',
+      'content-security-policy': "default-src 'self' https://o330525.ingest.sentry.io *.cashfree.com *.cashfree.net https://use.typekit.net *.cardinalcommerce.com *.modirum.com; script-src 'self' 'sha256-moDZXugPgv0is/+iXJ6gPprJMMhYYTnmr27C11GiA2Q=' 'sha256-v/2IJ060WniS8v+tlk4QomfIrpanLFe2sGUtFabcphA=' 'sha256-3xjAJj++z5Uxm7aMD6Nk4Kg4L52dxcnU6N2uKhWzjgQ=' 'sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=' 'sha256-JFH2VtdwCYoxqwSE5u/bntwX95nxk3Bx53Qi5LbadJY=' 'sha256-2diUMSJnDvRh7e4kBVGmy78TGg6mKonHz6F5gkf/b4Y=' 'sha256-NPlefNsTS+ZGz/OVpBocUV8PR5HbD3nAFF8dRVYqfyQ=' 'sha256-a7j3v6BV6ydq2cvdOmxPWgqNgf9FB3dO6uO7P54W5z0=' 'sha256-fLqd6Ffch3uBx5DLb+szFA856OemuYuOgkZByLMfBMU=' *.cashfree.com *.cashfree.net http://localhost:3190 https://code.jquery.com/ https://cdn.jsdelivr.net/ *.sentry-cdn.com; style-src 'unsafe-inline' 'self' https://cdn.jsdelivr.net/ https://fonts.googleapis.com; img-src http: data:; font-src https://fonts.gstatic.com;",
+      'strict-transport-security': 'max-age=3600; includeSubdomains',
+      'x-api-version': '2025-01-01',
+      'x-content-type-options': 'nosniff',
+      'x-frame-options': 'SAMEORIGIN',
+      'x-request-id': '[object Object]',
+      'x-robots-tag': 'none, nosnippet, notranslate',
+      'x-xss-protection': '1; mode=block',
+      'x-ratelimit-type': 'app_id',
+      'x-ratelimit-retry': '0',
+      'x-ratelimit-limit': '30000',
+      'x-cache': 'Error from cloudfront',
+      via: '1.1 36eb7db7b876a768af9f0f8d50271df8.cloudfront.net (CloudFront)',
+      'x-amz-cf-pop': 'DEL51-P5',
+      'x-amz-cf-id': 'Dz5YGSojrV158pMXZQDqBstosQ_jkNvwDFtx-6TK8JtMqSZVaAcO3w=='
+    },
+    config: {
+      transitional: [Object],
+      adapter: [Array],
+      transformRequest: [Array],
+      transformResponse: [Array],
+      timeout: 0,
+      xsrfCookieName: 'XSRF-TOKEN',
+      xsrfHeaderName: 'X-XSRF-TOKEN',
+      maxContentLength: -1,
+      maxBodyLength: -1,
+      env: [Object],
+      validateStatus: [Function: validateStatus],
+      headers: [Object [AxiosHeaders]],
+      method: 'post',
+      data: '"2023-08-01"',
+      url: 'https://sandbox.cashfree.com/pg/orders',
+      allowAbsoluteUrls: true
+    },
+    request: <ref *1> ClientRequest {
+      _events: [Object: null prototype],
+      _eventsCount: 7,
+      _maxListeners: undefined,
+      outputData: [],
+      outputSize: 0,
+      writable: true,
+      destroyed: true,
+      _last: false,
+      chunkedEncoding: false,
+      shouldKeepAlive: true,
+      maxRequestsOnConnectionReached: false,
+      _defaultKeepAlive: true,
+      useChunkedEncodingByDefault: true,
+      sendDate: false,
+      _removedConnection: false,
+      _removedContLen: false,
+      _removedTE: false,
+      strictContentLength: false,
+      _contentLength: 12,
+      _hasBody: true,
+      _trailer: '',
+      finished: true,
+      _headerSent: true,
+      _closed: true,
+      _header: 'POST /pg/orders HTTP/1.1\r\n' +
+        'Accept: application/json, text/plain, */*\r\n' +
+        'Content-Type: application/json\r\n' +
+        'x-client-secret: cfsk_ma_test_d1b2690691bfd2d3a9430ac9db6da650_cbeae098\r\n' +
+        'x-client-id: TEST11020395951aa59dcb99d50db83c59302011\r\n' +
+        'x-sdk-platform: nodejssdk-5.1.0\r\n' +
+        'x-api-version: 2025-01-01\r\n' +
+        'x-request-id: [object Object]\r\n' +
+        'User-Agent: axios/1.12.2\r\n' +
+        'Content-Length: 12\r\n' +
+        'Accept-Encoding: gzip, compress, deflate, br\r\n' +
+        'sentry-trace: 75349e9fcb5548d6b62162ca64dd29e6-9a61041a44d9efeb\r\n' +
+        'baggage: sentry-environment=production,sentry-public_key=748d9dcfc4286488867c59651cb6121a,sentry-trace_id=75349e9fcb5548d6b62162ca64dd29e6\r\n' +
+        'Host: sandbox.cashfree.com\r\n' +
+        'Connection: keep-alive\r\n' +
+        '\r\n',
+      _keepAliveTimeout: 0,
+      _onPendingData: [Function: nop],
+      agent: [Agent],
+      socketPath: undefined,
+      method: 'POST',
+      maxHeaderSize: undefined,
+      insecureHTTPParser: undefined,
+      joinDuplicateHeaders: undefined,
+      path: '/pg/orders',
+      _ended: true,
+      res: [IncomingMessage],
+      aborted: false,
+      timeoutCb: null,
+      upgradeOrConnect: false,
+      parser: null,
+      maxHeadersCount: null,
+      reusedSocket: false,
+      host: 'sandbox.cashfree.com',
+      protocol: 'https:',
+      _redirectable: [Writable],
+      [Symbol(shapeMode)]: false,
+      [Symbol(kCapture)]: false,
+      [Symbol(kBytesWritten)]: 0,
+      [Symbol(kNeedDrain)]: false,
+      [Symbol(corked)]: 0,
+      [Symbol(kChunkedBuffer)]: [],
+      [Symbol(kChunkedLength)]: 0,
+      [Symbol(kSocket)]: [TLSSocket],
+      [Symbol(kOutHeaders)]: [Object: null prototype],
+      [Symbol(errored)]: null,
+      [Symbol(kHighWaterMark)]: 16384,
+      [Symbol(kRejectNonStandardBodyWrites)]: false,
+      [Symbol(kUniqueHeaders)]: null
+    },
+    data: {
+      code: '_invalid',
+      help: 'Check latest errors and resolution from Merchant Dashboard API logs: https://bit.ly/4glEd0W Help Document: https://bit.ly/4eeZYO9',
+      message: ' should be request.CreateOrderRequest',
+      type: 'invalid_request_error'
+    }
+  },
+  status: 400
+}

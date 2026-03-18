@@ -75,7 +75,7 @@ const BuildYourOwnProtein = () => {
                         </svg>
                     </div>
                     <h1 className="text-3xl font-[Fraunces] text-brand-text">Demand Received!</h1>
-                    <p className="text-brand-secondary">Bhai, tera custom bar ka idea mast hai. Humari team jald hi contact karegi!</p>
+                    <p className="text-brand-secondary">Thank you for sharing your idea! Your custom bar concept is fantastic. Our team will review the details and contact you shortly.</p>
                     <button onClick={() => window.location.href = '/'} className="btn btn-primary w-full">Back to Home</button>
                 </div>
             </main>

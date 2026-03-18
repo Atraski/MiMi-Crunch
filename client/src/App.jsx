@@ -35,6 +35,7 @@ import Checkout from './pages/Checkout'
 import Lenis from 'lenis'
 import OrderSuccess from './pages/OrderSuccess'
 import { getProductSlugFromCartItem, wouldExceedWeightLimit } from './utils/cartUtils'
+import { Toaster } from 'react-hot-toast'
 
 const API_BASE = import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'
 
@@ -149,6 +150,36 @@ function App() {
   const [homeRecipes, setHomeRecipes] = useState([])
   const [flyingItem, setFlyingItem] = useState(null)
   const [flyingPos, setFlyingPos] = useState(null)
+  const [headerVisible, setHeaderVisible] = useState(true)
+  const lastScrollY = useRef(0)
+
+  useEffect(() => {
+    const SCROLL_THRESHOLD = 10
+    const tick = () => {
+      const y = window.scrollY
+      if (y <= 30) {
+        setHeaderVisible(true)
+      } else if (y > lastScrollY.current && y - lastScrollY.current > SCROLL_THRESHOLD) {
+        setHeaderVisible(false)
+      } else if (lastScrollY.current > y && lastScrollY.current - y > SCROLL_THRESHOLD) {
+        setHeaderVisible(true)
+      }
+      lastScrollY.current = y
+    }
+    const onScroll = () => requestAnimationFrame(tick)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    const handleCartCleared = () => {
+      setCart([])
+      localStorage.removeItem('mimi_cart')
+    }
+
+    window.addEventListener('mimi-cart-cleared', handleCartCleared)
+    return () => window.removeEventListener('mimi-cart-cleared', handleCartCleared)
+  }, [])
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -346,7 +377,7 @@ function App() {
     const slug = product.slug ?? product.id ?? ''
     const weightStr = product.size ?? product.selectedVariant?.weight ?? ''
     if (slug && wouldExceedWeightLimit(cart, slug, weightStr, 1)) {
-      setCartLimitMessage("Can't buy a product more than this.")
+      toast.error("Maximum purchase limit reached for this item.");
       return
     }
 
@@ -400,7 +431,7 @@ function App() {
     const slug = getProductSlugFromCartItem(product) || (product.slug ?? product.id ?? '')
     const weightStr = product.size ?? product.selectedVariant?.weight ?? ''
     if (slug && wouldExceedWeightLimit(cart, slug, weightStr, 1)) {
-      setCartLimitMessage("Can't buy a product more than this.")
+      toast.error("Maximum purchase limit reached for this item.");
       return
     }
     const id = buildCartId(product)
@@ -462,15 +493,21 @@ function App() {
         body: JSON.stringify({ code: code.trim(), subtotal }),
       })
       const data = await res.json()
-      if (data.valid && data.discount != null) {
-        setAppliedCoupon({ code: data.code, discount: data.discount })
+      const isValid = data && (data.valid === true || data.valid === 'true')
+      const discount = data?.discount
+      const hasDiscount = discount != null && (typeof discount === 'number' ? true : Number(discount) >= 0)
+      if (isValid && hasDiscount) {
+        setAppliedCoupon({ code: data.code || code.trim(), discount: Number(discount) || 0 })
         setCouponError('')
+        toast.success(`Coupon "${(data.code || code).toString().toUpperCase()}" applied!`)
       } else {
         setAppliedCoupon(null)
-        setCouponError(data.error || 'Invalid code.')
+        setCouponError(data?.error || 'Invalid code.')
+        toast.error(data?.error || 'Invalid coupon code.')
       }
     } catch {
       setCouponError('Could not apply code. Try again.')
+      toast.error('Failed to apply coupon. Please try again.')
       setAppliedCoupon(null)
     }
   }
@@ -486,19 +523,30 @@ function App() {
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-bg md:bg-white transition-colors duration-500">
+      <Toaster position="bottom-center" toastOptions={{ duration: 3000, style: { background: '#1c1917', color: '#fff', borderRadius: '12px' } }} />
       <CustomCursor />
       {isProductsLoading && <Loader />}
-      {/* Desktop Header */}
-      <div className="hidden md:block">
+      {/* Desktop Header – hide on scroll down, show on scroll up */}
+      <div
+        className={`sticky top-0 z-[110] hidden md:block transition-transform duration-300 ease-out ${
+          headerVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}
+      >
         <Header cartCount={cartCount} onCartToggle={() => setIsCartOpen(!isCartOpen)} products={products} />
       </div>
 
-      {/* Mobile Header */}
-      <MobileHeader
-        cartCount={cartCount}
-        onCartToggle={() => setIsCartOpen(!isCartOpen)}
-        wishlistCount={wishlistCount}
-      />
+      {/* Mobile Header – hide on scroll down, show on scroll up */}
+      <div
+        className={`sticky top-0 z-[110] md:hidden transition-transform duration-300 ease-out ${
+          headerVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}
+      >
+        <MobileHeader
+          cartCount={cartCount}
+          onCartToggle={() => setIsCartOpen(!isCartOpen)}
+          wishlistCount={wishlistCount}
+        />
+      </div>
 
       <main className="flex-1 relative overflow-hidden bg-brand-bg pb-24 md:pb-0 m-0 p-0">
         <PageWrapper>

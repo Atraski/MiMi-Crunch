@@ -1,119 +1,114 @@
 import { useEffect, useRef, useState } from 'react'
-import gsap from 'gsap'
+
+// Smooth lerp for 60fps follow – no GSAP per frame, no lag
+const lerp = (a, b, t) => a + (b - a) * t
 
 const CustomCursor = () => {
-    const mainCursor = useRef(null)
-    const secondaryCursor = useRef(null)
-    const [isPointer, setIsPointer] = useState(false)
-    const [isHidden, setIsHidden] = useState(true)
-    const [isClicking, setIsClicking] = useState(false)
+  const dotRef = useRef(null)
+  const ringRef = useRef(null)
+  const pointerRef = useRef(false)
+  const clickingRef = useRef(false)
+  const [isPointer, setIsPointer] = useState(false)
+  const [isHidden, setIsHidden] = useState(true)
+  const [isClicking, setIsClicking] = useState(false)
 
-    useEffect(() => {
-        let mouseX = 0
-        let mouseY = 0
-        let lastX = 0
-        let lastY = 0
+  pointerRef.current = isPointer
+  clickingRef.current = isClicking
 
-        const onMouseMove = (e) => {
-            const { clientX, clientY } = e
-            mouseX = clientX
-            mouseY = clientY
-            setIsHidden(false)
+  useEffect(() => {
+    let targetX = 0
+    let targetY = 0
+    let currentX = 0
+    let currentY = 0
+    let ringX = 0
+    let ringY = 0
+    let rafId = null
 
-            // Main small dot (instant)
-            gsap.to(mainCursor.current, {
-                x: clientX,
-                y: clientY,
-                duration: 0.1,
-                ease: "power2.out"
-            })
+    const onMouseMove = (e) => {
+      targetX = e.clientX
+      targetY = e.clientY
+      setIsHidden(false)
+    }
 
-            // Calculate velocity/direction for stretch effect
-            const deltaX = clientX - lastX
-            const deltaY = clientY - lastY
-            const velocity = Math.min(Math.sqrt(deltaX * deltaX + deltaY * deltaY), 150)
-            const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI)
+    const tick = () => {
+      currentX = lerp(currentX, targetX, 0.35)
+      currentY = lerp(currentY, targetY, 0.35)
+      ringX = lerp(ringX, targetX, 0.12)
+      ringY = lerp(ringY, targetY, 0.12)
 
-            // Dynamic scaling based on state
-            let baseScale = isPointer ? 1.8 : 1.0
-            if (isClicking) baseScale *= 0.8
+      const dotScale = clickingRef.current ? 0.5 : 1
+      const ringScale = pointerRef.current ? 1.25 : 1
 
-            // Secondary larger circle (smooth lag + dynamic stretch)
-            gsap.to(secondaryCursor.current, {
-                x: clientX,
-                y: clientY,
-                duration: 0.5,
-                ease: "expo.out",
-                rotate: angle, // Align stretch with direction
-                scaleX: baseScale * (1 + velocity / 100), // Stretch
-                scaleY: baseScale * (1 - velocity / 200), // Squeeze
-                backgroundColor: isPointer ? "rgba(46, 125, 50, 0.1)" : "transparent",
-                borderColor: isPointer ? "rgba(46, 125, 50, 1)" : "rgba(46, 125, 50, 0.3)"
-            })
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate(${currentX}px, ${currentY}px) translate(-50%, -50%) scale(${dotScale})`
+      }
+      if (ringRef.current) {
+        ringRef.current.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%) scale(${ringScale})`
+      }
+      rafId = requestAnimationFrame(tick)
+    }
+    rafId = requestAnimationFrame(tick)
 
-            lastX = clientX
-            lastY = clientY
-        }
+    const onMouseEnter = () => setIsHidden(false)
+    const onMouseLeave = () => setIsHidden(true)
+    const onMouseDown = () => setIsClicking(true)
+    const onMouseUp = () => setIsClicking(false)
 
-        const onMouseEnter = () => setIsHidden(false)
-        const onMouseLeave = () => setIsHidden(true)
-        const onMouseDown = () => setIsClicking(true)
-        const onMouseUp = () => setIsClicking(false)
+    const handleHover = (e) => {
+      const clickable = e.target.closest('a, button, [role="button"], input, select, textarea, [data-cursor-hover]')
+      setIsPointer(!!clickable)
+    }
 
-        // Check for hover state on interactive elements
-        const handleHover = (e) => {
-            const target = e.target
-            const isClickable = target.closest('a, button, [role="button"], input, select, textarea, .group, .recipe-card, .product-card')
-            setIsPointer(!!isClickable)
-        }
+    window.addEventListener('mousemove', onMouseMove, { passive: true })
+    window.addEventListener('mouseenter', onMouseEnter)
+    window.addEventListener('mouseleave', onMouseLeave)
+    window.addEventListener('mousedown', onMouseDown)
+    window.addEventListener('mouseup', onMouseUp)
+    document.addEventListener('mouseover', handleHover)
 
-        window.addEventListener('mousemove', onMouseMove)
-        window.addEventListener('mouseenter', onMouseEnter)
-        window.addEventListener('mouseleave', onMouseLeave)
-        window.addEventListener('mousedown', onMouseDown)
-        window.addEventListener('mouseup', onMouseUp)
-        window.addEventListener('mouseover', handleHover)
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId)
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mouseenter', onMouseEnter)
+      window.removeEventListener('mouseleave', onMouseLeave)
+      window.removeEventListener('mousedown', onMouseDown)
+      window.removeEventListener('mouseup', onMouseUp)
+      document.removeEventListener('mouseover', handleHover)
+    }
+  }, [])
 
-        return () => {
-            window.removeEventListener('mousemove', onMouseMove)
-            window.removeEventListener('mouseenter', onMouseEnter)
-            window.removeEventListener('mouseleave', onMouseLeave)
-            window.removeEventListener('mousedown', onMouseDown)
-            window.removeEventListener('mouseup', onMouseUp)
-            window.removeEventListener('mouseover', handleHover)
-        }
-    }, [isPointer, isClicking])
-
-    return (
-        <div className={`cursor-wrapper pointer-events-none fixed inset-0 z-[9999] hidden md:block ${isHidden ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
-            {/* Main Dot */}
-            <div
-                ref={mainCursor}
-                className="fixed top-0 left-0 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-green mix-blend-difference"
-            />
-            {/* Smooth Follower */}
-            <div
-                ref={secondaryCursor}
-                className="fixed top-0 left-0 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border-[1.5px] border-brand-green/30 mix-blend-normal flex items-center justify-center"
-            >
-                {isPointer && (
-                    <div className="w-1.5 h-1.5 bg-brand-green rounded-full animate-ping" />
-                )}
-            </div>
-
-            <style dangerouslySetInnerHTML={{
-                __html: `
-                @media (min-width: 768px) {
-                    * {
-                        cursor: none !important;
-                    }
-                    a, button, [role="button"], input, select, textarea, .group {
-                        cursor: none !important;
-                    }
-                }
-            `}} />
-        </div>
-    )
+  return (
+    <div
+      className={`pointer-events-none fixed inset-0 z-[9999] hidden md:block ${isHidden ? 'opacity-0' : 'opacity-100'} transition-opacity duration-200`}
+      aria-hidden
+    >
+      {/* Inner dot – snappy, squish on click */}
+      <div
+        ref={dotRef}
+        className="absolute left-0 top-0 h-1.5 w-1.5 rounded-full bg-stone-900 dark:bg-white will-change-transform"
+        style={{ transform: 'translate(-50%, -50%)' }}
+      />
+      {/* Outer ring – smooth lag, glow on hover */}
+      <div
+        ref={ringRef}
+        className={`absolute left-0 top-0 h-8 w-8 rounded-full border-2 will-change-transform transition-[border-color,background-color,box-shadow] duration-200 ${isPointer ? 'border-emerald-500 bg-emerald-500/10 shadow-[0_0_18px_rgba(34,197,94,0.22)] cursor-ring-hover' : 'border-stone-300/80'}`}
+        style={{ transform: 'translate(-50%, -50%)' }}
+      />
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @media (min-width: 768px) {
+            * { cursor: none !important; }
+            a, button, [role="button"], input, select, textarea, [data-cursor-hover] { cursor: none !important; }
+          }
+          @keyframes cursor-ring-pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+          }
+          .cursor-ring-hover { animation: cursor-ring-pulse 2s ease-in-out infinite; }
+        `,
+      }} />
+    </div>
+  )
 }
 
 export default CustomCursor
