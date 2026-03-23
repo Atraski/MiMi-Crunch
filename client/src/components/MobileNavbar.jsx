@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useMemo } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import gsap from 'gsap'
 
 const navItems = [
@@ -32,15 +33,22 @@ const navItems = [
         )
     },
     {
-        label: 'Account', path: '/profile', icon: (active) => (
-            <svg className={`w-6 h-6 transition-all duration-300 ${active ? 'text-brand-green scale-110' : 'text-stone-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
+        label: 'Account', path: '/profile', icon: (active, user) => (
+            user?.name ? (
+                <span className={`text-lg font-black transition-all duration-300 ${active ? 'text-brand-green scale-110' : 'text-stone-400'}`}>
+                    {user.name.charAt(0).toUpperCase()}
+                </span>
+            ) : (
+                <svg className={`w-6 h-6 transition-all duration-300 ${active ? 'text-brand-green scale-110' : 'text-stone-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+            )
         )
     }
 ]
 
 const MobileNavbar = ({ products = [] }) => {
+    const { user } = useAuth()
     const location = useLocation()
     const indicatorRef = useRef(null)
     const searchPanelRef = useRef(null)
@@ -184,7 +192,7 @@ const MobileNavbar = ({ products = [] }) => {
                                         className="flex flex-col items-center justify-center gap-1.5 h-full tap-highlight-none"
                                     >
                                         <div className={`relative transition-all duration-300 ${active ? '-translate-y-1' : 'translate-y-0'}`}>
-                                            {item.icon(active)}
+                                            {item.icon(active, user)}
                                             {active && (
                                                 <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-brand-green rounded-full shadow-[0_0_8px_rgba(46,125,50,0.8)]" />
                                             )}
@@ -204,13 +212,13 @@ const MobileNavbar = ({ products = [] }) => {
                                     className="flex flex-col items-center justify-center gap-1.5 h-full tap-highlight-none"
                                 >
                                     <div className={`relative transition-all duration-300 ${active ? '-translate-y-1' : 'translate-y-0'}`}>
-                                        {item.icon(active)}
+                                        {item.icon(active, user)}
                                         {active && (
                                             <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-brand-green rounded-full shadow-[0_0_8px_rgba(46,125,50,0.8)]" />
                                         )}
                                     </div>
                                     <span className={`text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${active ? 'text-brand-green' : 'text-stone-400 opacity-60'}`}>
-                                        {item.label}
+                                        {item.label === 'Account' && user?.name ? user.name.split(' ')[0] : item.label}
                                     </span>
                                 </Link>
                             )

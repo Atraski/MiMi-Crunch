@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { adminAuthMiddleware, signAdminToken } from '../middleware/adminAuth.js'
+import User from '../models/User.js'
 
 const router = Router()
 
@@ -36,6 +37,24 @@ router.get('/admin/me', adminAuthMiddleware, (req, res) => {
     success: true,
     loginId: req.admin?.loginId || ADMIN_LOGIN_ID,
   })
+})
+
+router.get('/admin/users', adminAuthMiddleware, async (req, res) => {
+  try {
+    const users = await User.find().sort({ createdAt: -1 })
+    res.json(users)
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch users.' })
+  }
+})
+
+router.delete('/admin/users/:id', adminAuthMiddleware, async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id)
+    res.json({ success: true, message: 'User deleted successfully.' })
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete user.' })
+  }
 })
 
 export default router

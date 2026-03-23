@@ -300,6 +300,11 @@ const ProductList = ({
                 initialProduct={isEditOpen ? editingProduct : null}
                 collections={collections}
                 apiBase={apiBase}
+                onClose={() => {
+                  setIsCreateOpen(false)
+                  setIsEditOpen(false)
+                  setEditingProduct(null)
+                }}
               />
             </div>
           </div>

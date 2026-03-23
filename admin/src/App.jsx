@@ -13,6 +13,7 @@ import ReviewList from './features/reviews/ReviewList.jsx'
 import CouponList from './features/discounts/CouponList.jsx'
 import OrderList from './features/orders/OrderList.jsx'
 import CustomDemandList from './features/customDemands/CustomDemandList.jsx'
+import CustomerList from './features/customers/CustomerList.jsx'
 import useProducts from './hooks/useProducts.js'
 import useCollections from './hooks/useCollections.js'
 import useBlogs from './hooks/useBlogs.js'
@@ -21,6 +22,7 @@ import useReviews from './hooks/useReviews.js'
 import useCoupons from './hooks/useCoupons.js'
 import useOrders from './hooks/useOrders.js'
 import useAnalytics from './hooks/useAnalytics.js'
+import useCustomers from './hooks/useCustomers.js'
 import AdminLayout from './layout/AdminLayout.jsx'
 import {
   clearAdminSession,
@@ -114,6 +116,14 @@ const AdminApp = () => {
   const analytics = useAnalytics(API_BASE)
   const { data: analyticsData } = analytics
 
+  const {
+    customers,
+    loading: customersLoading,
+    error: customersError,
+    fetchCustomers,
+    deleteCustomer,
+  } = useCustomers(API_BASE)
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (!isAdminSessionValid()) {
@@ -147,6 +157,9 @@ const AdminApp = () => {
     }
     if (activeTab === 'orders') {
       fetchOrders()
+    }
+    if (activeTab === 'customers') {
+      fetchCustomers()
     }
   }, [activeTab, isAuthenticated])
 
@@ -305,6 +318,16 @@ const AdminApp = () => {
         <CustomDemandList />
       ) : null}
 
+      {activeTab === 'customers' ? (
+        <CustomerList
+          customers={customers}
+          loading={customersLoading}
+          error={customersError}
+          onRefresh={fetchCustomers}
+          onDelete={deleteCustomer}
+        />
+      ) : null}
+
       {activeTab !== 'products' &&
         activeTab !== 'orders' &&
         activeTab !== 'collections' &&
@@ -312,6 +335,7 @@ const AdminApp = () => {
         activeTab !== 'recipes' &&
         activeTab !== 'reviews' &&
         activeTab !== 'customDemands' &&
+        activeTab !== 'customers' &&
         activeTab !== 'discounts' ? (
         <StatsGrid 
           products={products} 

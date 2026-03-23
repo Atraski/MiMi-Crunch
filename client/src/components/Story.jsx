@@ -111,8 +111,8 @@ const Story = () => {
           <div className="story-image-group order-1 lg:order-2 relative max-w-md mx-auto lg:mr-0 lg:max-w-none">
             <div className="relative z-10 overflow-hidden rounded-[2.5rem] shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=1200&auto=format&fit=crop"
-                alt="Our Heritage"
+                src="/farmer.jpg"
+                alt="Our Farmer Partner"
                 className="h-full w-full object-cover aspect-[4/4] xl:aspect-[4/4.5] transition-transform duration-700 hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-stone-900/40 via-transparent to-transparent" />

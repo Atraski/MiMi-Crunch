@@ -9,6 +9,13 @@ import { getOptimizedImage } from '../utils/imageUtils'
 import { load } from '@cashfreepayments/cashfree-js'
 import toast from 'react-hot-toast'
 
+const getCouponDescription = (c) => {
+  const min = c.minOrder && c.minOrder > 0 ? c.minOrder : 0
+  const off = c.type === 'percentage' ? `upto ${c.value}% OFF` : `₹${c.value} off`
+  if (min > 0) return `Shop for ₹${min} or more and get ${off}!`
+  return `Get ${off}!`
+}
+
 const Checkout = ({
   cart = [],
   products = [],
@@ -17,6 +24,11 @@ const Checkout = ({
   discountAmount = 0,
   total = 0,
   onOrderSuccess,
+  appliedCoupon = null,
+  couponError = '',
+  onApplyCoupon,
+  onRemoveCoupon,
+  apiBase = '',
 }) => {
   const navigate = useNavigate()
   const { user, token, loading } = useAuth()
@@ -35,6 +47,41 @@ const Checkout = ({
   const [touched, setTouched] = useState({})
   const [placing, setPlacing] = useState(false)
   const [showMap, setShowMap] = useState(false)
+
+  // Coupon state
+  const [couponInput, setCouponInput] = useState('')
+  const [applying, setApplying] = useState(false)
+  const [availableCoupons, setAvailableCoupons] = useState([])
+  const [couponsLoading, setCouponsLoading] = useState(false)
+
+  // Fetch available coupons on mount
+  useEffect(() => {
+    if (!apiBase || cart.length === 0) return
+    let cancelled = false
+    setCouponsLoading(true)
+    fetch(`${apiBase}/api/coupons/available`)
+      .then((r) => r.json())
+      .then((data) => { if (!cancelled && Array.isArray(data)) setAvailableCoupons(data) })
+      .catch(() => { if (!cancelled) setAvailableCoupons([]) })
+      .finally(() => { if (!cancelled) setCouponsLoading(false) })
+    return () => { cancelled = true }
+  }, [apiBase, cart.length])
+
+  const handleApplyCouponInput = async (e) => {
+    e?.preventDefault()
+    if (!couponInput.trim() || !onApplyCoupon) return
+    setApplying(true)
+    await onApplyCoupon(couponInput.trim())
+    setApplying(false)
+    setCouponInput('')
+  }
+
+  const handleApplyCouponByCode = async (code) => {
+    if (!onApplyCoupon) return
+    setApplying(true)
+    await onApplyCoupon(code)
+    setApplying(false)
+  }
 
   // COD default payment method rakha hai
   const [paymentMethod, setPaymentMethod] = useState('COD')
@@ -365,10 +412,101 @@ const Checkout = ({
                 })}
               </div>
 
-              <div className="mt-6 space-y-3 border-t pt-6 text-sm">
+              {/* Coupon Section */}
+              <div className="mt-5 border-t pt-5">
+                <p className="mb-3 text-[10px] font-black uppercase tracking-[0.25em] text-stone-400">Apply Coupon</p>
+
+                {!appliedCoupon ? (
+                  <form onSubmit={handleApplyCouponInput} className="relative flex items-center">
+                    <input
+                      type="text"
+                      value={couponInput}
+                      onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                      placeholder="ENTER PROMO CODE"
+                      className="w-full rounded-xl border border-stone-200 bg-stone-50 px-4 py-3 text-xs font-bold tracking-widest placeholder:text-stone-300 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-50 transition-all"
+                    />
+                    <button
+                      type="submit"
+                      disabled={applying || !couponInput.trim()}
+                      className="absolute right-2 rounded-lg bg-stone-900 px-4 py-2 text-[10px] font-black uppercase tracking-widest text-white hover:bg-emerald-600 disabled:opacity-30 transition-all"
+                    >
+                      {applying ? '...' : 'Apply'}
+                    </button>
+                  </form>
+                ) : (
+                  <div className="flex items-center justify-between rounded-xl border-2 border-dashed border-emerald-200 bg-emerald-50/60 px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">🎉</span>
+                      <div>
+                        <p className="text-xs font-black tracking-widest text-emerald-800">{appliedCoupon.code}</p>
+                        <p className="text-[10px] text-emerald-600">Coupon Applied! Saving ₹{Math.round(discountAmount)}</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={onRemoveCoupon}
+                      className="text-[10px] font-black uppercase tracking-widest text-orange-600 hover:text-orange-700 underline underline-offset-4"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+                {!appliedCoupon && couponError && (
+                  <p className="mt-1.5 ml-1 text-[10px] font-bold text-red-500">{couponError}</p>
+                )}
+
+                {/* Available Offers */}
+                {couponsLoading ? (
+                  <p className="mt-3 text-[10px] font-bold uppercase tracking-widest text-stone-400 animate-pulse">Fetching offers...</p>
+                ) : availableCoupons.length > 0 ? (
+                  <div className="mt-4 space-y-2">
+                    {availableCoupons.map((coupon) => {
+                      const minOrder = coupon.minOrder || 0
+                      const isApplicable = Math.round(subtotal) >= minOrder
+                      const isApplied = appliedCoupon?.code === coupon.code
+                      return (
+                        <div
+                          key={coupon.code}
+                          onClick={() => {
+                            if (isApplied || !isApplicable || applying) return
+                            handleApplyCouponByCode(coupon.code)
+                          }}
+                          className={`relative overflow-hidden rounded-xl border p-3 transition-all ${
+                            isApplied
+                              ? 'border-emerald-400 bg-emerald-50'
+                              : isApplicable
+                              ? 'cursor-pointer border-stone-100 bg-white hover:border-emerald-200 hover:shadow-sm'
+                              : 'cursor-not-allowed border-stone-100 bg-stone-50 opacity-50 grayscale'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-3">
+                            <div>
+                              <p className={`text-xs font-black uppercase tracking-widest ${isApplied ? 'text-emerald-700' : 'text-stone-900'}`}>
+                                {coupon.code}
+                              </p>
+                              <p className="mt-0.5 text-[10px] text-stone-500">{getCouponDescription(coupon)}</p>
+                              {!isApplicable && (
+                                <p className="mt-1 text-[10px] font-bold text-amber-600">Add ₹{minOrder - Math.round(subtotal)} more for this offer</p>
+                              )}
+                            </div>
+                            {isApplicable && !isApplied && (
+                              <span className="shrink-0 text-[10px] font-black uppercase tracking-widest text-emerald-600">Tap to Apply</span>
+                            )}
+                            {isApplied && (
+                              <span className="shrink-0 rounded-full bg-emerald-500 px-2 py-0.5 text-[8px] font-black uppercase text-white">Active</span>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="mt-5 space-y-3 border-t pt-5 text-sm">
                 <div className="flex justify-between text-stone-600"><span>Subtotal</span><span>₹{Math.round(subtotal)}</span></div>
                 <div className="flex justify-between text-stone-600"><span>Delivery Charges</span><span>{deliveryFee === 0 ? <span className="text-emerald-600 font-bold">Free</span> : `₹${Math.round(deliveryFee)}`}</span></div>
-                {discountAmount > 0 && <div className="flex justify-between text-emerald-600"><span>Discount</span><span>-₹{Math.round(discountAmount)}</span></div>}
+                {discountAmount > 0 && <div className="flex justify-between text-emerald-600 font-bold"><span>Coupon Discount</span><span>-₹{Math.round(discountAmount)}</span></div>}
                 <div className="flex justify-between border-t border-stone-100 pt-4 text-xl font-black text-stone-900"><span>Total</span><span>₹{Math.round(total)}</span></div>
               </div>
 

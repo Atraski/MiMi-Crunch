@@ -658,6 +658,11 @@ function App() {
                   discountAmount={discountAmount}
                   total={total}
                   onOrderSuccess={handleClearCart}
+                  appliedCoupon={appliedCoupon}
+                  couponError={couponError}
+                  onApplyCoupon={handleApplyCoupon}
+                  onRemoveCoupon={handleRemoveCoupon}
+                  apiBase={API_BASE}
                 />
               }
             />

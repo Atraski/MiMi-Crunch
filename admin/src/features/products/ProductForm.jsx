@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { getAdminAuthHeaders } from '../../utils/adminAuth.js'
+import RichTextEditor from '../../components/RichTextEditor.jsx'
 
 const defaultForm = {
   title: '',
@@ -37,6 +38,7 @@ const ProductForm = ({
   initialProduct,
   collections,
   apiBase,
+  onClose,
 }) => {
   const [form, setForm] = useState(defaultForm)
   const [variants, setVariants] = useState([createVariant()])
@@ -44,6 +46,7 @@ const ProductForm = ({
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState('')
   const [formError, setFormError] = useState('')
+  const [showRichFields, setShowRichFields] = useState(false)
   const isEditing = Boolean(initialProduct?._id)
 
   const slugify = (value) =>
@@ -424,27 +427,25 @@ const ProductForm = ({
       <div className="grid gap-4 md:grid-cols-2">
         <div>
           <p className="label">Description</p>
-          <p className="mt-1 text-xs text-stone-500">Plain text or HTML supported.</p>
-          <textarea
-            className="input mt-2 min-h-[120px] font-mono text-sm"
-            name="description"
-            placeholder="Short description or <p>HTML</p>"
-            rows="4"
-            value={form.description}
-            onChange={handleChange}
-          />
+          <p className="mt-1 text-xs text-stone-500">Google Docs style rich text editor.</p>
+          <div className="mt-2">
+            <RichTextEditor
+              value={form.description}
+              onChange={(html) => setForm((prev) => ({ ...prev, description: html }))}
+              placeholder="Detailed product description..."
+            />
+          </div>
         </div>
         <div>
           <p className="label">Additional Information</p>
-          <p className="mt-1 text-xs text-stone-500">Plain text or HTML supported.</p>
-          <textarea
-            className="input mt-2 min-h-[120px] font-mono text-sm"
-            name="additionalInfo"
-            placeholder="Additional info or <ul><li>...</li></ul>"
-            rows="4"
-            value={form.additionalInfo}
-            onChange={handleChange}
-          />
+          <p className="mt-1 text-xs text-stone-500">Additional details like usage, ingredients, etc.</p>
+          <div className="mt-2">
+            <RichTextEditor
+              value={form.additionalInfo}
+              onChange={(html) => setForm((prev) => ({ ...prev, additionalInfo: html }))}
+              placeholder="Usage instructions, ingredients..."
+            />
+          </div>
         </div>
       </div>
 
@@ -598,6 +599,15 @@ const ProductForm = ({
             </div>
           </div>
         ))}
+        <div className="mt-2">
+          <button
+            className="btn btn-outline border-stone-200 text-stone-600 hover:bg-stone-50"
+            type="button"
+            onClick={handleAddVariant}
+          >
+            + Add Another Variant
+          </button>
+        </div>
         {formError ? (
           <p className="text-sm text-red-600">{formError}</p>
         ) : null}
@@ -607,37 +617,46 @@ const ProductForm = ({
       </div>
 
       <div className="space-y-6 pt-10 border-t-4 border-[#1B3B26]/10">
-        <div>
-          <h2 className="text-2xl font-[Fraunces] text-[#1B3B26]">SEO & Rich Content</h2>
-          <p className="mt-1 text-sm text-stone-500">Manage technical info, benefits, FAQs, and search presence.</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-[Fraunces] text-[#1B3B26]">SEO & Rich Content</h2>
+            <p className="mt-1 text-sm text-stone-500">Manage technical info, benefits, FAQs, and search presence.</p>
+          </div>
+          <button 
+            type="button" 
+            onClick={() => setShowRichFields(!showRichFields)}
+            className="text-xs font-bold text-stone-500 hover:text-stone-900 underline underline-offset-4"
+          >
+            {showRichFields ? 'Hide Benefits & Trust' : 'Show Benefits & Trust'}
+          </button>
         </div>
 
-        <div className="grid gap-8 md:grid-cols-2">
-          <div>
-            <p className="label">Benefits</p>
-            <p className="mt-1 text-xs text-stone-500 font-medium">Plain text or HTML supported. e.g. High in fibre, or &lt;ul&gt;&lt;li&gt;...&lt;/li&gt;&lt;/ul&gt;</p>
-            <textarea
-              className="input mt-2 min-h-[120px] font-mono text-sm bg-stone-50"
-              name="benefits"
-              placeholder="e.g. High in fibre, Gluten-free or <p>HTML</p>"
-              rows="4"
-              value={form.benefits}
-              onChange={handleChange}
-            />
+        {showRichFields && (
+          <div className="grid gap-8 md:grid-cols-2 animate-in fade-in slide-in-from-top-2 duration-300">
+            <div>
+              <p className="label">Benefits</p>
+              <p className="mt-1 text-xs text-stone-500 font-medium italic">High in fibre, or bullet points.</p>
+              <div className="mt-2">
+                <RichTextEditor
+                  value={form.benefits}
+                  onChange={(html) => setForm((prev) => ({ ...prev, benefits: html }))}
+                  placeholder="Product health benefits..."
+                />
+              </div>
+            </div>
+            <div>
+              <p className="label">Trust Indicators</p>
+              <p className="mt-1 text-xs text-stone-500 font-medium italic">Certifications, trust badges or emoji.</p>
+              <div className="mt-2">
+                <RichTextEditor
+                  value={form.trust}
+                  onChange={(html) => setForm((prev) => ({ ...prev, trust: html }))}
+                  placeholder="e.g. 100% Organic, Handpicked..."
+                />
+              </div>
+            </div>
           </div>
-          <div>
-            <p className="label">Trust Indicators</p>
-            <p className="mt-1 text-xs text-stone-500 font-medium">Add icons or certifications with &lt;img /&gt; or use emoji.</p>
-            <textarea
-              className="input mt-2 min-h-[120px] font-mono text-sm bg-stone-50"
-              name="trust"
-              placeholder="<p>Trust badges, certifications...</p>"
-              rows="4"
-              value={form.trust}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
+        )}
 
         <div className="grid gap-8 md:grid-cols-2">
           <div>
@@ -771,14 +790,7 @@ const ProductForm = ({
       </div>
 
 
-      <div className="flex items-center justify-between">
-        <button
-          className="btn btn-outline"
-          type="button"
-          onClick={handleAddVariant}
-        >
-          Add Variant
-        </button>
+      <div className="flex items-center justify-end gap-3 pt-6 border-t border-stone-100">
         <button
           className="btn btn-primary"
           type="submit"
@@ -789,6 +801,13 @@ const ProductForm = ({
             : isEditing
               ? 'Update Product'
               : 'Add Product'}
+        </button>
+        <button
+          className="btn btn-soft bg-stone-100 text-stone-600 hover:bg-stone-200"
+          type="button"
+          onClick={onClose}
+        >
+          Cancel
         </button>
       </div>
     </form>

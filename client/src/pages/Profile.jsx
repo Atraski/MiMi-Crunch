@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import BackButton from '../components/BackButton'
 import { useAuth } from '../context/AuthContext'
 import { products } from '../data/homeData'
+import toast from 'react-hot-toast'
 
 const API_BASE = import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'
 
 const Profile = () => {
-  const { user, loading: authLoading, logout } = useAuth()
+  const { user, loading: authLoading, logout, setUser } = useAuth()
   const navigate = useNavigate()
   const [profile, setProfile] = useState(null)
   const [orders, setOrders] = useState([]) // Order history state
@@ -109,13 +110,17 @@ const Profile = () => {
       }
       const updated = await res.json()
       setProfile(updated)
+      setUser(updated)
+      toast.success('Profile updated successfully!')
       if (updated?.email && !updated?.emailVerified) {
         setOtpMessage('Verification code sent to your email.')
+        toast.success('Verification code sent to your email!')
       } else {
         setOtpMessage('')
       }
     } catch (err) {
       setError('Failed to update profile. Try again.')
+      toast.error('Failed to update profile. Try again.')
     } finally {
       setSaving(false)
     }
@@ -139,8 +144,10 @@ const Profile = () => {
         throw new Error('Failed to send OTP')
       }
       setOtpMessage('Verification code sent to your email.')
+      toast.success('Verification code sent to your email!')
     } catch (err) {
       setOtpMessage('Failed to send OTP. Please try again.')
+      toast.error('Failed to send OTP. Please try again.')
     } finally {
       setOtpSending(false)
     }
@@ -164,9 +171,11 @@ const Profile = () => {
       }
       setProfile((prev) => ({ ...prev, emailVerified: true }))
       setOtpMessage('Email verified successfully.')
+      toast.success('Email verified successfully!')
       setOtp('')
     } catch (err) {
       setOtpMessage('Invalid or expired code. Please try again.')
+      toast.error('Invalid or expired code. Please try again.')
     } finally {
       setOtpVerifying(false)
     }

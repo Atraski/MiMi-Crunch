@@ -252,7 +252,6 @@ const BlogList = ({
               contentHtml: '',
               coverImage: '',
               tags: [],
-              tags: [],
               published: false,
               metaTitle: '',
               metaDescription: '',

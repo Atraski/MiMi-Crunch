@@ -775,7 +775,7 @@ const ProductDetail = ({
           </div>
         </div>
 
-        {/* 2. BENEFITS / TRUST */}
+        {/* 2. BENEFITS / TRUST - HIDDEN FOR NOW
         {(product.benefits || product.trust) ? (
           <div className="grid gap-8 lg:grid-cols-2 lg:gap-16 pt-8">
             {product.benefits ? (
@@ -799,6 +799,7 @@ const ProductDetail = ({
             ) : null}
           </div>
         ) : null}
+        */}
 
                 {/* NEW DESCRIPTION SECTION */}
         {product.desc ? (
@@ -807,7 +808,8 @@ const ProductDetail = ({
               <div className="absolute top-0 left-0 w-64 h-64 bg-white/40 rounded-full blur-3xl transform -translate-x-32 -translate-y-32 pointer-events-none"></div>
               <h2 className="text-3xl lg:text-4xl font-[Fraunces] font-medium text-[#1B3B26] mb-6 relative z-10">About this product</h2>
               <div
-                className="prose prose-stone max-w-none text-[#4A5D4E] prose-p:leading-relaxed text-lg relative z-10"
+                className="prose prose-stone max-w-none text-[#4A5D4E] prose-p:leading-relaxed text-lg relative z-10 max-h-[60vh] overflow-y-auto pr-4 custom-scrollbar"
+                data-lenis-prevent
                 dangerouslySetInnerHTML={{ __html: product.desc }}
               />
             </div>

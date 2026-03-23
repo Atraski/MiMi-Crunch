@@ -4,6 +4,9 @@ const VISUAL = 'visual'
 const CODE = 'code'
 
 const toolbarButtons = [
+  { command: 'undo', label: '⟲', title: 'Undo' },
+  { command: 'redo', label: '⟳', title: 'Redo' },
+  { type: 'divider' },
   { command: 'bold', label: 'B', title: 'Bold' },
   { command: 'italic', label: 'I', title: 'Italic' },
   { command: 'underline', label: 'U', title: 'Underline' },
@@ -14,9 +17,10 @@ const toolbarButtons = [
   { command: 'insertUnorderedList', label: '• List', title: 'Bullet list' },
   { command: 'insertOrderedList', label: '1. List', title: 'Numbered list' },
   { type: 'divider' },
+  { command: 'formatBlock', value: 'h1', label: 'H1', title: 'Heading 1' },
   { command: 'formatBlock', value: 'h2', label: 'H2', title: 'Heading 2' },
   { command: 'formatBlock', value: 'h3', label: 'H3', title: 'Heading 3' },
-  { command: 'formatBlock', value: 'h4', label: 'H4', title: 'Heading 4' },
+  { command: 'formatBlock', value: 'p', label: 'Text', title: 'Normal text' },
   { command: 'formatBlock', value: 'blockquote', label: '“”', title: 'Quote' },
   { command: 'formatBlock', value: 'pre', label: '{}', title: 'Code block' },
   { command: 'insertHorizontalRule', label: '—', title: 'Horizontal line' },
@@ -24,6 +28,9 @@ const toolbarButtons = [
   { command: 'justifyLeft', label: '≡', title: 'Align left' },
   { command: 'justifyCenter', label: '≡', title: 'Align center' },
   { command: 'justifyRight', label: '≡', title: 'Align right' },
+  { type: 'divider' },
+  { command: 'indent', label: '→|', title: 'Indent' },
+  { command: 'outdent', label: '|←', title: 'Outdent' },
   { type: 'divider' },
   { command: 'removeFormat', label: 'Clear', title: 'Remove formatting' },
 ]

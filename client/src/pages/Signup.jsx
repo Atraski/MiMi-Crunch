@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import BackButton from '../components/BackButton'
+import toast from 'react-hot-toast'
 
 const Signup = () => {
   const [email, setEmail] = useState('')
@@ -34,6 +35,7 @@ const Signup = () => {
       await sendEmailLoginOtp(email)
       setStep('otp')
       setResendCooldown(60)
+      toast.success('OTP sent to your email!')
     } catch (err) {
       setError(err.message || 'Could not send OTP.')
     } finally {
@@ -51,9 +53,11 @@ const Signup = () => {
     setSubmitting(true)
     try {
       await verifyEmailLoginOtp(email, otp)
+      toast.success('Account verified successfully!')
       navigate(redirect, { replace: true })
     } catch (err) {
       setError(err.message || 'Invalid or expired OTP.')
+      toast.error(err.message || 'Invalid or expired OTP.')
     } finally {
       setSubmitting(false)
     }

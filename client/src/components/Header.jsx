@@ -171,11 +171,15 @@ const Header = ({ cartCount, onCartToggle, products }) => {
             className="flex flex-col items-center gap-0.5 text-[11px] font-semibold text-stone-700 md:hidden"
             aria-label={user ? 'Profile' : 'Log in'}
           >
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-800 shadow-sm">
-              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="8" r="4" />
-                <path d="M4 20c1.6-3.4 4.8-5 8-5s6.4 1.6 8 5" />
-              </svg>
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-800 shadow-sm overflow-hidden">
+              {user?.name ? (
+                <span className="text-sm font-bold text-stone-900">{user.name.charAt(0).toUpperCase()}</span>
+              ) : (
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c1.6-3.4 4.8-5 8-5s6.4 1.6 8 5" />
+                </svg>
+              )}
             </span>
           </Link>
           <div className="relative hidden md:block">
@@ -185,10 +189,16 @@ const Header = ({ cartCount, onCartToggle, products }) => {
                 to={user ? '/profile' : '/login'}
                 aria-label={user ? 'Open profile' : 'Log in'}
               >
-                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="8" r="4" />
-                  <path d="M4 20c1.6-3.4 4.8-5 8-5s6.4 1.6 8 5" />
-                </svg>
+                {user?.name ? (
+                  <span className="text-sm font-bold text-stone-900 group-hover:scale-110 transition-transform">
+                    {user.name.charAt(0).toUpperCase()}
+                  </span>
+                ) : (
+                  <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20c1.6-3.4 4.8-5 8-5s6.4 1.6 8 5" />
+                  </svg>
+                )}
               </Link>
               <span className="hidden md:block">{user ? (user.name || 'Profile') : 'Login'}</span>
               <div className="pointer-events-none absolute right-0 top-12 w-64 rounded-2xl border border-stone-200 bg-white p-4 text-left text-sm text-stone-700 opacity-0 shadow-xl transition group-hover:pointer-events-auto group-hover:opacity-100">
