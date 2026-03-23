@@ -11,14 +11,36 @@ const Home = ({ products, collections, blogs, recipes, onAddToCart }) => {
   // If collections data exists from backend, use it. Otherwise, fall back to deriving from products.
   const collectionCards = Array.isArray(collections) && collections.length > 0
     ? collections.map(col => ({
-      title: col.title,
+      title: getDisplayTitle(col.title),
       slug: col.slug,
       raw: col.title,
       desc: col.description || `Premium range of ${col.title}.`,
-      count: (products || []).filter(p =>
-        p.collection?.trim().toLowerCase() === col.title?.trim().toLowerCase() ||
-        p.collection?.trim().toLowerCase() === col.slug?.trim().toLowerCase()
-      ).length,
+      count: (() => {
+        const result = new Set();
+        const bySlug = new Map((products || []).map(p => [p.slug, p]));
+        
+        // 1. Manual slugs
+        if (col.productSlugs?.length) {
+          col.productSlugs.forEach(slug => {
+            const item = bySlug.get(slug);
+            if (item) result.add(item.slug);
+          });
+        }
+        
+        // 2. Collection field match
+        const targetSlug = col.slug?.toLowerCase();
+        const targetTitle = col.title?.toLowerCase().trim();
+        
+        (products || []).forEach(p => {
+          const pCol = p.collection?.toLowerCase().trim();
+          if (!pCol) return;
+          if (pCol === targetSlug || pCol === targetTitle || slugifyCollection(pCol) === targetSlug) {
+            result.add(p.slug);
+          }
+        });
+        
+        return result.size;
+      })(),
       image: col.image
     }))
     : (() => {
@@ -32,7 +54,7 @@ const Home = ({ products, collections, blogs, recipes, onAddToCart }) => {
 
       const groups = Object.entries(collectionGroups).map(
         ([collection, items]) => ({
-          title: formatCollectionTitle(collection),
+          title: getDisplayTitle(formatCollectionTitle(collection)),
           slug: slugifyCollection(collection),
           raw: collection,
           count: items.length,
@@ -138,5 +160,12 @@ const getRandomFeatured = (items) => {
     desc: item.desc,
   }))
 }
+
+const getDisplayTitle = (title) => {
+  const t = title?.toLowerCase().trim();
+  if (t === 'millet grain') return 'Grains';
+  if (t === 'millet flour') return 'Flour';
+  return title;
+};
 
 export default Home

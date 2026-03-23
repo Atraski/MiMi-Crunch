@@ -43,19 +43,37 @@ const Products = ({
     : null
 
   const getProductsForCollection = (collection) => {
-    if (collection?.productSlugs?.length) {
-      const bySlug = new Map(products.map((item) => [item.slug, item]))
-      return collection.productSlugs
-        .map((slug) => bySlug.get(slug))
-        .filter(Boolean)
+    if (!collection) return products;
+
+    const result = new Set();
+    const bySlug = new Map(products.map((item) => [item.slug, item]));
+
+    // 1. Add products explicitly listed in productSlugs
+    if (collection.productSlugs?.length) {
+      collection.productSlugs.forEach((slug) => {
+        const item = bySlug.get(slug);
+        if (item) result.add(item);
+      });
     }
-    if (collection?.slug) {
-      return products.filter((item) => item.collection === collection.slug)
-    }
-    if (collection?.raw) {
-      return products.filter((item) => item.collection === collection.raw)
-    }
-    return products
+
+    // 2. Add products that have this collection's slug or title in their collection field
+    const targetSlug = collection.slug?.toLowerCase();
+    const targetTitle = collection.title?.toLowerCase().trim();
+
+    products.forEach((item) => {
+      const pCol = item.collection?.toLowerCase().trim();
+      if (!pCol) return;
+
+      if (
+        pCol === targetSlug ||
+        pCol === targetTitle ||
+        slugifyCollection(pCol) === targetSlug
+      ) {
+        result.add(item);
+      }
+    });
+
+    return Array.from(result);
   }
 
   const hasBackendCollections = Array.isArray(collections) && collections.length
@@ -65,7 +83,7 @@ const Products = ({
       const items = getProductsForCollection(collection)
       return {
         id: collection._id,
-        title: collection.title,
+        title: getDisplayTitle(collection.title),
         slug: collection.slug,
         raw: collection.slug,
         count: items.length,
@@ -88,7 +106,7 @@ const Products = ({
         return acc
       }, {}),
     ).map(([collection, items]) => ({
-      title: formatCollectionTitle(collection),
+      title: getDisplayTitle(formatCollectionTitle(collection)),
       slug: slugifyCollection(collection),
       raw: collection,
       count: items.length,
@@ -149,7 +167,7 @@ const Products = ({
         {activeCollection ? (
           <div className="mb-6 flex flex-wrap items-center gap-3">
             <span className="bg-[#1B3B26] text-[#F5B041] px-4 py-1.5 rounded-full text-sm font-bold tracking-wide shadow-md">
-              {activeCategory ? activeCategory.title : activeCollection}
+              {activeCategory ? getDisplayTitle(activeCategory.title) : getDisplayTitle(activeCollection)}
             </span>
             <Link to="/products" className="text-sm font-semibold text-[#1B3B26] hover:text-[#2A5237] transition-colors underline underline-offset-4 decoration-2 decoration-[#F5B041]/40 hover:decoration-[#F5B041]">
               Clear filter
@@ -527,4 +545,11 @@ function slugifyCollection(value) {
     .replace(/[^a-z0-9\s-]/g, '')
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
+}
+
+function getDisplayTitle(title) {
+  const t = title?.toLowerCase().trim();
+  if (t === 'millet grain') return 'Grains';
+  if (t === 'millet flour') return 'Flour';
+  return title;
 }

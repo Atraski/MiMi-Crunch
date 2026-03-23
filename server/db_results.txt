@@ -1,0 +1,21 @@
+Connected to MongoDB
+
+--- COLLECTIONS ---
+Title: Millet Grain | Slug: millet-grain | ProductSlugs: [ragi-millet, multi-millet-khichdi, porso-millet]
+Title: Millet Flour | Slug: millet-flour | ProductSlugs: []
+
+--- PRODUCTS ---
+Name: Ragi Millet | Slug: ragi-millet | Collection Field: millet-grain
+Name: Multi Millet Khichdi Mix | Slug: multi-millet-khichdi-mix | Collection Field: millet-grain
+Name: Proso Millet Flour | Slug: proso-millet-flour | Collection Field: millet-flour
+Name: Barnyard Millet | Slug: barnyard-millet | Collection Field: millet-grain
+Name: Ragi Flour | Slug: ragi-flour | Collection Field: millet-flour
+Name: Little Millet Flour | Slug: little-millet-flour | Collection Field: millet-flour
+Name: Foxtail Millet | Slug: foxtail-millet | Collection Field: millet-grain
+Name: Browntop Millet | Slug: browntop-millet | Collection Field: millet-grain
+Name: Proso Millet | Slug: proso-millet | Collection Field: millet-grain
+Name: Foxtail Millet Flour | Slug: foxtail-millet-flour | Collection Field: millet-flour
+Name: Barnyard Millet Flour | Slug: barnyard-millet-flour | Collection Field: millet-flour
+Name: Kodo Millet | Slug: kodo-millet | Collection Field: millet-grain
+Name: Kodo Millet Flour | Slug: kodo-millet-flour | Collection Field: millet-flour
+Name: Little Millet Whole | Slug: little-millet-whole | Collection Field: millet-grain
