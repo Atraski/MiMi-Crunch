@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 
 const InstagramReels = () => {
-    // Standard Reel IDs from @mimicrunch.in
+    // User Provided Reel/Post URLs
     const reelUrls = [
-        'https://www.instagram.com/reel/DEzB_53pPvJ/',
-        'https://www.instagram.com/reel/DEzBfTjpS8O/',
-        'https://www.instagram.com/reel/DEyw4MvP6-k/',
-        'https://www.instagram.com/reel/DEvLh53PYyL/'
+        'https://www.instagram.com/p/DWWRiabE_Xo/',
+        'https://www.instagram.com/p/DWWGkJDyy2C/',
+        'https://www.instagram.com/p/DVyS4A6k1jS/',
+        'https://www.instagram.com/p/DVvViI1ExNl/',
+        'https://www.instagram.com/p/DUVh7PUk3T8/'
     ];
 
     const [scriptBlocked, setScriptBlocked] = React.useState(false);
