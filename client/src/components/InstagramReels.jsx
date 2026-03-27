@@ -44,7 +44,7 @@ const InstagramReels = () => {
                                     <div className="w-full h-full bg-[#1B3B26] rounded-[1.5rem] sm:rounded-[2rem] relative overflow-hidden">
                                         {/* Real Instagram Thumbnail using Weserv Image Proxy to bypass CORS */}
                                         <img 
-                                            src={`https://images.weserv.nl/?url=${url.replace('https://', '')}media/?size=l`} 
+                                            src={`https://images.weserv.nl/?url=${encodeURIComponent(url + 'media/')}&w=500&fit=cover`} 
                                             alt="Mimi Reel"
                                             className="w-full h-full object-cover transform transition-transform duration-700 group-hover/card:scale-110 opacity-70"
                                             loading="lazy"
