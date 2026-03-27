@@ -1,4 +1,5 @@
 import BackButton from '../components/BackButton'
+import SEO from '../components/SEO'
 import { Link, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 
@@ -97,6 +98,13 @@ const RecipeDetail = () => {
 
   return (
     <main className="min-h-screen bg-[#FAF8F5] relative overflow-clip py-16 px-4 font-[Manrope]">
+      <SEO 
+        title={recipe.metaTitle || recipe.title} 
+        description={recipe.metaDescription || recipe.excerpt} 
+        schemaMarkup={recipe.schemaMarkup} 
+        slug={recipe.slug} 
+        type="article" 
+      />
       {/* Aesthetic Background Elements */}
       <div className="absolute top-[0%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#1B3B26] opacity-[0.04] blur-[120px] pointer-events-none"></div>
       <div className="absolute top-[30%] right-[-10%] w-[40%] h-[50%] rounded-full bg-[#F5B041] opacity-[0.06] blur-[100px] pointer-events-none"></div>

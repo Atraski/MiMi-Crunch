@@ -26,6 +26,9 @@ const createRecipe = async (req, res) => {
       submittedBy,
       submitterEmail,
       published,
+      metaTitle,
+      metaDescription,
+      schemaMarkup,
     } = req.body || {}
 
     if (!title) {
@@ -52,6 +55,9 @@ const createRecipe = async (req, res) => {
       submittedBy: submittedBy || undefined,
       submitterEmail: submitterEmail || undefined,
       published: Boolean(published ?? true),
+      metaTitle: metaTitle || '',
+      metaDescription: metaDescription || '',
+      schemaMarkup: schemaMarkup || '',
     })
 
     return res.status(201).json(recipe)

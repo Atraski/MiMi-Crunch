@@ -25,6 +25,9 @@ const recipeSchema = new mongoose.Schema(
     submittedBy: { type: String, trim: true },
     submitterEmail: { type: String, trim: true },
     published: { type: Boolean, default: true },
+    metaTitle: { type: String, trim: true, default: '' },
+    metaDescription: { type: String, trim: true, default: '' },
+    schemaMarkup: { type: String, trim: true, default: '' },
   },
   { timestamps: true, suppressReservedKeysWarning: true },
 )

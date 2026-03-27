@@ -1,4 +1,5 @@
 import BackButton from '../components/BackButton'
+import SEO from '../components/SEO'
 import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 
@@ -6,21 +7,6 @@ const BlogDetail = ({ blogs }) => {
   const { slug } = useParams()
   const blog = (blogs || []).find((item) => item.slug === slug)
 
-  useEffect(() => {
-    if (blog) {
-      // Set Document Title
-      document.title = `${blog.metaTitle || blog.title} | Mimi Crunch`
-      
-      // Set Meta Description
-      let metaDescription = document.querySelector('meta[name="description"]')
-      if (!metaDescription) {
-        metaDescription = document.createElement('meta')
-        metaDescription.name = 'description'
-        document.head.appendChild(metaDescription)
-      }
-      metaDescription.content = blog.metaDescription || blog.excerpt || ''
-    }
-  }, [blog])
 
   if (!blog) {
     return (
@@ -48,6 +34,13 @@ const BlogDetail = ({ blogs }) => {
 
   return (
     <main className="py-16">
+      <SEO 
+        title={blog.metaTitle || blog.title} 
+        description={blog.metaDescription || blog.excerpt} 
+        schemaMarkup={blog.schemaMarkup} 
+        slug={blog.slug} 
+        type="article" 
+      />
       <div className="mx-auto max-w-3xl px-2">
         <BackButton className="mb-6" />
         {publishedDate ? (

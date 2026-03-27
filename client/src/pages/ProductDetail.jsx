@@ -1,4 +1,5 @@
 import BackButton from '../components/BackButton'
+import SEO from '../components/SEO'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
@@ -136,60 +137,6 @@ const ProductDetail = ({
     setIsZoomed(false)
   }, [slug])
 
-  // Inject product schema markup (JSON-LD) into head for SEO
-  useEffect(() => {
-    const raw = product?.schemaMarkup?.trim()
-    if (!raw) return
-    let parsed
-    try {
-      parsed = JSON.parse(raw)
-    } catch {
-      return
-    }
-    const script = document.createElement('script')
-    script.type = 'application/ld+json'
-    script.textContent = JSON.stringify(parsed)
-    script.setAttribute('data-product-schema', product?.slug || '')
-    document.head.appendChild(script)
-    return () => {
-      if (script.parentNode) script.parentNode.removeChild(script)
-    }
-  }, [product?.slug, product?.schemaMarkup])
-
-  // SEO: Update Meta Title and Description
-  useEffect(() => {
-    if (!product) return
-
-    // Save originals
-    const originalTitle = document.title
-    const metaDescEl = document.querySelector('meta[name="description"]')
-    const originalDesc = metaDescEl ? metaDescEl.getAttribute('content') : ''
-
-    // Apply Meta Title
-    if (product.metaTitle) {
-      document.title = product.metaTitle
-    } else if (product.name) {
-      document.title = `${product.name} | Mimi Crunch`
-    }
-
-    // Apply Meta Description
-    if (product.metaDescription) {
-      let el = metaDescEl
-      if (!el) {
-        el = document.createElement('meta')
-        el.name = 'description'
-        document.head.appendChild(el)
-      }
-      el.setAttribute('content', product.metaDescription)
-    }
-
-    return () => {
-      document.title = originalTitle
-      if (metaDescEl && originalDesc) {
-        metaDescEl.setAttribute('content', originalDesc)
-      }
-    }
-  }, [product?.metaTitle, product?.metaDescription, product?.name])
 
   useEffect(() => {
     if (!slug || !apiBase) return
@@ -413,6 +360,13 @@ const ProductDetail = ({
       className="min-h-screen bg-[#FAF8F5] relative overflow-clip py-16 px-4 font-[Manrope]"
       style={{ transition: 'background-color 0.5s ease' }}
     >
+      <SEO 
+        title={product.metaTitle || product.name} 
+        description={product.metaDescription} 
+        schemaMarkup={product.schemaMarkup} 
+        slug={product.slug} 
+        type="product" 
+      />
       {/* Aesthetic Background Elements */}
       <div className="absolute top-[-10%] left-[10%] w-[40%] h-[40%] rounded-full bg-[#1B3B26] opacity-[0.04] blur-[120px] pointer-events-none"></div>
       <div className="absolute bottom-[20%] right-[-5%] w-[35%] h-[40%] rounded-full bg-[#F5B041] opacity-[0.06] blur-[100px] pointer-events-none"></div>

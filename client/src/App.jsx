@@ -35,6 +35,7 @@ import Checkout from './pages/Checkout'
 import Lenis from 'lenis'
 import OrderSuccess from './pages/OrderSuccess'
 import { getProductSlugFromCartItem, wouldExceedWeightLimit } from './utils/cartUtils'
+import { HelmetProvider } from 'react-helmet-async'
 import toast, { Toaster } from 'react-hot-toast'
 
 const API_BASE = import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'
@@ -522,7 +523,8 @@ function App() {
   const wishlistCount = user?.wishlist?.length || 0
 
   return (
-    <div className="flex min-h-screen flex-col bg-brand-bg md:bg-white transition-colors duration-500">
+    <HelmetProvider>
+      <div className="flex min-h-screen flex-col bg-brand-bg md:bg-white transition-colors duration-500">
       <Toaster position="bottom-center" toastOptions={{ duration: 3000, style: { background: '#1c1917', color: '#fff', borderRadius: '12px' } }} />
       <CustomCursor />
       {isProductsLoading && <Loader />}
@@ -713,6 +715,7 @@ function App() {
       {/* Profile Completion Reminder */}
       <ProfileReminder user={user} />
     </div >
+    </HelmetProvider>
   )
 }
 
