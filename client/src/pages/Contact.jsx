@@ -40,10 +40,10 @@ const Contact = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
               </div>
-              <p className="text-sm font-bold text-[#F5B041] uppercase tracking-wider mb-1">Call Us</p>
+              {/* <p className="text-sm font-bold text-[#F5B041] uppercase tracking-wider mb-1">Call Us</p>
               <a href="tel:+919157165523" className="text-xl font-[Fraunces] font-medium text-[#1B3B26] hover:text-[#2A5237] transition-colors">
                 +91 91571 65523
-              </a>
+              </a> */}
             </div>
 
             <div className="backdrop-blur-xl bg-[#1B3B26] border border-[#2A5237] shadow-[0_20px_50px_-15px_rgba(27,59,38,0.2)] rounded-[2rem] p-8 text-center sm:text-left relative overflow-hidden group hover:-translate-y-1 transition-all">

@@ -5,6 +5,8 @@ import News from '../components/News'
 import Recipes from '../components/Recipes'
 import Story from '../components/Story'
 import FAQ from '../components/FAQ'
+import InstagramReels from '../components/InstagramReels'
+import ComparisonSection from '../components/ComparisonSection'
 import { featured as fallbackFeatured, news as fallbackNews, recipes as fallbackRecipes } from '../data/homeData'
 
 const Home = ({ products, collections, blogs, recipes, onAddToCart }) => {
@@ -120,9 +122,11 @@ const Home = ({ products, collections, blogs, recipes, onAddToCart }) => {
       <Hero products={heroProducts} />
       <Categories collections={allCollectionCards} />
       <FeaturedProducts featured={featuredItems} onAddToCart={onAddToCart} />
+      <ComparisonSection />
       <Story />
       <Recipes recipes={homepageRecipes} />
       <News news={newsItems} />
+      <InstagramReels />
       <FAQ />
     </>
   )
