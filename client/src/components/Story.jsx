@@ -91,7 +91,7 @@ const Story = () => {
             </div>
 
             <div className="mt-10 flex flex-wrap items-center gap-6">
-              <Link to="/about" className="story-btn btn btn-primary bg-stone-900 text-white hover:bg-stone-800 px-8 py-3 rounded-xl shadow-lg transition-all hover:-translate-y-1 font-bold text-sm">
+              <Link to="/about" className="story-btn btn btn-primary hidden lg:inline-flex bg-stone-900 text-white hover:bg-stone-800 px-8 py-3 rounded-xl shadow-lg transition-all hover:-translate-y-1 font-bold text-sm">
                 Read Our Story
               </Link>
               <div className="flex items-center gap-3 text-sm font-medium text-stone-500">
@@ -138,6 +138,16 @@ const Story = () => {
             <div className="absolute -top-6 -left-6 -z-10 h-16 w-16 rounded-2xl bg-amber-100 rotate-12" />
           </div>
 
+        </div>
+
+        {/* Mobile Only About Button */}
+        <div className="mt-10 lg:hidden flex justify-center w-full relative z-20">
+          <Link to="/about" className="w-full sm:w-80 flex items-center justify-center gap-3 bg-[#1B3B26] text-[#F5B041] py-4 rounded-xl shadow-[0_10px_30px_-10px_rgba(27,59,38,0.5)] font-bold uppercase tracking-[0.2em] text-[11px] active:scale-95 transition-transform">
+            Read Our Story
+            <svg className="w-4 h-4 text-[#F5B041]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </Link>
         </div>
       </div>
     </section>

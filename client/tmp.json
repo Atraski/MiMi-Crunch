@@ -1,0 +1,1538 @@
+[
+  {
+    "_id": "699a192262852d672c8d60f9",
+    "name": "Little Millet Whole",
+    "title": "Little Millet Whole",
+    "slug": "little-millet-whole",
+    "weight": "250g",
+    "weightOptions": [
+      "500g",
+      "1000g"
+    ],
+    "selectorCount": 1,
+    "category": "Quick Cook, Instant & Healthy",
+    "description": "<div class=\"product-description\">\n\n<h2 data-section-id=\"7668wx\" data-start=\"356\" data-end=\"438\">Little Millet Whole – Natural &amp; Unpolished Ancient Grain for Everyday Nutrition</h2><h2>\n<p data-start=\"440\" data-end=\"782\">Upgrade your daily meals with <strong data-start=\"470\" data-end=\"493\">Little Millet Whole</strong>, a nutrient-dense ancient grain carefully sourced and minimally processed to retain its natural goodness. Known traditionally as <em data-start=\"623\" data-end=\"630\">Kutki</em>, <em data-start=\"632\" data-end=\"639\">Samai</em>, or <em data-start=\"644\" data-end=\"655\">Sama rice</em>, little millet has been a staple in Indian kitchens for centuries and is now making a powerful comeback as a modern superfood.</p>\n<p data-start=\"784\" data-end=\"960\"><span class=\"hover:entity-accent entity-underline inline cursor-pointer align-baseline\">Mimicrunch Little Millet Natural &amp; Unpolished Whole Grain Millet</span> is naturally gluten-free, rich in dietary fiber, and packed with essential minerals that support balanced nutrition and active lifestyles.</p>\n<p data-start=\"962\" data-end=\"1143\">Unlike polished grains, this <strong data-start=\"991\" data-end=\"1022\">whole and unpolished millet</strong> preserves its bran layer, delivering better digestion, sustained energy, and wholesome nourishment for everyday cooking.</p></h2>\n\n</div>",
+    "additionalInfo": "<ul>\n <li>good</li>\n <li>awesome</li>\n</ul>",
+    "price": 209,
+    "collection": "millet-grain",
+    "keywords": [
+      "millet",
+      "healthy",
+      "nutritions"
+    ],
+    "tags": [
+      "easy cooking",
+      "heathy foods"
+    ],
+    "images": [
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706646/products/qw26mh3dmayiuubtcjmr.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706650/products/j6tsqyr9qjjlc9d4ems9.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706652/products/pf8nak1eb4b0orrnnpl4.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706653/products/qqt256zflwzzmu5x7uk0.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706654/products/qur6lqg3jrzu7gjiwrzb.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706657/products/fukh1htf8c3jhmr7zc5k.jpg"
+    ],
+    "variants": [
+      {
+        "weight": "250g",
+        "price": 209,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706646/products/qw26mh3dmayiuubtcjmr.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706650/products/j6tsqyr9qjjlc9d4ems9.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706652/products/pf8nak1eb4b0orrnnpl4.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706653/products/qqt256zflwzzmu5x7uk0.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706654/products/qur6lqg3jrzu7gjiwrzb.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706657/products/fukh1htf8c3jhmr7zc5k.jpg"
+        ],
+        "stock": 11,
+        "sku": "",
+        "_id": "69c6d417002e2c6b984c8ce1"
+      },
+      {
+        "weight": "500g",
+        "price": 329,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706628/products/hflbjshimqmamhl6id9h.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706636/products/jhmcxctmb3jg6reatfvr.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706638/products/fabvrli2ayirhliqcopr.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706639/products/lquzafjq1zi1qtek6yny.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706641/products/vbg0eenic01yjszudswl.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706642/products/btgxaw8v29wq2fh6u8pr.jpg"
+        ],
+        "stock": 30,
+        "sku": "",
+        "_id": "69c6d417002e2c6b984c8ce2"
+      },
+      {
+        "weight": "1KG",
+        "price": 499,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706628/products/hflbjshimqmamhl6id9h.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706636/products/jhmcxctmb3jg6reatfvr.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706638/products/fabvrli2ayirhliqcopr.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706639/products/lquzafjq1zi1qtek6yny.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706641/products/vbg0eenic01yjszudswl.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706642/products/btgxaw8v29wq2fh6u8pr.jpg"
+        ],
+        "stock": 5,
+        "sku": "",
+        "_id": "69c6d417002e2c6b984c8ce3"
+      }
+    ],
+    "isActive": true,
+    "inventory": {
+      "lowStockThreshold": 5
+    },
+    "faqs": [
+      {
+        "question": "What is Little Millet Whole and how is it used?",
+        "answer": "Little Millet Whole is an unprocessed ancient grain used as a healthy alternative to rice or wheat. It can be cooked for dishes like khichdi, upma, pulao, porridge, or steamed millet bowls for everyday meals."
+      },
+      {
+        "question": "Is Mimi Crunch Little Millet Whole gluten-free?",
+        "answer": "Yes, Mimi Crunch Little Millet Whole is naturally gluten-free and suitable for gluten-sensitive diets. It contains no wheat, maida, or additives, making it ideal for clean eating."
+      },
+      {
+        "question": "What are the health benefits of Little Millet Whole?",
+        "answer": "Little millet is rich in dietary fiber, plant-based nutrients, and essential minerals. It supports digestion, balanced energy levels, and overall daily nutrition while being light on the stomach."
+      },
+      {
+        "question": "How do I cook Little Millet Whole?",
+        "answer": "Rinse the millet thoroughly and cook using a 1:2.5 millet-to-water ratio. It can be pressure cooked or simmered like rice and becomes soft and fluffy when cooked properly."
+      },
+      {
+        "question": "Is Little Millet suitable for daily meals?",
+        "answer": "Yes. Little millet has a mild flavor and easy digestibility, making it ideal for regular consumption. It blends easily into traditional Indian recipes without changing taste significantly."
+      },
+      {
+        "question": "Where can I buy Little Millet Whole?",
+        "answer": "You can buy premium-quality Little Millet Whole directly from the official Mimi Crunch product page :  https://mimicrunch.com/products/little-millet-whole</a>"
+      }
+    ],
+    "createdAt": "2026-02-21T20:44:18.153Z",
+    "updatedAt": "2026-03-27T19:01:43.030Z",
+    "__v": 0,
+    "benefits": "This is benefits testing",
+    "faqContent": "hello testing",
+    "trust": "this is trust testing",
+    "metaData": "",
+    "schemaMarkup": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org/\",\n  \"@type\": \"Product\",\n  \"name\": \"Little Millet Whole\",\n  \"image\": \"https://res.cloudinary.com/daovxopcn/image/upload/w_1000,h_1000,c_fill,g_auto,q_auto,f_auto/v1771706646/products/qw26mh3dmayiuubtcjmr.png\",\n  \"description\": \"Mimi Crunch Little Millet Whole is a 100% natural, gluten-free ancient grain rich in fiber and nutrients. Ideal as a healthy rice alternative for everyday Indian meals.\",\n  \"brand\": {\n    \"@type\": \"Brand\",\n    \"name\": \"Mimi Crunch\"\n  },\n  \"category\": \"Millets & Ancient Grains\",\n  \"sku\": \"MC-LMW-001\",\n  \"url\": \"https://mimicrunch.com/products/little-millet-whole\",\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"url\": \"https://mimicrunch.com/products/little-millet-whole\",\n    \"priceCurrency\": \"INR\",\n    \"price\": \"0\",\n    \"availability\": \"https://schema.org/InStock\",\n    \"itemCondition\": \"https://schema.org/NewCondition\"\n  },\n  \"additionalProperty\": [\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Gluten Free\",\n      \"value\": \"Yes\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Processing\",\n      \"value\": \"Whole Grain\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Diet Type\",\n      \"value\": \"Vegan, Natural\"\n    }\n  ]\n}",
+    "metaDescription": "Switch to healthier grains with Mimi Crunch Little Millet Whole. Rich in iron, fiber & slow energy nutrition. Ideal for weight management and balanced diets.",
+    "metaTitle": "Buy Little Millet Whole Online | Natural Gluten-Free Millet – Mimi Crunch"
+  },
+  {
+    "_id": "699a184562852d672c8d60e0",
+    "name": "Kodo Millet Flour",
+    "title": "Kodo Millet Flour",
+    "slug": "kodo-millet-flour",
+    "weight": "250g",
+    "weightOptions": [
+      "500g",
+      "1000g"
+    ],
+    "selectorCount": 1,
+    "category": "Quick Cook, Instant & Healthy",
+    "description": "Kodo Millet Flour is a wholesome and nutrient-rich ancient grain flour made from carefully selected, naturally grown kodo millets that are finely milled to preserve their natural nutrition and earthy flavor. Traditionally known as <em data-start=\"554\" data-end=\"561\">Kodra</em> or <em data-start=\"565\" data-end=\"573\">Varagu</em>, kodo millet has been part of Indian diets for centuries and is now gaining popularity as a healthier alternative to refined wheat and rice flours. Mimicrunch Kodo Millet Flour is unpolished and minimally processed, helping retain dietary fiber, plant-based protein, and essential minerals that support balanced daily nutrition. Naturally gluten-free and easy to digest, this flour is ideal for preparing rotis, dosas, pancakes, baked recipes, and traditional Indian meals while promoting sustained energy release and improved satiety. Its low glycemic nature makes it suitable for modern lifestyles focused on mindful eating and wellness. Whether you are transitioning toward millet-based cooking or simply looking for a nutritious flour option, Kodo Millet Flour offers a perfect blend of traditional goodness and modern health-conscious eating.",
+    "additionalInfo": "",
+    "price": 119,
+    "collection": "millet-flour",
+    "keywords": [
+      "millet",
+      "healthy",
+      "nutritions"
+    ],
+    "tags": [
+      "easy cooking",
+      "heathy foods"
+    ],
+    "images": [
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706431/products/lqhv1slrq4ku6yq4ulli.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706437/products/px2bf1mzw4stjkodcv6q.png"
+    ],
+    "variants": [
+      {
+        "weight": "250g",
+        "price": 119,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706431/products/lqhv1slrq4ku6yq4ulli.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706437/products/px2bf1mzw4stjkodcv6q.png"
+        ],
+        "stock": 8,
+        "sku": "",
+        "_id": "69c6d66b002e2c6b984c8e9a"
+      },
+      {
+        "weight": "500g",
+        "price": 279,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706431/products/lqhv1slrq4ku6yq4ulli.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706437/products/px2bf1mzw4stjkodcv6q.png"
+        ],
+        "stock": 32,
+        "sku": "",
+        "_id": "69c6d66b002e2c6b984c8e9b"
+      },
+      {
+        "weight": "1KG",
+        "price": 399,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706431/products/lqhv1slrq4ku6yq4ulli.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706437/products/px2bf1mzw4stjkodcv6q.png"
+        ],
+        "stock": 3,
+        "sku": "",
+        "_id": "69c6d66b002e2c6b984c8e9c"
+      }
+    ],
+    "isActive": true,
+    "inventory": {
+      "lowStockThreshold": 5
+    },
+    "faqs": [
+      {
+        "question": "What is Kodo Millet Flour?",
+        "answer": "Kodo Millet Flour is a gluten-free flour made by grinding whole Kodo millet grains. It is traditionally used in Indian cooking as a healthier alternative to refined flours."
+      },
+      {
+        "question": "Is Kodo Millet Flour gluten-free?",
+        "answer": "Yes, Kodo millet is naturally gluten-free, making it suitable for people looking to reduce or avoid gluten in their diet."
+      },
+      {
+        "question": "What recipes can be made using Kodo Millet Flour?",
+        "answer": "You can prepare rotis, parathas, cheelas, dosa batter, thalipeeth, pancakes, and even baked snacks using Kodo millet flour."
+      },
+      {
+        "question": "Is Kodo Millet Flour good for daily meals?",
+        "answer": "Yes. Due to its fiber content and easy digestibility, it can be incorporated into daily meals as a nutritious flour replacement."
+      },
+      {
+        "question": "How should Kodo Millet Flour be stored?",
+        "answer": "Store the flour in an airtight container in a cool, dry place away from moisture to maintain freshness and shelf life."
+      },
+      {
+        "question": "Where to buy Kodo Millet Flour?",
+        "answer": "You can purchase authentic Mimi Crunch Kodo Millet Flour directly from the official product page:\nhttps://mimicrunch.com/products/kodo-millet-flour"
+      }
+    ],
+    "createdAt": "2026-02-21T20:40:37.712Z",
+    "updatedAt": "2026-03-27T19:11:39.956Z",
+    "__v": 0,
+    "benefits": "",
+    "faqContent": "",
+    "metaData": "",
+    "metaDescription": "Buy natural Kodo Millet Flour online from Mimi Crunch. Stone-ground, gluten-free, high-fiber millet flour perfect for rotis, cheelas & healthy daily meals. Shop now.",
+    "metaTitle": "Kodo Millet Flour (Stone-Ground & Gluten-Free) | Mimi Crunch Healthy Millet",
+    "schemaMarkup": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org/\",\n  \"@type\": \"Product\",\n  \"name\": \"Kodo Millet Flour\",\n  \"image\": \"https://res.cloudinary.com/daovxopcn/image/upload/w_1000,h_1000,c_fill,g_auto,q_auto,f_auto/v1771706431/products/lqhv1slrq4ku6yq4ulli.png\",\n  \"description\": \"Natural and unpolished Kodo Millet Flour made from finely milled kodo millet grains. Gluten-free, fiber-rich flour ideal for rotis, dosas, and healthy everyday cooking.\",\n  \"brand\": {\n    \"@type\": \"Brand\",\n    \"name\": \"Mimi Crunch\"\n  },\n  \"sku\": \"MC-KMF-001\",\n  \"category\": \"Millet Flour\",\n  \"url\": \"https://mimicrunch.com/products/kodo-millet-flour\",\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"url\": \"https://mimicrunch.com/products/kodo-millet-flour\",\n    \"priceCurrency\": \"INR\",\n    \"price\": \"199\",\n    \"availability\": \"https://schema.org/InStock\",\n    \"itemCondition\": \"https://schema.org/NewCondition\"\n  },\n  \"additionalProperty\": [\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Processing\",\n      \"value\": \"Unpolished\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Diet Type\",\n      \"value\": \"Gluten Free\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Product Type\",\n      \"value\": \"Millet Flour\"\n    }\n  ]\n}\n</script>",
+    "trust": ""
+  },
+  {
+    "_id": "699a17ad62852d672c8d60c7",
+    "name": "Kodo Millet",
+    "title": "Kodo Millet",
+    "slug": "kodo-millet",
+    "weight": "250g",
+    "weightOptions": [
+      "500g",
+      "1000g"
+    ],
+    "selectorCount": 1,
+    "category": "Quick Cook, Instant & Healthy",
+    "description": "<strong data-start=\"285\" data-end=\"312\">Mimi Crunch Kodo Millet</strong> is a traditional, unpolished whole grain millet carefully sourced to deliver natural nutrition and authentic taste for everyday Indian meals. Rich in dietary fiber, antioxidants, and complex carbohydrates, Kodo millet serves as a wholesome alternative to polished rice while supporting balanced digestion and sustained energy release. Naturally gluten-free and minimally processed, this ancient grain retains its bran layer and essential nutrients, making it ideal for clean eating and modern wellness lifestyles. Known for its versatility, Kodo millet can be used to prepare pulao, idli, pongal, khichdi, millet rice bowls, and daily home-style recipes without compromising taste or nutrition. Sourced through farmer-first supply chains and packed with care, Mimi Crunch Kodo Millet combines traditional Indian food wisdom with contemporary health needs, helping families transition toward healthier grain choices effortlessly.",
+    "additionalInfo": "",
+    "price": 149,
+    "collection": "millet-grain",
+    "keywords": [
+      "millet",
+      "healthy",
+      "nutritions"
+    ],
+    "tags": [
+      "easy cooking",
+      "heathy foods"
+    ],
+    "images": [
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706259/products/b58d1eu6mmwikcdj3mci.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774641512/products/e1zdvawq4jzclbpq7fdr.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774641513/products/wqqnbgfbmvksf78mtdji.jpg"
+    ],
+    "variants": [
+      {
+        "weight": "250g",
+        "price": 149,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706259/products/b58d1eu6mmwikcdj3mci.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641512/products/e1zdvawq4jzclbpq7fdr.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641513/products/wqqnbgfbmvksf78mtdji.jpg"
+        ],
+        "stock": 37,
+        "sku": "",
+        "_id": "69c6e16a002e2c6b984ca059"
+      },
+      {
+        "weight": "500g",
+        "price": 259,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706259/products/b58d1eu6mmwikcdj3mci.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641509/products/kpktayjkba47miir0avp.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641510/products/u1klkqxsn2epte2doz2l.jpg"
+        ],
+        "stock": 28,
+        "sku": "",
+        "_id": "69c6e16a002e2c6b984ca05a"
+      },
+      {
+        "weight": "1KG",
+        "price": 369,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706259/products/b58d1eu6mmwikcdj3mci.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641509/products/kpktayjkba47miir0avp.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641510/products/u1klkqxsn2epte2doz2l.jpg"
+        ],
+        "stock": 2,
+        "sku": "",
+        "_id": "69c6e16a002e2c6b984ca05b"
+      }
+    ],
+    "isActive": true,
+    "inventory": {
+      "lowStockThreshold": 5
+    },
+    "faqs": [
+      {
+        "question": "What is Kodo Millet?",
+        "answer": "Kodo millet is an ancient Indian grain known for its high fiber content, antioxidants, and naturally gluten-free properties. It is widely used as a healthier substitute for rice in daily meals."
+      },
+      {
+        "question": "Is Kodo Millet gluten-free?",
+        "answer": "Yes, Kodo millet is naturally gluten-free, making it suitable for people looking for alternative grains or gluten-free dietary options."
+      },
+      {
+        "question": "How can Kodo Millet be cooked?",
+        "answer": "Kodo millet can be cooked like rice and used in dishes such as pulao, khichdi, pongal, idli batter, and millet bowls. It absorbs flavors well and cooks relatively quickly."
+      },
+      {
+        "question": "Is Kodo Millet good for everyday consumption?",
+        "answer": "Yes. Due to its fiber and complex carbohydrates, Kodo millet provides steady energy and supports digestion, making it suitable for regular meals when eaten as part of a balanced diet."
+      },
+      {
+        "question": "How should Kodo Millet be stored?",
+        "answer": "Store Kodo millet in an airtight container in a cool, dry place away from moisture to maintain freshness and shelf life."
+      },
+      {
+        "question": "Where to buy Little Millet Whole?",
+        "answer": "You can buy premium quality millet products directly from Mimi Crunch here:\nhttps://mimicrunch.com/products/little-millet-whole"
+      }
+    ],
+    "createdAt": "2026-02-21T20:38:05.929Z",
+    "updatedAt": "2026-03-27T19:58:34.509Z",
+    "__v": 0,
+    "benefits": "",
+    "faqContent": "",
+    "metaData": "",
+    "metaDescription": "Buy natural Kodo Millet online from Mimi Crunch. Unpolished, gluten-free whole grain rich in fiber & antioxidants. Perfect rice alternative for healthy daily meals.",
+    "metaTitle": "Kodo Millet (Unpolished Whole Grain) | Gluten-Free Healthy Millet | Mimi Crunch",
+    "schemaMarkup": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org/\",\n  \"@type\": \"Product\",\n  \"name\": \"Kodo Millet\",\n  \"image\": \"https://res.cloudinary.com/daovxopcn/image/upload/w_1000,h_1000,c_fill,g_auto,q_auto,f_auto/v1771706259/products/b58d1eu6mmwikcdj3mci.png\",\n  \"description\": \"Mimi Crunch Kodo Millet is a natural, unpolished whole grain millet rich in fiber and antioxidants. Gluten-free and ideal as a healthy rice alternative for daily meals.\",\n  \"brand\": {\n    \"@type\": \"Brand\",\n    \"name\": \"Mimi Crunch\"\n  },\n  \"sku\": \"MC-KM-001\",\n  \"category\": \"Raw Millets\",\n  \"url\": \"https://mimicrunch.com/products/kodo-millet\",\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"url\": \"https://mimicrunch.com/products/kodo-millet\",\n    \"priceCurrency\": \"INR\",\n    \"availability\": \"https://schema.org/InStock\",\n    \"itemCondition\": \"https://schema.org/NewCondition\"\n  },\n  \"additionalProperty\": [\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Ingredients\",\n      \"value\": \"100% Kodo Millet\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Processing\",\n      \"value\": \"Unpolished\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Diet Type\",\n      \"value\": \"Gluten Free\"\n    }\n  ]\n}\n</script>",
+    "trust": ""
+  },
+  {
+    "_id": "699a16d762852d672c8d60ae",
+    "name": "Barnyard Millet Flour",
+    "title": "Barnyard Millet Flour",
+    "slug": "barnyard-millet-flour",
+    "weight": "250g",
+    "weightOptions": [
+      "500g",
+      "1000g"
+    ],
+    "selectorCount": 1,
+    "category": "Quick Cook, Instant & Healthy",
+    "description": "<strong data-start=\"316\" data-end=\"353\">Mimi Crunch Barnyard Millet Flour</strong> is a finely stone-ground, naturally gluten-free flour made from premium quality barnyard millet, carefully processed to retain its natural fiber and nutritional goodness. Known for being light on digestion and low in calories, barnyard millet flour is an excellent choice for clean eating, fasting (vrat) meals, and everyday healthy cooking. This single-ingredient flour contains no additives or chemicals, making it suitable for rotis, cheelas, thalipeeth, snacks, and quick traditional recipes that nourish without heaviness. Its high-fiber profile helps support balanced digestion while providing sustained energy, making it ideal for modern lifestyles focused on mindful eating. Whether used during fasting days or as a healthier alternative to refined flours, Mimi Crunch Barnyard Millet Flour brings together traditional Indian nutrition and contemporary wellness in a versatile, easy-to-cook flour.",
+    "additionalInfo": "",
+    "price": 99,
+    "collection": "millet-flour",
+    "keywords": [
+      "millet",
+      "healthy",
+      "nutritions"
+    ],
+    "tags": [
+      "easy cooking",
+      "heathy foods"
+    ],
+    "images": [
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706047/products/ojdycyc3lexk3h1lljwx.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706061/products/seg7kwffi9mhvjjtmkep.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706063/products/a5iztch1odkuszkwbeuk.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706065/products/tqydrdhuxn2s6kpmletb.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706067/products/bssbcngyein5fgha4xrr.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706069/products/nrljjzzem0exo0ziwr6x.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1771706071/products/fikmbog25yoq38nn7gsr.jpg"
+    ],
+    "variants": [
+      {
+        "weight": "250g",
+        "price": 99,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706047/products/ojdycyc3lexk3h1lljwx.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706061/products/seg7kwffi9mhvjjtmkep.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706063/products/a5iztch1odkuszkwbeuk.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706065/products/tqydrdhuxn2s6kpmletb.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706067/products/bssbcngyein5fgha4xrr.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706069/products/nrljjzzem0exo0ziwr6x.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706071/products/fikmbog25yoq38nn7gsr.jpg"
+        ],
+        "stock": 34,
+        "sku": "",
+        "_id": "69c6d978002e2c6b984c92cc"
+      },
+      {
+        "weight": "500g",
+        "price": 239,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706047/products/ojdycyc3lexk3h1lljwx.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706061/products/seg7kwffi9mhvjjtmkep.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706063/products/a5iztch1odkuszkwbeuk.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706065/products/tqydrdhuxn2s6kpmletb.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706067/products/bssbcngyein5fgha4xrr.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706069/products/nrljjzzem0exo0ziwr6x.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706071/products/fikmbog25yoq38nn7gsr.jpg"
+        ],
+        "stock": 26,
+        "sku": "",
+        "_id": "69c6d978002e2c6b984c92cd"
+      },
+      {
+        "weight": "1KG",
+        "price": 359,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706047/products/ojdycyc3lexk3h1lljwx.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706061/products/seg7kwffi9mhvjjtmkep.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706063/products/a5iztch1odkuszkwbeuk.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706065/products/tqydrdhuxn2s6kpmletb.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706067/products/bssbcngyein5fgha4xrr.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706069/products/nrljjzzem0exo0ziwr6x.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1771706071/products/fikmbog25yoq38nn7gsr.jpg"
+        ],
+        "stock": 2,
+        "sku": "",
+        "_id": "69c6d978002e2c6b984c92ce"
+      }
+    ],
+    "isActive": true,
+    "inventory": {
+      "lowStockThreshold": 5
+    },
+    "faqs": [
+      {
+        "question": "What is Barnyard Millet Flour?",
+        "answer": "Barnyard Millet Flour is made by stone-grinding whole barnyard millet grains into a fine flour that is naturally gluten-free and easy to digest."
+      },
+      {
+        "question": "Is Barnyard Millet Flour suitable for fasting (vrat)?",
+        "answer": "Yes. Barnyard millet flour is commonly used in vrat recipes because it is light, clean, and traditionally accepted for fasting meals."
+      },
+      {
+        "question": "What dishes can be prepared using Barnyard Millet Flour?",
+        "answer": "You can prepare rotis, cheelas, thalipeeth, pancakes, dosa batter, and healthy snacks using barnyard millet flour."
+      },
+      {
+        "question": "Is Barnyard Millet Flour good for digestion?",
+        "answer": "Yes. Barnyard millet contains dietary fiber and is known for being easy on the stomach, making it suitable for regular and light meals."
+      },
+      {
+        "question": "How should Barnyard Millet Flour be stored?",
+        "answer": "Store the flour in an airtight container in a cool, dry place away from moisture and direct sunlight to maintain freshness"
+      },
+      {
+        "question": "Where to buy Little Millet Whole?",
+        "answer": "You can buy premium quality Little Millet Whole directly from the official Mimi Crunch product page:\n https://mimicrunch.com/products/little-millet-whole"
+      }
+    ],
+    "createdAt": "2026-02-21T20:34:31.995Z",
+    "updatedAt": "2026-03-27T19:24:40.872Z",
+    "__v": 0,
+    "benefits": "",
+    "faqContent": "",
+    "metaData": "",
+    "metaDescription": "Buy Barnyard Millet Flour online from Mimi Crunch. Stone-ground, gluten-free, high-fiber millet flour ideal for vrat recipes, rotis & healthy everyday meals.",
+    "metaTitle": "Barnyard Millet Flour (Stone-Ground & Gluten-Free) | Healthy Millet Atta | Mimi Crunch",
+    "schemaMarkup": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org/\",\n  \"@type\": \"Product\",\n  \"name\": \"Barnyard Millet Flour\",\n  \"image\": \"https://res.cloudinary.com/daovxopcn/image/upload/w_1000,h_1000,c_fill,g_auto,q_auto,f_auto/v1771706047/products/ojdycyc3lexk3h1lljwx.png\",\n  \"description\": \"Stone-ground Barnyard Millet Flour by Mimi Crunch. Naturally gluten-free, high fiber and ideal for vrat recipes, rotis and healthy daily meals.\",\n  \"brand\": {\n    \"@type\": \"Brand\",\n    \"name\": \"Mimi Crunch\"\n  },\n  \"sku\": \"MC-BMF-001\",\n  \"category\": \"Millet Flour\",\n  \"url\": \"https://mimicrunch.com/products/barnyard-millet-flour\",\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"url\": \"https://mimicrunch.com/products/barnyard-millet-flour\",\n    \"priceCurrency\": \"INR\",\n    \"availability\": \"https://schema.org/InStock\",\n    \"itemCondition\": \"https://schema.org/NewCondition\"\n  },\n  \"additionalProperty\": [\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Ingredients\",\n      \"value\": \"100% Barnyard Millet\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Processing\",\n      \"value\": \"Stone Ground\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Diet Type\",\n      \"value\": \"Gluten Free\"\n    }\n  ]\n}\n</script>",
+    "trust": ""
+  },
+  {
+    "_id": "699a13e162852d672c8d6057",
+    "name": "Foxtail Millet Flour",
+    "title": "Foxtail Millet Flour",
+    "slug": "foxtail-millet-flour",
+    "weight": "250g",
+    "weightOptions": [
+      "500g",
+      "1000g"
+    ],
+    "selectorCount": 1,
+    "category": "Quick Cook, Instant & Healthy",
+    "description": "<strong data-start=\"293\" data-end=\"329\">Mimi Crunch Foxtail Millet Flour</strong> is a premium stone-ground flour made from 100% natural foxtail millet, carefully processed to preserve its fiber, protein, and wholesome nutritional value. Naturally gluten-free and unrefined, this clean-label flour is designed for modern healthy kitchens seeking a nutritious alternative to refined wheat flour. Known for its low glycemic nature and easy digestibility, foxtail millet flour supports balanced energy release and fits well into diabetic-friendly and weight-conscious diets. Its soft texture and mild nutty flavor make it ideal for preparing rotis, cheelas, pancakes, thalipeeth, and healthy baked recipes without compromising taste. Free from additives and chemicals, Mimi Crunch Foxtail Millet Flour delivers traditional millet nutrition in a versatile form suitable for everyday cooking, helping families transition toward cleaner and more nourishing meals.&nbsp;",
+    "additionalInfo": "",
+    "price": 159,
+    "collection": "millet-flour",
+    "keywords": [
+      "millet",
+      "healthy",
+      "nutritions"
+    ],
+    "tags": [
+      "easy cooking",
+      "heathy foods"
+    ],
+    "images": [
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774641207/products/cqdbd00ys4tecxyc6cnf.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774641209/products/g4sqnfw3istbs4sbnhou.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774641210/products/zu9j3mlnzz0coy1bdxut.jpg"
+    ],
+    "variants": [
+      {
+        "weight": "250g",
+        "price": 159,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641207/products/cqdbd00ys4tecxyc6cnf.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641209/products/g4sqnfw3istbs4sbnhou.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641210/products/zu9j3mlnzz0coy1bdxut.jpg"
+        ],
+        "stock": 23,
+        "sku": "",
+        "_id": "69c6e03b002e2c6b984c9dfa"
+      },
+      {
+        "weight": "500g",
+        "price": 299,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641201/products/gzhyay6mtzkwsvziyozj.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641203/products/hhj8fqwy1sskzffghirh.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641205/products/ysmlsxjvuqngf5ce5llu.jpg"
+        ],
+        "stock": 30,
+        "sku": "",
+        "_id": "69c6e03b002e2c6b984c9dfb"
+      },
+      {
+        "weight": "1KG",
+        "price": 399,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641201/products/gzhyay6mtzkwsvziyozj.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641203/products/hhj8fqwy1sskzffghirh.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641205/products/ysmlsxjvuqngf5ce5llu.jpg"
+        ],
+        "stock": 5,
+        "sku": "",
+        "_id": "69c6e03b002e2c6b984c9dfc"
+      }
+    ],
+    "isActive": true,
+    "inventory": {
+      "lowStockThreshold": 5
+    },
+    "faqs": [
+      {
+        "question": "What is Foxtail Millet Flour?",
+        "answer": "Foxtail Millet Flour is made by stone-grinding whole foxtail millet grains into a fine flour that is naturally gluten-free and rich in protein and fiber."
+      },
+      {
+        "question": "Is Foxtail Millet Flour gluten-free?",
+        "answer": "Yes, foxtail millet is naturally gluten-free, making it suitable for people looking for wheat alternatives or gluten-free diets."
+      },
+      {
+        "question": "What recipes can be prepared using Foxtail Millet Flour?",
+        "answer": "You can prepare rotis, cheelas, pancakes, thalipeeth, and healthy baked dishes using foxtail millet flour due to its versatile texture and mild flavor."
+      },
+      {
+        "question": "Is Foxtail Millet Flour suitable for daily meals?",
+        "answer": "Yes. Its fiber and protein content help provide sustained energy and make it a nutritious option for everyday cooking when included in a balanced diet."
+      },
+      {
+        "question": "How should Foxtail Millet Flour be stored?",
+        "answer": "Store the flour in an airtight container in a cool, dry place away from moisture to maintain freshness and shelf life."
+      },
+      {
+        "question": "Where to buy Little Millet Whole?",
+        "answer": "You can purchase premium quality Little Millet Whole directly from the official Mimi Crunch product page here:\nhttps://mimicrunch.com/products/little-millet-whole"
+      }
+    ],
+    "createdAt": "2026-02-21T20:21:53.645Z",
+    "updatedAt": "2026-03-27T19:53:31.821Z",
+    "__v": 0,
+    "benefits": "",
+    "faqContent": "",
+    "metaData": "",
+    "metaDescription": "Buy Foxtail Millet Flour online from Mimi Crunch. Stone-ground, gluten-free, high-protein millet flour perfect for rotis, cheelas & healthy everyday meals. Shop now.",
+    "metaTitle": "Foxtail Millet Flour (Stone-Ground & Gluten-Free) | Healthy Millet | Mimi Crunch",
+    "schemaMarkup": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org/\",\n  \"@type\": \"Product\",\n  \"name\": \"Foxtail Millet Flour\",\n  \"image\": \"https://res.cloudinary.com/daovxopcn/image/upload/w_1000,h_1000,c_fill,g_auto,q_auto,f_auto/v1774598158/products/ik03xfaqsck0jpc3gxh2.jpg\",\n  \"description\": \"Mimi Crunch Foxtail Millet Flour is a stone-ground, gluten-free flour made from 100% foxtail millet. High in protein and fiber, ideal for rotis, cheelas and healthy daily cooking.\",\n  \"brand\": {\n    \"@type\": \"Brand\",\n    \"name\": \"Mimi Crunch\"\n  },\n  \"sku\": \"MC-FMF-001\",\n  \"category\": \"Millet Flour\",\n  \"url\": \"https://mimicrunch.com/products/foxtail-millet-flour\",\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"url\": \"https://mimicrunch.com/products/foxtail-millet-flour\",\n    \"priceCurrency\": \"INR\",\n    \"availability\": \"https://schema.org/InStock\",\n    \"itemCondition\": \"https://schema.org/NewCondition\"\n  },\n  \"additionalProperty\": [\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Ingredients\",\n      \"value\": \"100% Foxtail Millet\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Processing\",\n      \"value\": \"Stone Ground\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Diet Type\",\n      \"value\": \"Gluten Free\"\n    }\n  ]\n}\n</script>",
+    "trust": ""
+  },
+  {
+    "_id": "699a12cb62852d672c8d6032",
+    "name": "Proso Millet",
+    "title": "Proso Millet",
+    "slug": "proso-millet",
+    "weight": "250g",
+    "weightOptions": [
+      "500g",
+      "1000g"
+    ],
+    "selectorCount": 1,
+    "category": "Quick Cook, Instant & Healthy",
+    "description": "<strong data-start=\"276\" data-end=\"304\">Mimi Crunch Proso Millet</strong> is a naturally gluten-free, whole grain millet valued for its light texture, quick cooking time, and powerful nutritional profile. Rich in plant-based protein, B-complex vitamins, fiber, and antioxidants, proso millet supports sustained energy, improved digestion, and balanced metabolism, making it an ideal grain for modern healthy lifestyles. This clean, single-ingredient millet is minimally processed to preserve its natural goodness and authentic taste, offering a wholesome alternative to polished rice and refined grains. Its mild flavor and versatility make it perfect for preparing porridge, pulao, khichdi, millet bowls, and everyday Indian meals. Carefully sourced and packed for freshness, Mimi Crunch Proso Millet combines ancient grain wisdom with contemporary nutrition, helping families adopt cleaner, lighter, and more nourishing eating habits.",
+    "additionalInfo": "",
+    "price": 139,
+    "collection": "millet-grain",
+    "keywords": [
+      "millet",
+      "healthy",
+      "nutritions"
+    ],
+    "tags": [
+      "easy cooking",
+      "heathy foods"
+    ],
+    "images": [
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774641131/products/ldattz4nk3v6cscxubkw.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774641134/products/vi8pkio4oieeg2ec51va.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774641135/products/w4nhhm3swcqot3bmbwaf.jpg"
+    ],
+    "variants": [
+      {
+        "weight": "250g",
+        "price": 139,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641131/products/ldattz4nk3v6cscxubkw.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641134/products/vi8pkio4oieeg2ec51va.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641135/products/w4nhhm3swcqot3bmbwaf.jpg"
+        ],
+        "stock": 19,
+        "sku": "",
+        "_id": "69c6dff1002e2c6b984c9d5c"
+      },
+      {
+        "weight": "500g",
+        "price": 269,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641127/products/eopwdchg7byxwsrro02d.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641128/products/jzk2t9irnqxznkl3lm4f.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641130/products/ggjqfxodvnepuqn5ots3.jpg"
+        ],
+        "stock": 28,
+        "sku": "",
+        "_id": "69c6dff1002e2c6b984c9d5d"
+      },
+      {
+        "weight": "1KG",
+        "price": 379,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641127/products/eopwdchg7byxwsrro02d.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641128/products/jzk2t9irnqxznkl3lm4f.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641130/products/ggjqfxodvnepuqn5ots3.jpg"
+        ],
+        "stock": 1,
+        "sku": "",
+        "_id": "69c6dff1002e2c6b984c9d5e"
+      }
+    ],
+    "isActive": true,
+    "inventory": {
+      "lowStockThreshold": 5
+    },
+    "faqs": [
+      {
+        "question": "What is Proso Millet?",
+        "answer": "Proso millet is an ancient whole grain known for being quick-cooking, protein-rich, and naturally gluten-free, making it a nutritious alternative to rice and refined grains."
+      },
+      {
+        "question": "Is Proso Millet gluten-free?",
+        "answer": "Yes, proso millet is naturally gluten-free and suitable for people looking for wheat alternatives or gluten-free diets."
+      },
+      {
+        "question": "How can Proso Millet be cooked?",
+        "answer": "Proso millet can be cooked like rice and used in dishes such as porridge, pulao, khichdi, and grain bowls due to its light texture and quick cooking nature."
+      },
+      {
+        "question": "Is Proso Millet good for daily meals?",
+        "answer": "Yes. Its combination of protein, fiber, and antioxidants helps support energy levels, digestion, and balanced nutrition when included in regular meals."
+      },
+      {
+        "question": "How should Proso Millet be stored?",
+        "answer": "Store proso millet in a cool, dry place inside an airtight container to maintain freshness and shelf life."
+      },
+      {
+        "question": "Where to buy Little Millet Whole?",
+        "answer": "You can buy premium quality Little Millet Whole directly from Mimi Crunch here:\n  https://mimicrunch.com/products/little-millet-whole"
+      }
+    ],
+    "createdAt": "2026-02-21T20:17:15.892Z",
+    "updatedAt": "2026-03-27T19:52:17.509Z",
+    "__v": 0,
+    "benefits": "",
+    "faqContent": "",
+    "metaData": "",
+    "metaDescription": "Buy Proso Millet online from Mimi Crunch. Naturally gluten-free, protein-rich whole grain ideal for khichdi, pulao & healthy daily meals. Clean, light & nutritious millet.",
+    "metaTitle": "Proso Millet (Protein-Rich Whole Grain) | Gluten-Free Healthy Millet | Mimi Crunch",
+    "schemaMarkup": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org/\",\n  \"@type\": \"Product\",\n  \"name\": \"Proso Millet\",\n  \"image\": \"https://res.cloudinary.com/daovxopcn/image/upload/w_1000,h_1000,c_fill,g_auto,q_auto,f_auto/v1774598462/products/kh74nd1rgea3sqtz8nfu.jpg\",\n  \"description\": \"Mimi Crunch Proso Millet is a naturally gluten-free whole grain rich in protein, fiber and B-complex vitamins. Ideal for porridge, pulao, khichdi and healthy daily meals.\",\n  \"brand\": {\n    \"@type\": \"Brand\",\n    \"name\": \"Mimi Crunch\"\n  },\n  \"sku\": \"MC-PM-001\",\n  \"category\": \"Raw Millets\",\n  \"url\": \"https://mimicrunch.com/products/proso-millet\",\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"url\": \"https://mimicrunch.com/products/proso-millet\",\n    \"priceCurrency\": \"INR\",\n    \"availability\": \"https://schema.org/InStock\",\n    \"itemCondition\": \"https://schema.org/NewCondition\"\n  },\n  \"additionalProperty\": [\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Ingredients\",\n      \"value\": \"100% Proso Millet\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Diet Type\",\n      \"value\": \"Gluten Free\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Shelf Life\",\n      \"value\": \"12 Months\"\n    }\n  ]\n}\n</script>",
+    "trust": ""
+  },
+  {
+    "_id": "699a10ca62852d672c8d5ffb",
+    "name": "Browntop Millet",
+    "title": "Browntop Millet",
+    "slug": "browntop-millet",
+    "weight": "250g",
+    "weightOptions": [
+      "500g",
+      "1000g"
+    ],
+    "selectorCount": 1,
+    "category": "Quick Cook, Instant & Healthy",
+    "description": "<strong data-start=\"300\" data-end=\"331\">Mimi Crunch Browntop Millet</strong> is a rare and nutrient-dense ancient grain valued for its high dietary fiber, natural minerals, and wholesome nutritional profile. Carefully sourced and minimally processed to retain its natural goodness, this gluten-free whole grain serves as a clean and nourishing alternative to refined cereals and polished rice. Known for being light on digestion yet highly satisfying, browntop millet supports balanced energy release and fits well into modern wellness-focused diets. Its mild earthy flavor makes it suitable for a wide range of traditional Indian recipes including millet rice, khichdi, porridge, and healthy grain bowls. Free from additives and preservatives, Mimi Crunch Browntop Millet reflects the brand’s commitment to pure, single-ingredient foods that combine traditional farming wisdom with contemporary healthy eating habits. Mimi Crunch millets are positioned as natural, nutrient-rich grains designed to support everyday family nutrition and mindful eating lifestyles.&nbsp;",
+    "additionalInfo": "",
+    "price": 139,
+    "collection": "millet-grain",
+    "keywords": [
+      "millet",
+      "healthy",
+      "nutritions"
+    ],
+    "tags": [
+      "easy cooking",
+      "heathy foods"
+    ],
+    "images": [
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774641028/products/scspzeds6ziteoboi3fz.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774641041/products/jexdv3eoyro3fkvqlyrx.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774641071/products/npy7gymbgveojojuhutf.png"
+    ],
+    "variants": [
+      {
+        "weight": "250g",
+        "price": 139,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641028/products/scspzeds6ziteoboi3fz.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641041/products/jexdv3eoyro3fkvqlyrx.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641071/products/npy7gymbgveojojuhutf.png"
+        ],
+        "stock": 19,
+        "sku": "",
+        "_id": "69c6dfb0002e2c6b984c9cc6"
+      },
+      {
+        "weight": "500g",
+        "price": 279,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641009/products/yizzvlepxy4fhquikppp.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641014/products/igs7uliinaemyofyvocb.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641026/products/athqyuhapakscjt9wvpr.png"
+        ],
+        "stock": 30,
+        "sku": "",
+        "_id": "69c6dfb0002e2c6b984c9cc7"
+      },
+      {
+        "weight": "1KG",
+        "price": 399,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641009/products/yizzvlepxy4fhquikppp.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641014/products/igs7uliinaemyofyvocb.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641026/products/athqyuhapakscjt9wvpr.png"
+        ],
+        "stock": 4,
+        "sku": "",
+        "_id": "69c6dfb0002e2c6b984c9cc8"
+      }
+    ],
+    "isActive": true,
+    "inventory": {
+      "lowStockThreshold": 5
+    },
+    "faqs": [
+      {
+        "question": "What is Browntop Millet?",
+        "answer": "Browntop millet is an ancient whole grain millet known for its high fiber content and nutrient density, often used as a healthier alternative to refined grains."
+      },
+      {
+        "question": "Is Browntop Millet gluten-free?",
+        "answer": "Yes, browntop millet is naturally gluten-free and suitable for people looking for wheat alternatives or gluten-free meal options."
+      },
+      {
+        "question": "How can Browntop Millet be cooked?",
+        "answer": "Browntop millet can be cooked similar to rice and used in dishes like khichdi, pulao, porridge, upma, and millet bowls."
+      },
+      {
+        "question": "Is Browntop Millet suitable for daily consumption?",
+        "answer": "Yes. Due to its fiber and nutrient content, browntop millet can be included regularly as part of a balanced diet for sustained energy and digestion support."
+      },
+      {
+        "question": "How should Browntop Millet be stored?",
+        "answer": "Store browntop millet in an airtight container in a cool and dry place away from moisture to maintain freshness and shelf life."
+      },
+      {
+        "question": "Where to buy Little Millet Whole?",
+        "answer": "You can buy premium quality Little Millet Whole directly from Mimi Crunch here: https://mimicrunch.com/products/little-millet-whole"
+      }
+    ],
+    "createdAt": "2026-02-21T20:08:42.430Z",
+    "updatedAt": "2026-03-27T19:51:12.655Z",
+    "__v": 0,
+    "benefits": "",
+    "faqContent": "",
+    "metaData": "",
+    "metaDescription": "Buy Browntop Millet online from Mimi Crunch. Naturally gluten-free, high-fiber ancient grain ideal for khichdi, porridge & healthy daily meals. Clean & unpolished millet.",
+    "metaTitle": "Browntop Millet (High-Fiber Whole Grain) | Gluten-Free Healthy Millet | Mimi Crunch",
+    "schemaMarkup": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org/\",\n  \"@type\": \"Product\",\n  \"name\": \"Browntop Millet\",\n  \"image\": \"https://res.cloudinary.com/daovxopcn/image/upload/w_1000,h_1000,c_fill,g_auto,q_auto,f_auto/v1774598382/products/sindenhyfxzylu6ogtlo.png\",\n  \"description\": \"Mimi Crunch Browntop Millet is a natural, gluten-free whole grain rich in fiber and nutrients. Ideal for khichdi, porridge and healthy daily meals.\",\n  \"brand\": {\n    \"@type\": \"Brand\",\n    \"name\": \"Mimi Crunch\"\n  },\n  \"sku\": \"MC-BTM-001\",\n  \"category\": \"Raw Millets\",\n  \"url\": \"https://mimicrunch.com/products/browntop-millet\",\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"url\": \"https://mimicrunch.com/products/browntop-millet\",\n    \"priceCurrency\": \"INR\",\n    \"availability\": \"https://schema.org/InStock\",\n    \"itemCondition\": \"https://schema.org/NewCondition\"\n  },\n  \"additionalProperty\": [\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Ingredients\",\n      \"value\": \"100% Browntop Millet\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Diet Type\",\n      \"value\": \"Gluten Free\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Processing\",\n      \"value\": \"Unpolished Whole Grain\"\n    }\n  ]\n}\n</script>",
+    "trust": ""
+  },
+  {
+    "_id": "699a0f0c62852d672c8d5fc2",
+    "name": "Foxtail Millet",
+    "title": "Foxtail Millet",
+    "slug": "foxtail-millet",
+    "weight": "250g",
+    "weightOptions": [
+      "500g",
+      "1000g"
+    ],
+    "selectorCount": 1,
+    "category": "Quick Cook, Instant & Healthy",
+    "description": "<strong data-start=\"303\" data-end=\"333\">Mimi Crunch Foxtail Millet</strong> is a premium quality ancient whole grain millet known for its light texture, natural nutrition, and easy digestibility. Carefully sourced and minimally processed to retain its natural fiber, protein, and essential nutrients, this gluten-free millet serves as a wholesome alternative to refined grains and polished rice. Foxtail millet is valued for supporting sustained energy release and balanced eating habits, making it suitable for everyday meals and modern health-focused lifestyles. Its mild nutty flavor blends easily into traditional Indian recipes such as khichdi, pulao, upma, porridge, and millet bowls, allowing families to enjoy nutritious meals without compromising taste. Made from a single clean ingredient with no additives or preservatives, Mimi Crunch Foxtail Millet reflects the brand’s commitment to simple, natural foods designed for mindful and healthier living. Mimi Crunch millets are positioned as easy-to-digest, gluten-free grains ideal for daily nutrition and balanced diets",
+    "additionalInfo": "",
+    "price": 159,
+    "collection": "millet-grain",
+    "keywords": [
+      "millet",
+      "healthy",
+      "nutritions"
+    ],
+    "tags": [
+      "easy cooking",
+      "heathy foods"
+    ],
+    "images": [
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640926/products/zumtxkip0jnhitvgspl0.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640933/products/yb50plm4l2zugac0todg.png"
+    ],
+    "variants": [
+      {
+        "weight": "250g",
+        "price": 159,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640926/products/zumtxkip0jnhitvgspl0.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640933/products/yb50plm4l2zugac0todg.png"
+        ],
+        "stock": 95,
+        "sku": "",
+        "_id": "69c6df26002e2c6b984c9ba7"
+      },
+      {
+        "weight": "500g",
+        "price": 239,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640917/products/lbrhgyiwkfjec0u9eksm.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640921/products/pavfwp6qjswvu06dnhok.png"
+        ],
+        "stock": 100,
+        "sku": "",
+        "_id": "69c6df26002e2c6b984c9ba8"
+      },
+      {
+        "weight": "1KG",
+        "price": 339,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640917/products/lbrhgyiwkfjec0u9eksm.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640921/products/pavfwp6qjswvu06dnhok.png"
+        ],
+        "stock": 2,
+        "sku": "",
+        "_id": "69c6df26002e2c6b984c9ba9"
+      }
+    ],
+    "isActive": true,
+    "inventory": {
+      "lowStockThreshold": 5
+    },
+    "faqs": [
+      {
+        "question": "What is Foxtail Millet?",
+        "answer": "Foxtail millet is an ancient whole grain millet traditionally consumed in India as a nutritious alternative to rice and refined grains. It is naturally gluten-free and easy to digest."
+      },
+      {
+        "question": "Is Foxtail Millet gluten-free?",
+        "answer": "Yes, foxtail millet is naturally gluten-free, making it suitable for gluten-free diets and wheat alternatives."
+      },
+      {
+        "question": "How can Foxtail Millet be cooked?",
+        "answer": "Foxtail millet can be cooked similar to rice and used in dishes like khichdi, pulao, porridge, upma, dosa batter, and healthy grain bowls."
+      },
+      {
+        "question": "Is Foxtail Millet suitable for daily consumption?",
+        "answer": "Yes. Its fiber and natural nutrient profile support balanced energy and digestion, making it suitable for regular meals when included in a balanced diet."
+      },
+      {
+        "question": "How should Foxtail Millet be stored?",
+        "answer": "Store the millet in an airtight container in a cool, dry place away from moisture and direct sunlight to maintain freshness."
+      },
+      {
+        "question": "Where to buy Little Millet Whole?",
+        "answer": "You can buy premium quality Little Millet Whole directly from Mimi Crunch here:  https://mimicrunch.com/products/little-millet-whole"
+      }
+    ],
+    "createdAt": "2026-02-21T20:01:16.657Z",
+    "updatedAt": "2026-03-27T19:48:54.067Z",
+    "__v": 0,
+    "benefits": "",
+    "faqContent": "",
+    "metaData": "",
+    "metaDescription": "Buy Foxtail Millet online from Mimi Crunch. Naturally gluten-free, fiber-rich ancient grain ideal for khichdi, pulao & healthy daily meals. Clean, unpolished millet.",
+    "metaTitle": "Foxtail Millet (Gluten-Free Whole Grain) | Healthy Millet Rice Alternative | Mimi Crunch",
+    "schemaMarkup": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org/\",\n  \"@type\": \"Product\",\n  \"name\": \"Foxtail Millet\",\n  \"image\": \"https://res.cloudinary.com/daovxopcn/image/upload/w_1000,h_1000,c_fill,g_auto,q_auto,f_auto/v1774598336/products/e1fgmnzbaoxvgv6ujgxm.png\",\n  \"description\": \"Mimi Crunch Foxtail Millet is a natural gluten-free whole grain rich in fiber and protein. Ideal for khichdi, pulao, porridge and healthy daily meals.\",\n  \"brand\": {\n    \"@type\": \"Brand\",\n    \"name\": \"Mimi Crunch\"\n  },\n  \"sku\": \"MC-FTM-001\",\n  \"category\": \"Raw Millets\",\n  \"url\": \"https://mimicrunch.com/products/foxtail-millet\",\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"url\": \"https://mimicrunch.com/products/foxtail-millet\",\n    \"priceCurrency\": \"INR\",\n    \"availability\": \"https://schema.org/InStock\",\n    \"itemCondition\": \"https://schema.org/NewCondition\"\n  },\n  \"additionalProperty\": [\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Ingredients\",\n      \"value\": \"100% Foxtail Millet\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Diet Type\",\n      \"value\": \"Gluten Free\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Processing\",\n      \"value\": \"Unpolished Whole Grain\"\n    }\n  ]\n}\n</script>",
+    "trust": ""
+  },
+  {
+    "_id": "699a0df862852d672c8d5fa3",
+    "name": "Little Millet Flour",
+    "title": "Little Millet Flour",
+    "slug": "little-millet-flour",
+    "weight": "250g",
+    "weightOptions": [
+      "500g",
+      "1000g"
+    ],
+    "selectorCount": 1,
+    "category": "Quick Cook, Instant & Healthy",
+    "description": "<strong data-start=\"318\" data-end=\"353\">Mimi Crunch Little Millet Flour</strong> is a premium stone-ground flour made from 100% natural little millet, carefully processed to retain its original fiber, protein, and essential nutrients. Naturally gluten-free and easy to digest, this wholesome flour serves as a nutritious alternative to refined wheat flour and supports modern clean-eating lifestyles. Little millet is valued for its balanced carbohydrate profile, dietary fiber, and plant-based nutrients that help provide sustained energy while supporting digestion and overall wellness. Its mild nutty flavor and soft texture make it highly versatile for everyday cooking, allowing you to prepare rotis, dosas, cheelas, pancakes, porridges, and healthy baked recipes without compromising taste. Free from additives and preservatives, Mimi Crunch Little Millet Flour brings traditional millet nutrition into contemporary kitchens, helping families shift toward lighter, more nourishing meals rooted in ancient grains. Millets are widely recognized for being gluten-free, fiber-rich grains that may support balanced blood sugar and digestion when included in regular diets.",
+    "additionalInfo": "",
+    "price": 189,
+    "collection": "millet-flour",
+    "keywords": [
+      "millet",
+      "healthy",
+      "nutritions"
+    ],
+    "tags": [
+      "easy cooking",
+      "heathy foods"
+    ],
+    "images": [
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640860/products/tcegwhbwswzi1gjduoqg.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640862/products/g6lgkzzljilbcmmfdfjp.jpg"
+    ],
+    "variants": [
+      {
+        "weight": "250g",
+        "price": 189,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640860/products/tcegwhbwswzi1gjduoqg.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640862/products/g6lgkzzljilbcmmfdfjp.jpg"
+        ],
+        "stock": 37,
+        "sku": "",
+        "_id": "69c6e067002e2c6b984c9e2d"
+      },
+      {
+        "weight": "500g",
+        "price": 259,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640857/products/sw6dt71t8bo5nsgh5ghu.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640859/products/ajhm7aljf6nqgbc1ba6z.jpg"
+        ],
+        "stock": 26,
+        "sku": "",
+        "_id": "69c6e067002e2c6b984c9e2e"
+      },
+      {
+        "weight": "1KG",
+        "price": 429,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640857/products/sw6dt71t8bo5nsgh5ghu.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640859/products/ajhm7aljf6nqgbc1ba6z.jpg"
+        ],
+        "stock": 0,
+        "sku": "",
+        "_id": "69c6e067002e2c6b984c9e2f"
+      }
+    ],
+    "isActive": true,
+    "inventory": {
+      "lowStockThreshold": 5
+    },
+    "faqs": [
+      {
+        "question": "What is Little Millet Flour?",
+        "answer": "Little Millet Flour is made by finely grinding whole little millet grains into flour, preserving their natural fiber, nutrients, and gluten-free properties."
+      },
+      {
+        "question": "Is Little Millet Flour gluten-free?",
+        "answer": "Yes, little millet is naturally gluten-free, making the flour suitable for people avoiding wheat or following gluten-free diets."
+      },
+      {
+        "question": "What dishes can be prepared using Little Millet Flour?",
+        "answer": "You can prepare rotis, dosas, cheelas, pancakes, porridge, and baked recipes using little millet flour due to its light texture and mild flavor."
+      },
+      {
+        "question": "Is Little Millet Flour suitable for daily meals?",
+        "answer": "Yes. Its fiber and nutrient profile support sustained energy and digestion, making it a healthy option for everyday cooking when consumed as part of a balanced diet."
+      },
+      {
+        "question": "How should Little Millet Flour be stored?",
+        "answer": "Store the flour in an airtight container in a cool, dry place away from moisture and direct sunlight to maintain freshness."
+      },
+      {
+        "question": "Where to buy Little Millet Whole?",
+        "answer": "You can buy premium quality Little Millet Whole directly from Mimi Crunch here: https://mimicrunch.com/products/little-millet-whole"
+      }
+    ],
+    "createdAt": "2026-02-21T19:56:40.623Z",
+    "updatedAt": "2026-03-27T19:54:15.204Z",
+    "__v": 0,
+    "benefits": "",
+    "faqContent": "",
+    "metaData": "",
+    "metaDescription": "Buy Little Millet Flour online from Mimi Crunch. Stone-ground, gluten-free millet flour ideal for rotis, dosas & healthy daily meals. Clean, nutritious ancient grain flour.",
+    "metaTitle": "Little Millet Flour (Gluten-Free Stone) | Healthy Millet Flour | Mimi Crunch",
+    "schemaMarkup": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org/\",\n  \"@type\": \"Product\",\n  \"name\": \"Little Millet Flour\",\n  \"image\": \"https://res.cloudinary.com/daovxopcn/image/upload/w_1000,h_1000,c_fill,g_auto,q_auto,f_auto/v1774640860/products/tcegwhbwswzi1gjduoqg.png\",\n  \"description\": \"Mimi Crunch Little Millet Flour is a stone-ground, gluten-free flour made from 100% little millet. Ideal for rotis, dosas, cheelas and healthy everyday cooking.\",\n  \"brand\": {\n    \"@type\": \"Brand\",\n    \"name\": \"Mimi Crunch\"\n  },\n  \"sku\": \"MC-LMF-001\",\n  \"category\": \"Millet Flour\",\n  \"url\": \"https://mimicrunch.com/products/little-millet-flour\",\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"url\": \"https://mimicrunch.com/products/little-millet-flour\",\n    \"priceCurrency\": \"INR\",\n    \"availability\": \"https://schema.org/InStock\",\n    \"itemCondition\": \"https://schema.org/NewCondition\"\n  },\n  \"additionalProperty\": [\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Ingredients\",\n      \"value\": \"100% Little Millet\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Processing\",\n      \"value\": \"Stone Ground\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Diet Type\",\n      \"value\": \"Gluten Free\"\n    }\n  ]\n}\n</script>",
+    "trust": ""
+  },
+  {
+    "_id": "699a06a262852d672c8d5ea0",
+    "name": "Ragi Flour",
+    "title": "Ragi Flour",
+    "slug": "ragi-flour",
+    "weight": "250g",
+    "weightOptions": [
+      "500g",
+      "1000g"
+    ],
+    "selectorCount": 1,
+    "category": "Quick Cook, Instant & Healthy",
+    "description": "<strong data-start=\"338\" data-end=\"364\">Mimi Crunch Ragi Flour</strong> is a premium, finely milled flour made from 100% natural finger millet (ragi), carefully processed to preserve its rich nutritional value and authentic taste. Known as one of India’s most nourishing ancient grains, ragi is naturally gluten-free and valued for its high calcium, fiber, and plant-based nutrient profile that supports strong bones, sustained energy, and balanced digestion. This wholesome flour serves as a healthy alternative to refined wheat flour, making it ideal for modern clean-eating lifestyles. With its earthy flavor and smooth texture, Mimi Crunch Ragi Flour can be used to prepare rotis, dosas, porridge, pancakes, baked recipes, and traditional Indian meals without compromising nutrition or taste. Free from preservatives and additives, the product reflects Mimi Crunch’s commitment to pure, single-ingredient foods designed for everyday family wellness. Ragi is widely recognized as an iron- and mineral-rich millet that may support bone health, digestion, and balanced blood sugar when included as part of a regular diet.",
+    "additionalInfo": "",
+    "price": 169,
+    "collection": "millet-flour",
+    "keywords": [
+      "millet",
+      "healthy",
+      "nutritions"
+    ],
+    "tags": [
+      "easy cooking",
+      "heathy foods"
+    ],
+    "images": [
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640632/products/pjgafr090jfbcaqh7vqq.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640633/products/cnzwjverrytnseo4mh2f.jpg"
+    ],
+    "variants": [
+      {
+        "weight": "250g",
+        "price": 169,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640632/products/pjgafr090jfbcaqh7vqq.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640633/products/cnzwjverrytnseo4mh2f.jpg"
+        ],
+        "stock": 18,
+        "sku": "",
+        "_id": "69c6e1fe002e2c6b984ca163"
+      },
+      {
+        "weight": "500g",
+        "price": 249,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640629/products/nvrtrjwbk6i88ealo0s1.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640631/products/ew8k1ityq1jrfvktphnx.jpg"
+        ],
+        "stock": 30,
+        "sku": "",
+        "_id": "69c6e1fe002e2c6b984ca164"
+      },
+      {
+        "weight": "1KG",
+        "price": 339,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640629/products/nvrtrjwbk6i88ealo0s1.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640631/products/ew8k1ityq1jrfvktphnx.jpg"
+        ],
+        "stock": 5,
+        "sku": "",
+        "_id": "69c6e1fe002e2c6b984ca165"
+      }
+    ],
+    "isActive": true,
+    "inventory": {
+      "lowStockThreshold": 5
+    },
+    "faqs": [
+      {
+        "question": "What is Ragi Flour?",
+        "answer": "Ragi flour is made by grinding finger millet grains into a fine flour, preserving their natural nutrients, fiber, and mineral content."
+      },
+      {
+        "question": "Is Ragi Flour gluten-free?",
+        "answer": "Yes, ragi is naturally gluten-free and suitable for people looking for wheat alternatives or gluten-free diets."
+      },
+      {
+        "question": "What recipes can be made using Ragi Flour?",
+        "answer": "Ragi flour can be used to prepare rotis, dosa, idli, porridge, pancakes, baked goods, and traditional Indian recipes."
+      },
+      {
+        "question": "Why is Ragi Flour considered nutritious?",
+        "answer": "Ragi is rich in calcium, iron, dietary fiber, and antioxidants, which help support bone health, digestion, and sustained energy levels."
+      },
+      {
+        "question": "How should Ragi Flour be stored?",
+        "answer": "Store the flour in an airtight container in a cool and dry place away from moisture to maintain freshness and shelf life."
+      },
+      {
+        "question": "Where to buy Little Millet Whole?",
+        "answer": "You can buy premium quality Little Millet Whole directly from Mimi Crunch here:  https://mimicrunch.com/products/little-millet-whole"
+      }
+    ],
+    "createdAt": "2026-02-21T19:25:22.677Z",
+    "updatedAt": "2026-03-27T20:01:02.752Z",
+    "__v": 0,
+    "benefits": "",
+    "faqContent": "",
+    "metaData": "",
+    "metaDescription": "Buy Ragi Flour online from Mimi Crunch. Gluten-free finger millet flour rich in calcium & fiber, ideal for rotis, dosa & healthy daily meals. Clean ancient grain nutrition.",
+    "metaTitle": "Ragi Flour (Calcium-Rich Finger Millet) | Gluten-Free Healthy Flour | Mimi Crunch",
+    "schemaMarkup": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org/\",\n  \"@type\": \"Product\",\n  \"name\": \"Ragi Flour\",\n  \"image\": \"https://res.cloudinary.com/daovxopcn/image/upload/w_1000,h_1000,c_fill,g_auto,q_auto,f_auto/v1774640632/products/pjgafr090jfbcaqh7vqq.png\",\n  \"description\": \"Mimi Crunch Ragi Flour is a gluten-free finger millet flour rich in calcium, fiber and essential nutrients. Ideal for rotis, dosa, porridge and healthy everyday cooking.\",\n  \"brand\": {\n    \"@type\": \"Brand\",\n    \"name\": \"Mimi Crunch\"\n  },\n  \"sku\": \"MC-RF-001\",\n  \"category\": \"Millet Flour\",\n  \"url\": \"https://mimicrunch.com/products/ragi-flour\",\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"url\": \"https://mimicrunch.com/products/ragi-flour\",\n    \"priceCurrency\": \"INR\",\n    \"availability\": \"https://schema.org/InStock\",\n    \"itemCondition\": \"https://schema.org/NewCondition\"\n  },\n  \"additionalProperty\": [\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Ingredients\",\n      \"value\": \"100% Ragi (Finger Millet)\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Diet Type\",\n      \"value\": \"Gluten Free\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Key Nutrient\",\n      \"value\": \"High Calcium & Fiber\"\n    }\n  ]\n}\n</script>",
+    "trust": ""
+  },
+  {
+    "_id": "69998e0562852d672c8d5af6",
+    "name": "Barnyard Millet",
+    "title": "Barnyard Millet",
+    "slug": "barnyard-millet",
+    "weight": "250g",
+    "weightOptions": [
+      "500g",
+      "1000g"
+    ],
+    "selectorCount": 1,
+    "category": "Quick Cook, Instant & Healthy",
+    "description": "Barnyard Millet by <strong data-start=\"298\" data-end=\"313\">MiMi Crunch</strong> is a light, naturally gluten-free ancient grain designed for clean, everyday nutrition and easy digestion. Known for its low-calorie profile and high dietary fiber content, barnyard millet is an excellent alternative to refined grains like rice and wheat, helping you enjoy wholesome meals without heaviness. Carefully sourced and processed without additives or preservatives, this millet supports balanced energy, gut comfort, and mindful eating. Its mild taste and quick cooking nature make it perfect for khichdi, upma, pulao, fasting recipes, and modern healthy bowls. Rich in plant nutrients, fiber, and essential minerals, barnyard millet fits seamlessly into diabetic-friendly, weight-management, and gluten-free lifestyles while keeping traditional Indian cooking authentic and nourishing. With MiMi Crunch’s commitment to purity and farmer-first sourcing, every grain delivers clean nutrition from ancient farms to your modern plate.",
+    "additionalInfo": "",
+    "price": 99,
+    "collection": "millet-grain",
+    "keywords": [
+      "millet",
+      "healthy",
+      "nutritions"
+    ],
+    "tags": [
+      "easy cooking",
+      "heathy foods"
+    ],
+    "images": [
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640561/products/nsnraqbkeq3pvpsqqlhj.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640563/products/zfkh2ak7h8xf98xfjwqw.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640566/products/e4mxynk5kwmz5ex6lpsn.jpg"
+    ],
+    "variants": [
+      {
+        "weight": "250g",
+        "price": 99,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640561/products/nsnraqbkeq3pvpsqqlhj.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640563/products/zfkh2ak7h8xf98xfjwqw.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640566/products/e4mxynk5kwmz5ex6lpsn.jpg"
+        ],
+        "stock": 35,
+        "sku": "",
+        "_id": "69c6e309002e2c6b984ca34d"
+      },
+      {
+        "weight": "500g",
+        "price": 239,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640553/products/msxcauika3strpusmtgt.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640556/products/wwoa2itrvnr4crhipueh.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640559/products/twibirrlavlss8wo2hoq.jpg"
+        ],
+        "stock": 26,
+        "sku": "",
+        "_id": "69c6e309002e2c6b984ca34e"
+      },
+      {
+        "weight": "1KG",
+        "price": 359,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640553/products/msxcauika3strpusmtgt.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640556/products/wwoa2itrvnr4crhipueh.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640559/products/twibirrlavlss8wo2hoq.jpg"
+        ],
+        "stock": 4,
+        "sku": "",
+        "_id": "69c6e309002e2c6b984ca34f"
+      }
+    ],
+    "isActive": true,
+    "inventory": {
+      "lowStockThreshold": 5
+    },
+    "faqs": [
+      {
+        "question": "What is Barnyard Millet?",
+        "answer": "Barnyard millet is a nutrient-rich ancient grain known for being naturally gluten-free, light on digestion, and high in dietary fiber, making it a healthy substitute for rice and wheat."
+      },
+      {
+        "question": "Is Barnyard Millet good for weight management?",
+        "answer": "Yes. Barnyard millet is low in calories and high in fiber, which promotes fullness and helps support balanced eating habits."
+      },
+      {
+        "question": "Is Barnyard Millet suitable for diabetics?",
+        "answer": "Barnyard millet has a low glycemic index, meaning it releases glucose slowly and helps maintain stable blood sugar levels when consumed as part of a balanced diet."
+      },
+      {
+        "question": "How can I cook Barnyard Millet?",
+        "answer": "You can prepare it like rice or use it in khichdi, pulao, upma, porridge, fasting meals, and healthy grain bowls. It cooks quickly and absorbs flavors well."
+      },
+      {
+        "question": "Is Barnyard Millet gluten-free?",
+        "answer": "Yes, barnyard millet is naturally gluten-free and suitable for gluten-sensitive or clean-eating diets."
+      },
+      {
+        "question": "Where can I buy Little Millet Whole?",
+        "answer": "You can buy premium quality Little Millet Whole directly from MiMi Crunch’s official store:  https://mimicrunch.com/products/little-millet-whole"
+      }
+    ],
+    "createdAt": "2026-02-21T10:50:45.639Z",
+    "updatedAt": "2026-03-27T20:05:29.263Z",
+    "__v": 0,
+    "benefits": "",
+    "faqContent": "",
+    "metaData": "",
+    "metaDescription": "Buy premium Barnyard Millet from MiMi Crunch — a gluten-free, high-fiber ancient grain perfect for fasting meals, weight management, and everyday healthy cooking. Clean, natural & nutrient-rich.",
+    "metaTitle": "Barnyard Millet Online | Gluten-Free Ancient Grain for Healthy Meals | MiMi Crunch",
+    "schemaMarkup": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org/\",\n  \"@type\": \"Product\",\n  \"name\": \"Barnyard Millet\",\n  \"image\": \"https://res.cloudinary.com/daovxopcn/image/upload/w_1000,h_1000,c_fill,g_auto,q_auto,f_auto/v1774640561/products/nsnraqbkeq3pvpsqqlhj.png\",\n  \"description\": \"MiMi Crunch Barnyard Millet is a naturally gluten-free, high-fiber ancient grain ideal for clean eating, fasting meals, and everyday healthy cooking.\",\n  \"brand\": {\n    \"@type\": \"Brand\",\n    \"name\": \"MiMi Crunch\"\n  },\n  \"category\": \"Millets & Ancient Grains\",\n  \"sku\": \"MC-BARNYARD-MILLET\",\n  \"additionalProperty\": [\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Diet Type\",\n      \"value\": \"Gluten-Free, Vegan, Clean Eating\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Ingredients\",\n      \"value\": \"100% Barnyard Millet\"\n    }\n  ],\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"url\": \"https://mimicrunch.com/products/barnyard-millet\",\n    \"priceCurrency\": \"INR\",\n    \"availability\": \"https://schema.org/InStock\",\n    \"itemCondition\": \"https://schema.org/NewCondition\"\n  }\n}\n</script>",
+    "trust": ""
+  },
+  {
+    "_id": "69998cb162852d672c8d5aa7",
+    "name": "Proso Millet Flour",
+    "title": "Proso Millet Flour",
+    "slug": "proso-millet-flour",
+    "weight": "250g",
+    "weightOptions": [
+      "500g",
+      "1000g"
+    ],
+    "selectorCount": 1,
+    "category": "Quick Cook, Instant & Healthy",
+    "description": "MiMi Crunch <strong data-start=\"293\" data-end=\"315\">Proso Millet Flour</strong> is a finely stone-ground, protein-rich ancient grain flour crafted to bring clean nutrition into everyday cooking. Made from 100% natural proso millet, this gluten-free flour retains its natural fiber, B-vitamins, and essential nutrients, supporting sustained energy, easy digestion, and balanced meals. Known for its low glycemic index, proso millet flour is an excellent alternative to refined wheat flour for modern healthy lifestyles. Its light texture and mild earthy flavor make it ideal for preparing soft rotis, crispy dosas, thalipeeth, pancakes, and nutritious baked recipes. Carefully processed without additives or preservatives, MiMi Crunch Proso Millet Flour helps you enjoy traditional Indian meals with a healthier twist while supporting metabolism and gut wellness. Designed for clean eating, diabetic-friendly diets, and plant-based nutrition, this flour brings the goodness of ancient grains to modern kitchens with purity and authenticity.",
+    "additionalInfo": "",
+    "price": 189,
+    "collection": "millet-flour",
+    "keywords": [
+      "millet",
+      "healthy",
+      "nutritions"
+    ],
+    "tags": [
+      "easy cooking",
+      "heathy foods"
+    ],
+    "images": [
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640468/products/pefne2l6kmghrcpx3wf5.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640472/products/tnxaoxlxsnarzli2akvz.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640476/products/miaujsbkzhnbhkk5aa8f.png"
+    ],
+    "variants": [
+      {
+        "weight": "250g",
+        "price": 189,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640468/products/pefne2l6kmghrcpx3wf5.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640472/products/tnxaoxlxsnarzli2akvz.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640476/products/miaujsbkzhnbhkk5aa8f.png"
+        ],
+        "stock": 33,
+        "sku": "",
+        "_id": "69c6e5a4002e2c6b984ca665"
+      },
+      {
+        "weight": "500g",
+        "price": 299,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640457/products/mze5rr6x5h5d5ue4kulw.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640461/products/yyajqlrumlrcx81ranwi.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640466/products/bw4zyfwb4l3g0gsrlnm8.png"
+        ],
+        "stock": 30,
+        "sku": "",
+        "_id": "69c6e5a4002e2c6b984ca666"
+      },
+      {
+        "weight": "1KG",
+        "price": 399,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640457/products/mze5rr6x5h5d5ue4kulw.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640461/products/yyajqlrumlrcx81ranwi.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640466/products/bw4zyfwb4l3g0gsrlnm8.png"
+        ],
+        "stock": 5,
+        "sku": "",
+        "_id": "69c6e5a4002e2c6b984ca667"
+      }
+    ],
+    "isActive": true,
+    "inventory": {
+      "lowStockThreshold": 5
+    },
+    "faqs": [
+      {
+        "question": "What is Proso Millet Flour?",
+        "answer": "Proso Millet Flour is a finely milled flour made from proso millet grains, known for being naturally gluten-free, protein-rich, and easy to digest."
+      },
+      {
+        "question": "Is Proso Millet Flour good for daily cooking?",
+        "answer": "Yes. It can be used daily to make rotis, dosas, pancakes, thalipeeth, and healthy baked foods as a nutritious alternative to refined flour."
+      },
+      {
+        "question": "Is Proso Millet Flour suitable for diabetics?",
+        "answer": "Proso millet flour has a low glycemic index, which helps release energy slowly and supports better blood sugar balance when included in a balanced diet."
+      },
+      {
+        "question": "How should I use Proso Millet Flour for rotis?",
+        "answer": "For softer rotis, mix proso millet flour with warm water or blend it with other millet or whole-grain flours to improve texture and elasticity."
+      },
+      {
+        "question": "Is Proso Millet Flour gluten-free?",
+        "answer": "Yes, it is naturally gluten-free and suitable for gluten-sensitive and clean-eating diets."
+      },
+      {
+        "question": "Where can I buy Little Millet Whole?",
+        "answer": "You can buy premium quality Little Millet Whole directly from MiMi Crunch here:\n https://mimicrunch.com/products/little-millet-whole"
+      }
+    ],
+    "createdAt": "2026-02-21T10:45:05.905Z",
+    "updatedAt": "2026-03-27T20:16:36.524Z",
+    "__v": 0,
+    "benefits": "",
+    "faqContent": "",
+    "metaData": "",
+    "metaDescription": "Buy Proso Millet Flour from MiMi Crunch — stone-ground, gluten-free, protein-rich millet atta ideal for rotis, dosas, and healthy everyday cooking.",
+    "metaTitle": "Proso Millet Flour Online | Gluten-Free Protein-Rich Millet | MiMi Crunch",
+    "schemaMarkup": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org/\",\n  \"@type\": \"Product\",\n  \"name\": \"Proso Millet Flour\",\n  \"image\": \"https://res.cloudinary.com/daovxopcn/image/upload/w_1000,h_1000,c_fill,g_auto,q_auto,f_auto/v1774640468/products/pefne2l6kmghrcpx3wf5.png\",\n  \"description\": \"MiMi Crunch Proso Millet Flour is a gluten-free, stone-ground flour rich in protein and fiber, ideal for rotis, dosas, and healthy baking.\",\n  \"brand\": {\n    \"@type\": \"Brand\",\n    \"name\": \"MiMi Crunch\"\n  },\n  \"category\": \"Millet Flour\",\n  \"sku\": \"MC-PROSO-MILLET-FLOUR\",\n  \"additionalProperty\": [\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Ingredients\",\n      \"value\": \"100% Proso Millet Flour\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Diet Type\",\n      \"value\": \"Gluten-Free, Vegan, Diabetic-Friendly\"\n    }\n  ],\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"url\": \"https://mimicrunch.com/products/proso-millet-flour\",\n    \"priceCurrency\": \"INR\",\n    \"availability\": \"https://schema.org/InStock\",\n    \"itemCondition\": \"https://schema.org/NewCondition\"\n  }\n}\n</script>",
+    "trust": ""
+  },
+  {
+    "_id": "69998b4062852d672c8d5a2e",
+    "name": "Multi Millet Khichdi Mix",
+    "title": "Multi Millet Khichdi Mix",
+    "slug": "multi-millet-khichdi-mix",
+    "weight": "250g",
+    "weightOptions": [
+      "500g",
+      "1000g"
+    ],
+    "selectorCount": 1,
+    "category": "Quick Cook, Instant & Healthy",
+    "description": "MiMi Crunch <strong data-start=\"303\" data-end=\"331\">Multi Millet Khichdi Mix</strong> is a wholesome, ready-to-cook blend crafted from carefully selected ancient millets and natural ingredients to deliver balanced nutrition with traditional taste. Designed for modern lifestyles, this nutritious khichdi mix combines the goodness of multiple millets rich in fiber, plant protein, vitamins, and essential minerals that support digestion, sustained energy, and overall wellness. Naturally gluten-free and free from preservatives or artificial additives, it offers a convenient way to enjoy a comforting Indian meal without compromising health. The mix cooks quickly into a soft, flavorful khichdi, making it ideal for busy families, fitness enthusiasts, and anyone seeking clean, nourishing food. Perfect for light dinners, detox meals, or everyday healthy eating, MiMi Crunch Multi Millet Khichdi Mix brings together traditional wisdom and modern convenience in every bowl.",
+    "additionalInfo": "",
+    "price": 259,
+    "collection": "millet-grain",
+    "keywords": [
+      "millet",
+      "healthy",
+      "nutritions"
+    ],
+    "tags": [
+      "easy cooking",
+      "heathy foods"
+    ],
+    "images": [
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640252/products/j1gffhzztttycflnasib.png",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640254/products/ltgbvhcnmkoyudjkoqc1.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774640255/products/xivrbmbafoduy1ynjeyc.jpg"
+    ],
+    "variants": [
+      {
+        "weight": "250g",
+        "price": 259,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640252/products/j1gffhzztttycflnasib.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640254/products/ltgbvhcnmkoyudjkoqc1.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640255/products/xivrbmbafoduy1ynjeyc.jpg"
+        ],
+        "stock": 0,
+        "sku": "",
+        "_id": "69c6e68d002e2c6b984ca77d"
+      },
+      {
+        "weight": "500g",
+        "price": 349,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640252/products/j1gffhzztttycflnasib.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640254/products/ltgbvhcnmkoyudjkoqc1.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640255/products/xivrbmbafoduy1ynjeyc.jpg"
+        ],
+        "stock": 0,
+        "sku": "",
+        "_id": "69c6e68d002e2c6b984ca77e"
+      },
+      {
+        "weight": "1KG",
+        "price": 599,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640252/products/j1gffhzztttycflnasib.png",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640254/products/ltgbvhcnmkoyudjkoqc1.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774640255/products/xivrbmbafoduy1ynjeyc.jpg"
+        ],
+        "stock": 0,
+        "sku": "",
+        "_id": "69c6e68d002e2c6b984ca77f"
+      }
+    ],
+    "isActive": true,
+    "inventory": {
+      "lowStockThreshold": 5
+    },
+    "faqs": [
+      {
+        "question": "What is Multi Millet Khichdi Mix?",
+        "answer": "Multi Millet Khichdi Mix is a ready-to-cook blend made using nutritious millets and natural ingredients that helps prepare a healthy khichdi quickly and easily."
+      },
+      {
+        "question": "Is Multi Millet Khichdi Mix healthy for daily consumption?",
+        "answer": "Yes. It is rich in fiber and plant-based nutrients, making it suitable for regular meals as part of a balanced diet."
+      },
+      {
+        "question": "How do I cook Multi Millet Khichdi Mix?",
+        "answer": "Simply cook the mix with water in a pressure cooker or pan, add vegetables or spices if desired, and cook until soft for a wholesome meal."
+      },
+      {
+        "question": "Is this khichdi mix gluten-free?",
+        "answer": "Yes, since it is made from millets, it is naturally gluten-free and suitable for gluten-sensitive diets."
+      },
+      {
+        "question": "Who can consume Multi Millet Khichdi Mix?",
+        "answer": "It is suitable for adults, seniors, and children looking for light, easy-to-digest, and nutritious meals."
+      },
+      {
+        "question": "Where can I buy Little Millet Whole?",
+        "answer": "You can purchase premium quality Little Millet Whole directly from MiMi Crunch here:\n https://mimicrunch.com/products/little-millet-whole"
+      }
+    ],
+    "createdAt": "2026-02-21T10:38:56.433Z",
+    "updatedAt": "2026-03-27T20:20:29.296Z",
+    "__v": 0,
+    "benefits": "",
+    "faqContent": "",
+    "metaData": "",
+    "metaDescription": "Buy Multi Millet Khichdi Mix from MiMi Crunch — nutritious, gluten-free ready-to-cook millet khichdi packed with fiber, protein, and traditional taste.",
+    "metaTitle": "Multi Millet Khichdi Mix Online | Healthy Ready-to-Cook Millet Khichdi | MiMi Crunch",
+    "schemaMarkup": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org/\",\n  \"@type\": \"Product\",\n  \"name\": \"Multi Millet Khichdi Mix\",\n  \"image\": \"https://res.cloudinary.com/daovxopcn/image/upload/w_1000,h_1000,c_fill,g_auto,q_auto,f_auto/v1774640252/products/j1gffhzztttycflnasib.png\",\n  \"description\": \"MiMi Crunch Multi Millet Khichdi Mix is a nutritious ready-to-cook blend made from multiple millets, rich in fiber and plant protein for healthy everyday meals.\",\n  \"brand\": {\n    \"@type\": \"Brand\",\n    \"name\": \"MiMi Crunch\"\n  },\n  \"category\": \"Millet Ready Mix\",\n  \"sku\": \"MC-MULTI-MILLET-KHICHDI\",\n  \"additionalProperty\": [\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Ingredients\",\n      \"value\": \"Blend of Multiple Millets and Natural Ingredients\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Diet Type\",\n      \"value\": \"Gluten-Free, Vegan, High Fiber\"\n    }\n  ],\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"url\": \"https://mimicrunch.com/products/multi-millet-khichdi-mix\",\n    \"priceCurrency\": \"INR\",\n    \"availability\": \"https://schema.org/InStock\",\n    \"itemCondition\": \"https://schema.org/NewCondition\"\n  }\n}\n</script>",
+    "trust": ""
+  },
+  {
+    "_id": "69998a0a62852d672c8d59d9",
+    "name": "Ragi Millet",
+    "title": "Ragi Millet",
+    "slug": "ragi-millet",
+    "weight": "250g",
+    "weightOptions": [
+      "500g",
+      "1000g"
+    ],
+    "selectorCount": 1,
+    "category": "",
+    "description": "MiMi Crunch <strong data-start=\"289\" data-end=\"304\">Ragi Millet</strong> is a wholesome ancient grain celebrated for its exceptional nutritional value and traditional goodness. Naturally rich in calcium, iron, fiber, and plant-based protein, ragi supports strong bones, sustained energy, and balanced daily nutrition. Carefully sourced and minimally processed, this gluten-free millet retains its natural nutrients, making it ideal for modern healthy lifestyles. Known as one of India’s most nourishing grains, ragi is easy to digest and suitable for all age groups, including children and elders. Its earthy flavor and versatile texture make it perfect for preparing porridges, rotis, dosas, laddus, and wholesome breakfast recipes. Free from preservatives and additives, MiMi Crunch Ragi Millet brings clean, authentic nutrition straight from traditional farms to your everyday meals, helping you replace refined grains with a smarter, nutrient-dense alternative. MiMi Crunch highlights ragi as an iron-rich grain ideal for strong bones and growing kids while supporting everyday wellness.&nbsp;",
+    "additionalInfo": "",
+    "price": 149,
+    "collection": "millet-grain",
+    "keywords": [
+      "millet",
+      "healthy",
+      "nutritions"
+    ],
+    "tags": [
+      "easy cooking",
+      "heathy foods"
+    ],
+    "images": [
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1773128651/products/sdsp6w4bnzqavqdvon9u.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1773128653/products/smdi1xsms1n4ltcfyrf0.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1774641380/products/em1ptasmjl21zuomzp8p.png"
+    ],
+    "variants": [
+      {
+        "weight": "250g",
+        "price": 149,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1773128651/products/sdsp6w4bnzqavqdvon9u.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1773128653/products/smdi1xsms1n4ltcfyrf0.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1774641380/products/em1ptasmjl21zuomzp8p.png"
+        ],
+        "stock": 93,
+        "sku": "",
+        "_id": "69c6e774002e2c6b984ca8b3"
+      },
+      {
+        "weight": "500g",
+        "price": 219,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1773128647/products/sduske8jqyzu4bdiutcu.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1773128649/products/ilypbmtr6ouvw2ycnmox.jpg"
+        ],
+        "stock": 99,
+        "sku": "",
+        "_id": "69c6e774002e2c6b984ca8b4"
+      },
+      {
+        "weight": "1KG",
+        "price": 309,
+        "images": [
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1773128647/products/sduske8jqyzu4bdiutcu.jpg",
+          "https://res.cloudinary.com/daovxopcn/image/upload/v1773128649/products/ilypbmtr6ouvw2ycnmox.jpg"
+        ],
+        "stock": 100,
+        "sku": "",
+        "_id": "69c6e774002e2c6b984ca8b5"
+      }
+    ],
+    "isActive": true,
+    "inventory": {
+      "lowStockThreshold": 5
+    },
+    "faqs": [
+      {
+        "question": "What is Ragi Millet?",
+        "answer": "Ragi millet, also known as finger millet, is an ancient whole grain naturally rich in calcium, fiber, and essential minerals that support overall health."
+      },
+      {
+        "question": "Is Ragi Millet good for daily consumption?",
+        "answer": "Yes. Ragi is light, nutritious, and easy to digest, making it suitable for regular meals as part of a balanced diet."
+      },
+      {
+        "question": "Is Ragi Millet gluten-free?",
+        "answer": "Yes, ragi millet is naturally gluten-free and suitable for gluten-sensitive or clean-eating diets."
+      },
+      {
+        "question": "How can I cook Ragi Millet?",
+        "answer": "You can use ragi to prepare porridge, rotis, dosa batter, malt drinks, laddus, or healthy breakfast bowls depending on your preference."
+      },
+      {
+        "question": "Who should include Ragi Millet in their diet?",
+        "answer": "Ragi is beneficial for kids, adults, fitness enthusiasts, and elders due to its nutrient density and easy digestion."
+      },
+      {
+        "question": "Where can I buy Little Millet Whole?",
+        "answer": "You can buy premium quality Little Millet Whole directly from MiMi Crunch here:\n https://mimicrunch.com/products/little-millet-whole"
+      }
+    ],
+    "createdAt": "2026-02-21T10:33:46.381Z",
+    "updatedAt": "2026-03-27T20:24:20.216Z",
+    "__v": 0,
+    "benefits": "",
+    "faqContent": "",
+    "metaData": "",
+    "metaDescription": "Buy Ragi Millet from MiMi Crunch — naturally gluten-free, calcium-rich finger millet ideal for porridges, rotis, and healthy everyday nutrition.",
+    "metaTitle": "Ragi Millet Online | Calcium-Rich Finger Millet Grain | MiMi Crunch",
+    "schemaMarkup": "<script type=\"application/ld+json\">\n{\n  \"@context\": \"https://schema.org/\",\n  \"@type\": \"Product\",\n  \"name\": \"Ragi Millet\",\n  \"image\": \"https://res.cloudinary.com/daovxopcn/image/upload/w_1000,h_1000,c_fill,g_auto,q_auto,f_auto/v1773128651/products/sdsp6w4bnzqavqdvon9u.jpg\",\n  \"description\": \"MiMi Crunch Ragi Millet is a naturally gluten-free ancient grain rich in calcium, iron, and fiber, ideal for porridges, rotis, and healthy everyday meals.\",\n  \"brand\": {\n    \"@type\": \"Brand\",\n    \"name\": \"MiMi Crunch\"\n  },\n  \"category\": \"Raw Millets\",\n  \"sku\": \"MC-RAGI-MILLET\",\n  \"additionalProperty\": [\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Ingredients\",\n      \"value\": \"100% Ragi Millet\"\n    },\n    {\n      \"@type\": \"PropertyValue\",\n      \"name\": \"Diet Type\",\n      \"value\": \"Gluten-Free, Vegan, High Calcium\"\n    }\n  ],\n  \"offers\": {\n    \"@type\": \"Offer\",\n    \"url\": \"https://mimicrunch.com/products/ragi-millet\",\n    \"priceCurrency\": \"INR\",\n    \"availability\": \"https://schema.org/InStock\",\n    \"itemCondition\": \"https://schema.org/NewCondition\"\n  }\n}\n</script>",
+    "trust": ""
+  }
+]

@@ -492,18 +492,29 @@ const FeaturedSection = ({ featured = [] }) => {
                   ) : null}
                 </div>
                 <div className="flex flex-col flex-1">
-                  {item.size ? (
-                    <p className="bg-white/10 border border-white/10 text-white w-fit px-2 py-1 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wider mb-2">
-                      {item.size}
-                    </p>
-                  ) : null}
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {item.size ? (
+                      <span className="bg-[#F5B041] text-[#1B3B26] w-fit px-2 py-1 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wider">
+                        {item.size}
+                      </span>
+                    ) : null}
+                    {item.tags?.slice(0, 2).map(tag => (
+                      <span key={tag} className="border border-white/20 bg-white/5 text-white/80 w-fit px-2 py-1 rounded-md text-[9px] sm:text-[10px] uppercase font-bold tracking-wider">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
 
                   <h3 className="line-clamp-2 text-sm font-[Fraunces] font-medium text-white sm:text-xl leading-tight">
                     {item.name}
                   </h3>
 
                   {item.desc ? (
-                    <p className="mt-2 hidden text-sm text-[#a8b8ae] line-clamp-2 sm:block">{item.desc}</p>
+                    <p className="mt-3 hidden text-sm text-[#a8b8ae] sm:block leading-relaxed">
+                      {stripHtml(item.desc).length > 100 
+                        ? <>{stripHtml(item.desc).substring(0, 100)}... <span className="text-[#F5B041] italic opacity-80 group-hover:opacity-100 transition-opacity">more</span></>
+                        : stripHtml(item.desc)}
+                    </p>
                   ) : null}
 
                   <div className="mt-auto pt-4 border-t border-white/10 text-right">
@@ -552,4 +563,9 @@ function getDisplayTitle(title) {
   if (t === 'millet grain') return 'Grains';
   if (t === 'millet flour') return 'Flour';
   return title;
+}
+
+function stripHtml(html) {
+  if (!html) return '';
+  return html.replace(/<[^>]*>?/gm, '').replace(/&[a-zA-Z0-9#]+;/g, ' ').trim();
 }

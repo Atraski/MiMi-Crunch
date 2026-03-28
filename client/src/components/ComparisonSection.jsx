@@ -3,28 +3,40 @@ import React from 'react';
 const ComparisonSection = () => {
     const comparisonData = [
         {
-            feature: 'Cooking Time',
-            traditional: '30-40 Minutes',
-            others: '5 Minutes (Preservatives)',
-            mimi: '2 Minutes (Natural)'
+            feature: 'Main Ingredient',
+            traditional: 'Maida ya Chawal',
+            others: 'Refined Sugar & Maida',
+            mimi: '100% Whole Millets'
         },
         {
-            feature: 'Ingredients',
-            traditional: 'Simple Grains',
-            others: 'MSG, Palm Oil, Colors',
-            mimi: '5+ Native Millets, Cold-Pressed Oil'
+            feature: 'Effort',
+            traditional: 'Kitchen mein mehnat',
+            others: 'App se order karo',
+            mimi: 'Ready in 2-3 Mins'
         },
         {
-            feature: 'Nutrition',
-            traditional: 'Variable',
-            others: 'High Sodium & Sugars',
-            mimi: 'High Protein & Fiber'
+            feature: 'Energy Spike',
+            traditional: 'Jaldi bhook lagna',
+            others: 'Sugar Rush & Crash',
+            mimi: 'Sustained Energy (Low GI)'
         },
         {
-            feature: 'Prep Effort',
-            traditional: 'High (Soaking + Cooking)',
-            others: 'Instant but Unhealthy',
-            mimi: 'Instant & Wholesome'
+            feature: 'Digestion',
+            traditional: 'Heavy feel hona',
+            others: 'Bloating ka khatra',
+            mimi: 'Light & Gut-Friendly'
+        },
+        {
+            feature: 'Protein/Fiber',
+            traditional: 'Minimal',
+            others: 'Zero (Bas Calories)',
+            mimi: 'Superfood Powered'
+        },
+        {
+            feature: 'Vibe',
+            traditional: 'Boring Purana Nashta',
+            others: 'Guilty Pleasure',
+            mimi: 'Healthy Swag'
         }
     ];
 
@@ -52,7 +64,7 @@ const ComparisonSection = () => {
                     <div className="grid grid-cols-3 gap-1.5 sm:gap-8 max-w-5xl mx-auto">
                         {/* Column 1: Ghar Ka Khaana */}
                         <div className="bg-[#1B3B26]/5 rounded-[1.5rem] sm:rounded-[3rem] p-2 sm:p-10 flex flex-col items-center border border-[#1B3B26]/10">
-                            <h3 className="text-[#1B3B26] font-bold uppercase tracking-widest text-[7px] sm:text-xs mb-6 sm:mb-8 text-center px-1">Traditional</h3>
+                            <h3 className="text-[#1B3B26] font-bold uppercase tracking-widest text-[7px] sm:text-xs mb-6 sm:mb-8 text-center px-1">Regular Snacks</h3>
                             <div className="space-y-6 sm:space-y-12 w-full text-center">
                                 {comparisonData.map((row, idx) => (
                                     <div key={idx} className="space-y-2 sm:space-y-4">
@@ -65,7 +77,7 @@ const ComparisonSection = () => {
 
                         {/* Column 2: Junk Food */}
                         <div className="bg-[#F5B041]/5 rounded-[1.5rem] sm:rounded-[3rem] p-2 sm:p-10 flex flex-col items-center border border-[#F5B041]/10">
-                            <h3 className="text-[#F5B041] font-bold uppercase tracking-widest text-[7px] sm:text-xs mb-6 sm:mb-8 text-center px-1">Processed</h3>
+                            <h3 className="text-[#F5B041] font-bold uppercase tracking-widest text-[7px] sm:text-xs mb-6 sm:mb-8 text-center px-1">Junk Food</h3>
                             <div className="space-y-6 sm:space-y-12 w-full text-center">
                                 {comparisonData.map((row, idx) => (
                                     <div key={idx} className="space-y-2 sm:space-y-4">
@@ -79,9 +91,9 @@ const ComparisonSection = () => {
                         {/* Column 3: MIMI CRUNCH (The Winner) */}
                         <div className="bg-[#1B3B26] rounded-[1.5rem] sm:rounded-[3rem] p-2 sm:p-10 flex flex-col items-center shadow-2xl shadow-[#1B3B26]/30 relative overflow-hidden">
                             <div className="absolute top-0 right-0 w-16 h-16 sm:w-32 sm:h-32 bg-[#F5B041] opacity-20 blur-[40px] sm:blur-[60px]"></div>
-                            <h3 className="text-white font-bold uppercase tracking-[0.1em] sm:tracking-[0.3em] text-[7px] sm:text-sm mb-6 sm:mb-8 z-10 flex items-center gap-1">
+                            <h3 className="text-white font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] text-[7px] sm:text-xs mb-6 sm:mb-8 z-10 flex items-center justify-center gap-1 sm:gap-2">
                                 <span className="flex h-1 w-1 sm:h-2 sm:w-2 rounded-full bg-[#F5B041]"></span>
-                                Mimi
+                                Mimi Crunch
                             </h3>
                             <div className="space-y-6 sm:space-y-12 w-full text-center relative z-10">
                                 {comparisonData.map((row, idx) => (
@@ -97,7 +109,7 @@ const ComparisonSection = () => {
 
                 <div className="mt-16 text-center">
                     <p className="text-sm text-[#4A5D4E] italic mb-8 opacity-60">*Based on detailed nutritional analysis of leading ready-to-eat brands.</p>
-                    <a href="/product/multi-millet-khichdi" className="inline-flex items-center gap-4 bg-[#F5B041] text-white px-10 py-5 rounded-2xl text-sm font-bold uppercase tracking-[0.2em] shadow-xl hover:-translate-y-1 transition-all active:scale-95 shadow-orange-500/20">
+                    <a href="/products/multi-millet-khichdi-mix" className="inline-flex items-center gap-4 bg-[#F5B041] text-white px-10 py-5 rounded-2xl text-sm font-bold uppercase tracking-[0.2em] shadow-xl hover:-translate-y-1 transition-all active:scale-95 shadow-orange-500/20">
                         Try Multi-Millet Khichdi
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />

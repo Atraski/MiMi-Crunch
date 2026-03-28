@@ -9,6 +9,14 @@ const InstagramReels = () => {
         'https://www.instagram.com/p/DVvViI1ExNl/',
         'https://www.instagram.com/p/DUVh7PUk3T8/'
     ];
+    // Constant Mimi Crunch Product Images (Sourced from DB)
+    const reelThumbs = [
+        'https://res.cloudinary.com/daovxopcn/image/upload/w_800,h_1422,c_fill,g_auto/v1771706646/products/qw26mh3dmayiuubtcjmr.png', // Little Millet
+        'https://res.cloudinary.com/daovxopcn/image/upload/w_800,h_1422,c_fill,g_auto/v1771706431/products/lqhv1slrq4ku6yq4ulli.png', // Kodo Flour
+        'https://res.cloudinary.com/daovxopcn/image/upload/w_800,h_1422,c_fill,g_auto/v1771706259/products/b58d1eu6mmwikcdj3mci.png', // Kodo Millet
+        'https://res.cloudinary.com/daovxopcn/image/upload/w_800,h_1422,c_fill,g_auto/v1771706047/products/ojdycyc3lexk3h1lljwx.png', // Barnyard Flour
+        'https://res.cloudinary.com/daovxopcn/image/upload/w_800,h_1422,c_fill,g_auto/v1774641207/products/cqdbd00ys4tecxyc6cnf.png'  // Foxtail Flour
+    ];
 
     return (
         <section className="py-20 bg-[#FAF8F5] relative overflow-hidden font-[Manrope]">
@@ -19,18 +27,18 @@ const InstagramReels = () => {
             <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
                 <div className="inline-flex items-center gap-2 mb-4 bg-white/80 border border-[#1B3B26]/10 px-4 py-1.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase text-[#1B3B26] shadow-sm">
                     <span className="flex h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse"></span>
-                    Live Feed
+                    Mimi Social
                 </div>
 
                 <h2 className="text-3xl sm:text-5xl lg:text-6xl font-[Fraunces] font-medium text-[#1B3B26] leading-tight mb-4">
                     Experience <span className="text-[#F5B041]">Mimi Crunch</span>
                 </h2>
                 <p className="text-sm sm:text-lg text-[#4A5D4E] mb-12 max-w-2xl mx-auto opacity-80 leading-relaxed font-[Manrope]">
-                    Join our vibrant community on Instagram <a href="https://www.instagram.com/mimicrunch.in" target="_blank" rel="noopener noreferrer" className="text-[#1B3B26] font-bold underline underline-offset-4 decoration-[#F5B041]">@mimicrunch.in</a>
+                    Join our vibrant community as we celebrate wellness and tradition.
                 </p>
 
                 {/* Reels Horizontal Scroll Container */}
-                <div className="relative group">
+                <div className="relative group mb-12">
                     <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-8 snap-x no-scrollbar px-4 sm:px-0 scroll-smooth">
                         {reelUrls.map((url, index) => (
                             <a 
@@ -42,9 +50,8 @@ const InstagramReels = () => {
                             >
                                 <div className="bg-white rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_20px_50px_-15px_rgba(27,59,38,0.12)] border border-white p-2 sm:p-3 overflow-hidden aspect-[9/16] relative">
                                     <div className="w-full h-full bg-[#1B3B26] rounded-[1.5rem] sm:rounded-[2rem] relative overflow-hidden">
-                                        {/* Real Instagram Thumbnail using Weserv Image Proxy to bypass CORS */}
                                         <img 
-                                            src={`https://images.weserv.nl/?url=${encodeURIComponent(url + 'media/')}&w=500&fit=cover`} 
+                                            src={reelThumbs[index]}
                                             alt="Mimi Reel"
                                             className="w-full h-full object-cover transform transition-transform duration-700 group-hover/card:scale-110 opacity-70"
                                             loading="lazy"
@@ -63,6 +70,23 @@ const InstagramReels = () => {
                             </a>
                         ))}
                     </div>
+                </div>
+
+                {/* Follow Button */}
+                <div className="flex justify-center">
+                    <a 
+                        href="https://www.instagram.com/mimicrunch.in" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="group relative inline-flex items-center gap-4 bg-[#1B3B26] text-[#F5B041] px-10 py-5 rounded-full text-sm font-bold tracking-widest uppercase transition-all duration-300 hover:bg-[#F5B041] hover:text-[#1B3B26] shadow-xl hover:shadow-[0_20px_40px_-10px_rgba(245,176,65,0.4)]"
+                    >
+                        <span className="relative z-10">Follow @mimicrunch.in</span>
+                        <div className="relative z-10 w-8 h-8 rounded-full bg-[#F5B041]/20 group-hover:bg-[#1B3B26]/10 flex items-center justify-center transition-colors">
+                            <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                        </div>
+                    </a>
                 </div>
             </div>
         </section>
