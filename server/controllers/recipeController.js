@@ -13,6 +13,7 @@ const createRecipe = async (req, res) => {
     const {
       title,
       slug,
+      highlightLine,
       excerpt,
       contentHtml,
       coverImage,
@@ -20,6 +21,11 @@ const createRecipe = async (req, res) => {
       videoUrl,
       productSlug,
       time,
+      servings,
+      difficulty,
+      ingredients,
+      steps,
+      chefTip,
       tags,
       source,
       approvalStatus,
@@ -37,9 +43,23 @@ const createRecipe = async (req, res) => {
 
     const finalSlug = slug ? slugify(slug) : slugify(title)
 
+    // Coerce ingredients — should be array of strings
+    const cleanIngredients = Array.isArray(ingredients)
+      ? ingredients.filter((i) => typeof i === 'string' && i.trim())
+      : []
+
+    // Coerce steps — should be array of { header, description }
+    const cleanSteps = Array.isArray(steps)
+      ? steps.map((s) => ({
+          header: String(s?.header || ''),
+          description: String(s?.description || ''),
+        }))
+      : []
+
     const recipe = await Recipe.create({
       title,
       slug: finalSlug,
+      highlightLine: highlightLine || '',
       excerpt,
       contentHtml,
       coverImage,
@@ -47,6 +67,11 @@ const createRecipe = async (req, res) => {
       videoUrl,
       productSlug,
       time: time || undefined,
+      servings: servings || '',
+      difficulty: ['easy', 'medium', 'hard'].includes(difficulty) ? difficulty : '',
+      ingredients: cleanIngredients,
+      steps: cleanSteps,
+      chefTip: chefTip || '',
       tags: Array.isArray(tags) ? tags : [],
       source: source === 'community' ? 'community' : 'official',
       approvalStatus: approvalStatus === 'pending' || approvalStatus === 'rejected'
@@ -183,18 +208,50 @@ const getRecipeBySlug = async (req, res) => {
 const updateRecipe = async (req, res) => {
   try {
     const updates = { ...req.body }
+
+    // Slug
     if (updates.slug) {
       updates.slug = slugify(updates.slug)
     }
+
+    // Arrays
     if (updates.tags && !Array.isArray(updates.tags)) {
       updates.tags = []
     }
     if (updates.gallery && !Array.isArray(updates.gallery)) {
       updates.gallery = []
     }
+
+    // Ingredients — array of strings
+    if ('ingredients' in updates) {
+      updates.ingredients = Array.isArray(updates.ingredients)
+        ? updates.ingredients.filter((i) => typeof i === 'string' && i.trim())
+        : []
+    }
+
+    // Steps — array of { header, description }
+    if ('steps' in updates) {
+      updates.steps = Array.isArray(updates.steps)
+        ? updates.steps.map((s) => ({
+            header: String(s?.header || ''),
+            description: String(s?.description || ''),
+          }))
+        : []
+    }
+
+    // Difficulty
+    if ('difficulty' in updates) {
+      if (!['easy', 'medium', 'hard', ''].includes(updates.difficulty)) {
+        updates.difficulty = ''
+      }
+    }
+
+    // Source
     if (updates.source && !['official', 'community'].includes(updates.source)) {
       delete updates.source
     }
+
+    // Approval status
     if (
       updates.approvalStatus &&
       !['approved', 'pending', 'rejected'].includes(updates.approvalStatus)

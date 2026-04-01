@@ -320,12 +320,19 @@ const RecipeList = ({
             initialData={{
               title: '',
               slug: '',
+              highlightLine: '',
               excerpt: '',
               contentHtml: '',
               coverImage: '',
               gallery: [],
               videoUrl: '',
               productSlug: '',
+              time: '',
+              servings: '',
+              difficulty: '',
+              ingredients: [],
+              steps: [],
+              chefTip: '',
               tags: [],
               source: 'official',
               approvalStatus: 'approved',
@@ -376,6 +383,7 @@ const RecipeEditorModal = ({
   const [form, setForm] = useState({
     title: initialData.title || '',
     slug: initialData.slug || '',
+    highlightLine: initialData.highlightLine || '',
     excerpt: initialData.excerpt || '',
     contentHtml: initialData.contentHtml || '',
     coverImage: initialData.coverImage || '',
@@ -383,6 +391,11 @@ const RecipeEditorModal = ({
     videoUrl: initialData.videoUrl || '',
     productSlug: initialData.productSlug || '',
     time: initialData.time || '',
+    servings: initialData.servings || '',
+    difficulty: initialData.difficulty || '',
+    ingredients: initialData.ingredients || [],
+    steps: initialData.steps || [],
+    chefTip: initialData.chefTip || '',
     tags: initialData.tags || [],
     source: initialData.source || 'official',
     approvalStatus: initialData.approvalStatus || 'approved',
@@ -405,6 +418,7 @@ const RecipeEditorModal = ({
     setForm({
       title: initialData.title || '',
       slug: initialData.slug || '',
+      highlightLine: initialData.highlightLine || '',
       excerpt: initialData.excerpt || '',
       contentHtml: initialData.contentHtml || '',
       coverImage: initialData.coverImage || '',
@@ -412,6 +426,11 @@ const RecipeEditorModal = ({
       videoUrl: initialData.videoUrl || '',
       productSlug: initialData.productSlug || '',
       time: initialData.time || '',
+      servings: initialData.servings || '',
+      difficulty: initialData.difficulty || '',
+      ingredients: initialData.ingredients || [],
+      steps: initialData.steps || [],
+      chefTip: initialData.chefTip || '',
       tags: initialData.tags || [],
       source: initialData.source || 'official',
       approvalStatus: initialData.approvalStatus || 'approved',
@@ -429,6 +448,35 @@ const RecipeEditorModal = ({
     () => (Array.isArray(form.tags) ? form.tags.join(', ') : ''),
     [form.tags],
   )
+
+  const ingredientsValue = useMemo(
+    () => (Array.isArray(form.ingredients) ? form.ingredients.join('\n') : ''),
+    [form.ingredients],
+  )
+
+  const handleIngredientChange = (e) => {
+    const lines = e.target.value.split('\n').map((l) => l.trimStart()).filter((l) => l !== '')
+    setForm((prev) => ({ ...prev, ingredients: lines }))
+  }
+
+  const handleStepChange = (index, field, value) => {
+    setForm((prev) => {
+      const steps = [...(prev.steps || [])]
+      steps[index] = { ...steps[index], [field]: value }
+      return { ...prev, steps }
+    })
+  }
+
+  const addStep = () => {
+    setForm((prev) => ({ ...prev, steps: [...(prev.steps || []), { header: '', description: '' }] }))
+  }
+
+  const removeStep = (index) => {
+    setForm((prev) => ({
+      ...prev,
+      steps: (prev.steps || []).filter((_, i) => i !== index),
+    }))
+  }
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target
@@ -610,6 +658,18 @@ const RecipeEditorModal = ({
               </div>
             </div>
 
+            {/* Highlight Line */}
+            <div>
+              <p className="label">Highlight Line <span className="text-stone-400 font-normal">(one-liner shown below title)</span></p>
+              <input
+                className="input mt-2"
+                name="highlightLine"
+                placeholder="e.g. A wholesome twist on a classic favourite!"
+                value={form.highlightLine}
+                onChange={handleChange}
+              />
+            </div>
+
             <div className="grid gap-4 md:grid-cols-[2fr_1fr] items-start">
               <div>
                 <p className="label">Content</p>
@@ -670,6 +730,30 @@ const RecipeEditorModal = ({
                   <p className="mt-1 text-xs text-stone-500">
                     Shown on recipe cards with a clock icon.
                   </p>
+                </div>
+                <div>
+                  <p className="label">Servings</p>
+                  <input
+                    className="input mt-2"
+                    name="servings"
+                    placeholder="e.g. 2-4 servings"
+                    value={form.servings}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <p className="label">Difficulty</p>
+                  <select
+                    name="difficulty"
+                    className="input mt-2"
+                    value={form.difficulty}
+                    onChange={handleChange}
+                  >
+                    <option value="">— Not set —</option>
+                    <option value="easy">🟢 Easy</option>
+                    <option value="medium">🟡 Medium</option>
+                    <option value="hard">🔴 Hard</option>
+                  </select>
                 </div>
                 <div>
                   <p className="label">Recipe type</p>
@@ -799,6 +883,79 @@ const RecipeEditorModal = ({
                   Published
                 </label>
               </div>
+            </div>
+
+            {/* ─── Ingredients ──────────────────────── */}
+            <div className="space-y-2 border-t border-stone-100 pt-5">
+              <p className="label">Ingredients <span className="text-stone-400 font-normal">(one per line)</span></p>
+              <textarea
+                className="input mt-2 min-h-[160px] font-mono text-sm"
+                placeholder={`e.g.\n1 cup Mimi Crunch\n2 ripe bananas\n½ tsp cinnamon`}
+                value={ingredientsValue}
+                onChange={handleIngredientChange}
+              />
+              <p className="text-xs text-stone-500">Each line becomes one ingredient bullet on the recipe page.</p>
+            </div>
+
+            {/* ─── Steps ────────────────────────────── */}
+            <div className="space-y-4 border-t border-stone-100 pt-5">
+              <div className="flex items-center justify-between">
+                <p className="label">Steps</p>
+                <button
+                  type="button"
+                  className="btn btn-outline rounded-lg px-3 py-1 text-xs"
+                  onClick={addStep}
+                >
+                  + Add Step
+                </button>
+              </div>
+              {(form.steps || []).length === 0 && (
+                <p className="text-xs text-stone-400">No steps yet — click "+ Add Step" to begin.</p>
+              )}
+              {(form.steps || []).map((step, idx) => (
+                <div key={idx} className="rounded-xl border border-stone-200 bg-stone-50/50 p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-stone-500">Step {idx + 1}</span>
+                    <button
+                      type="button"
+                      className="text-xs text-red-500 hover:underline"
+                      onClick={() => removeStep(idx)}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <div>
+                    <p className="label text-[11px]">Header</p>
+                    <input
+                      className="input mt-1 text-sm"
+                      placeholder="e.g. Prepare the batter"
+                      value={step.header || ''}
+                      onChange={(e) => handleStepChange(idx, 'header', e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <p className="label text-[11px]">Description</p>
+                    <textarea
+                      className="input mt-1 min-h-[80px] text-sm"
+                      placeholder="Describe what to do in this step..."
+                      value={step.description || ''}
+                      onChange={(e) => handleStepChange(idx, 'description', e.target.value)}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* ─── Chef's Tip ───────────────────────── */}
+            <div className="space-y-2 border-t border-stone-100 pt-5">
+              <p className="label">Chef's Tip <span className="text-stone-400 font-normal">(highlighted on recipe page)</span></p>
+              <textarea
+                className="input mt-2 min-h-[80px]"
+                name="chefTip"
+                placeholder="e.g. Add a pinch of cardamom for an extra depth of flavour!"
+                value={form.chefTip}
+                onChange={handleChange}
+              />
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-2">
