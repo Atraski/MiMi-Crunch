@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getProductSlugFromCartItem } from '../utils/cartUtils'
 import { getOptimizedImage } from '../utils/imageUtils'
+import { getProductColor, getContrastColor } from '../utils/productColors'
 
 const FREE_DELIVERY_MIN = 499
 
@@ -48,6 +49,8 @@ const CartDrawer = ({
   onRemoveItem,
   apiBase,
   cartLimitMessage = '',
+  products = [],
+  onAddToCart,
 }) => {
   const navigate = useNavigate()
   const [couponInput, setCouponInput] = useState('')
@@ -134,6 +137,28 @@ const CartDrawer = ({
   const freeDeliveryUnlocked = sub >= FREE_DELIVERY_MIN
   const progressPercent = Math.min(100, (sub / FREE_DELIVERY_MIN) * 100)
 
+  const suggestedProducts = useMemo(() => {
+    if (!products || products.length === 0) return [];
+    
+    // Get unique collections from cart
+    const cartCollections = [...new Set(cart.map(c => c.collection).filter(Boolean))];
+    
+    // Randomize all products
+    const shuffled = [...products].sort(() => 0.5 - Math.random());
+    
+    // Filter out products already in cart
+    let notInCart = shuffled.filter(p => !cart.some(c => (c.slug || c.id) === p.slug));
+    
+    // Prioritize products from same collections
+    if (cartCollections.length > 0) {
+      const sameCollection = notInCart.filter(p => cartCollections.includes(p.collection));
+      const otherCollection = notInCart.filter(p => !cartCollections.includes(p.collection));
+      notInCart = [...sameCollection, ...otherCollection];
+    }
+    
+    return notInCart.slice(0, 3);
+  }, [products, cart, open]);
+
   if (!open) return null
 
   return (
@@ -144,6 +169,68 @@ const CartDrawer = ({
         aria-label="Close cart"
         type="button"
       />
+
+      {/* Floating Suggested Products on Desktop */}
+      {open && suggestedProducts.length > 0 && (
+        <div 
+          className="absolute right-[470px] top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-4 z-[205] pointer-events-none"
+          style={{ animation: 'fadeSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s', opacity: 0 }}
+        >
+          <div className="bg-white/80 backdrop-blur-2xl border border-white p-5 rounded-[2rem] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] pointer-events-auto">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-800 mb-4 px-2">You May Also Like</h3>
+            <div className="flex flex-col gap-3">
+              {suggestedProducts.map((item) => {
+                const itemBrandColor = getProductColor(item.slug, item.name);
+                const itemContrastColor = getContrastColor(itemBrandColor);
+                const firstVar = item.variants && item.variants.length > 0 ? item.variants[0] : null;
+                const quickAddPrice = firstVar ? firstVar.price : item.price;
+                const quickAddSize = firstVar ? firstVar.weight : item.size;
+
+                return (
+                  <div key={item.slug} className="group relative flex items-center gap-3 w-[320px] rounded-[1.5rem] bg-white p-2.5 shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-black/5 hover:-translate-y-0.5 border border-transparent hover:border-stone-100 cursor-pointer" onClick={() => handleViewProduct(item)}>
+                    <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-stone-50 border border-stone-50 flex items-center justify-center p-2">
+                       <img src={getOptimizedImage(item.image || (item.images && item.images[0]))} alt={item.name} className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform duration-700" loading="lazy" />
+                    </div>
+                    <div className="flex-1 min-w-0 pr-10">
+                       <p className="text-sm font-black text-stone-900 leading-tight line-clamp-2">{item.name}</p>
+                       <div className="flex items-center gap-2 mt-1">
+                         <span className="text-[10px] uppercase font-bold text-stone-400 bg-stone-50 px-2 py-0.5 rounded-full">{quickAddSize}</span>
+                         <span className="text-sm font-black text-emerald-700">₹{quickAddPrice}</span>
+                       </div>
+                    </div>
+                    <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (onAddToCart) {
+                            onAddToCart({
+                                ...item,
+                                selectedVariant: firstVar,
+                                price: quickAddPrice,
+                                size: quickAddSize,
+                                image: item.images ? item.images[0] : item.image
+                            }, { x: e.clientX, y: e.clientY });
+                          }
+                        }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-lg transition-transform hover:scale-110 active:scale-95"
+                        style={{ backgroundColor: itemBrandColor, color: itemContrastColor }}
+                        title="Add to Cart"
+                    >
+                        <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <style dangerouslySetInnerHTML={{ __html: `
+            @keyframes fadeSlideIn { 
+              from { opacity: 0; transform: translate(30px, -50%); } 
+              to { opacity: 1; transform: translate(0, -50%); } 
+            }
+          `}} />
+        </div>
+      )}
+
       <aside
         ref={asideRef}
         className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-[#FDFBF7] shadow-2xl z-[210] transition-transform duration-500 ease-out"
@@ -484,6 +571,55 @@ const CartDrawer = ({
                   Prices include GST. Final total calculated on checkout page.
                 </p>
               </div>
+
+              {/* Mobile "You May Also Like" */}
+              {suggestedProducts.length > 0 && (
+                <div className="mt-8 px-6 pb-2 xl:hidden">
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="flex h-1.5 w-8 rounded-full bg-emerald-200" />
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-800">You may also like</h3>
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    {suggestedProducts.slice(0, 2).map((item) => {
+                      const firstVar = item.variants && item.variants.length > 0 ? item.variants[0] : null;
+                      const quickAddPrice = firstVar ? firstVar.price : item.price;
+                      const quickAddSize = firstVar ? firstVar.weight : item.size;
+
+                      return (
+                        <div key={item.slug} className="group relative flex gap-4 rounded-2xl border border-stone-100 bg-white p-3 transition-colors active:bg-stone-50 cursor-pointer" onClick={() => handleViewProduct(item)}>
+                          <div className="h-16 w-16 shrink-0 overflow-hidden rounded-[14px] bg-stone-50 border border-stone-50 flex items-center justify-center p-2">
+                             <img src={getOptimizedImage(item.image || (item.images && item.images[0]))} alt={item.name} className="max-h-full max-w-full object-contain" loading="lazy" />
+                          </div>
+                          <div className="flex-1 min-w-0 pr-10 py-0.5 relative">
+                             <p className="text-xs font-black text-stone-900 leading-tight line-clamp-2">{item.name}</p>
+                             <div className="flex items-center gap-2 mt-1">
+                               <span className="text-[9px] uppercase font-bold tracking-widest text-stone-400">{quickAddSize}</span>
+                               <span className="text-xs font-black text-emerald-700">₹{quickAddPrice}</span>
+                             </div>
+                            <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (onAddToCart) {
+                                    onAddToCart({
+                                        ...item,
+                                        selectedVariant: firstVar,
+                                        price: quickAddPrice,
+                                        size: quickAddSize,
+                                        image: item.images ? item.images[0] : item.image
+                                    }, { x: e.clientX, y: e.clientY });
+                                  }
+                                }}
+                                className="absolute right-0 top-1/2 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-lg bg-stone-100 text-stone-500 hover:bg-stone-200 hover:text-stone-900 active:scale-95 transition-all"
+                            >
+                                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -1,7 +1,7 @@
 import BackButton from '../components/BackButton'
 import SEO from '../components/SEO'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useMemo } from 'react'
 import gsap from 'gsap'
 import { useAuth } from '../context/AuthContext'
 import { getOptimizedImage } from '../utils/imageUtils'
@@ -270,6 +270,13 @@ const ProductDetail = ({
     if (!hasMultipleImages) return
     setActiveImage((prev) => (prev + 1) % images.length)
   }
+
+  const relatedProducts = useMemo(() => {
+    if (!product || !products || products.length === 0) return [];
+    const sameCollection = products.filter(p => p.collection === product.collection && p.slug !== product.slug);
+    const shuffled = sameCollection.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 4);
+  }, [product, products]);
 
   const uploadReviewImageToCloudinary = async (file) => {
     if (!file || !apiBase) return null
@@ -818,8 +825,146 @@ const ProductDetail = ({
             </div>
           </section>
         ) : null}
-{/* 3. REVIEWS & RECIPES */}
-        <section className="pt-8">
+        {/* 3. LINKED RECIPES SECTION */}
+        {linkedRecipes.length > 0 && (
+          <section className="pt-20">
+            <div className="mb-12 text-center lg:text-left">
+              <h2 className="text-4xl lg:text-5xl font-[Fraunces] font-medium text-[#1B3B26]">Cook with {product.name}</h2>
+              <p className="mt-3 text-[#4A5D4E]">Delicious ways to include this superfood in your daily meals</p>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {linkedRecipes.map((recipe) => (
+                <Link
+                  key={recipe._id}
+                  to={`/recipes/${recipe.slug}`}
+                  className="group flex flex-col rounded-[2.5rem] overflow-hidden bg-white/60 backdrop-blur-xl border border-white/60 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    {recipe.coverImage ? (
+                      <img
+                        src={getOptimizedImage(recipe.coverImage)}
+                        alt={recipe.title}
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-stone-100 text-stone-300 font-[Fraunces]">
+                        Mimi Recipe
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#1B3B26]/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+                    
+                    {/* Stats Overlay */}
+                    <div className="absolute bottom-4 left-4 z-10 flex gap-2">
+                      {recipe.time && (
+                        <span className="rounded-lg bg-black/50 backdrop-blur-md px-2 py-1 text-[9px] font-bold text-white uppercase tracking-wider">
+                          ⏱ {recipe.time}
+                        </span>
+                      )}
+                      {recipe.difficulty && (
+                        <span className="rounded-lg bg-black/50 backdrop-blur-md px-2 py-1 text-[9px] font-bold text-white uppercase tracking-wider">
+                          {recipe.difficulty === 'easy' ? '🟢 Easy' : recipe.difficulty === 'medium' ? '🟡 Medium' : '🔴 Hard'}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <div className="mb-3 flex flex-wrap gap-2">
+                      {(recipe.tags || []).slice(0, 3).map(tag => (
+                        <span key={tag} className="rounded-lg bg-[#EAE6DF]/60 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-[#1B3B26]">
+                          {tag}
+                        </span>
+                      ))}
+                      {recipe.servings && (
+                        <span className="rounded-lg bg-[#F5B041]/10 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-[#D68910]">
+                          🍽️ {recipe.servings}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="line-clamp-2 text-xl font-[Fraunces] font-medium text-[#1B3B26] group-hover:text-[#F5B041] transition-colors leading-tight">
+                      {recipe.title}
+                    </h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+{/* 5. YOU MAY ALSO LIKE SECTION */}
+        {relatedProducts.length > 0 && (
+          <section className="pt-16 pb-10">
+            <div className="mb-10 flex flex-col items-center text-center">
+              <h2 className="text-4xl lg:text-5xl font-[Fraunces] font-medium text-[#1B3B26]">You may also like</h2>
+              <p className="mt-3 text-lg text-[#4A5D4E]">Other items from the {product.collection} collection</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+              {relatedProducts.map((item) => {
+                const itemBrandColor = getProductColor(item.slug, item.name);
+                const itemContrastColor = getContrastColor(itemBrandColor);
+
+                return (
+                  <div key={item.slug || item.name} className="group relative flex flex-col overflow-hidden rounded-[2rem] border border-white/60 bg-white/60 backdrop-blur-md p-3 shadow-sm transition-all duration-300 hover:shadow-2xl hover:shadow-[#1B3B26]/10 hover:border-[#1B3B26]/20 hover:-translate-y-1">
+                    <div className="relative aspect-square w-full overflow-hidden rounded-[1.5rem] bg-white mb-4 flex items-center justify-center p-4">
+                      <Link to={item.slug ? `/products/${item.slug}` : '#'} className="w-full h-full flex items-center justify-center">
+                        <img
+                          src={getOptimizedImage(item.image || (item.images && item.images[0]))}
+                          alt={item.name}
+                          className="max-h-full max-w-full object-contain transition-transform duration-700 group-hover:scale-110"
+                          loading="lazy"
+                        />
+                      </Link>
+
+                      {/* Add to Cart - Quick Add */}
+                      <button
+                        onClick={(e) => {
+                          const { clientX, clientY } = e;
+                          // Handle variants correctly, getting the first variant
+                          const firstVar = item.variants && item.variants.length > 0 ? item.variants[0] : null;
+                          const quickAddPrice = firstVar ? firstVar.price : item.price;
+                          const quickAddSize = firstVar ? firstVar.weight : item.size;
+                          
+                          onAddToCart?.({
+                            ...item,
+                            selectedVariant: firstVar,
+                            price: quickAddPrice,
+                            size: quickAddSize,
+                            image: item.images ? item.images[0] : item.image
+                          }, { x: clientX, y: clientY });
+                        }}
+                        className="absolute bottom-3 right-3 z-20 flex h-10 w-10 md:h-12 md:w-12 items-center justify-center rounded-2xl text-white shadow-xl transition-all hover:scale-110 active:scale-90"
+                        style={{ backgroundColor: itemBrandColor, color: itemContrastColor }}
+                        title="Quick Add"
+                      >
+                        <svg className="h-5 w-5 md:h-6 md:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    <Link to={item.slug ? `/products/${item.slug}` : '#'} className="flex flex-1 flex-col px-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-[10px] font-bold text-[#4A5D4E] uppercase tracking-widest">
+                          {item.variants && item.variants.length > 0 ? item.variants[0].weight : (item.size || 'Size')}
+                        </span>
+                        <p className="text-sm font-black" style={{ color: '#1B3B26' }}>
+                          ₹{item.variants && item.variants.length > 0 ? item.variants[0].price : item.price}
+                        </p>
+                      </div>
+                      <h3 className="text-base font-[Fraunces] font-medium text-[#1B3B26] leading-tight line-clamp-2 md:text-lg">
+                        {item.name}
+                      </h3>
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+{/* 4. REVIEWS & TESTIMONIALS */}
+        <section className="pt-16">
           <div className="mb-10 flex flex-col items-center text-center">
             <h2 className="text-4xl lg:text-5xl font-[Fraunces] font-medium text-[#1B3B26]">Reviews & testimonials</h2>
             <p className="mt-3 text-lg text-[#4A5D4E]">What others say about this product</p>
@@ -1040,48 +1185,7 @@ const ProductDetail = ({
           </div>
         </section>
 
-        {/* 4. LINKED RECIPES SECTION */}
-        {linkedRecipes.length > 0 && (
-          <section className="pt-20">
-            <div className="mb-12 text-center lg:text-left">
-              <h2 className="text-4xl lg:text-5xl font-[Fraunces] font-medium text-[#1B3B26]">Cook with {product.name}</h2>
-              <p className="mt-3 text-[#4A5D4E]">Delicious ways to include this superfood in your daily meals</p>
-            </div>
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {linkedRecipes.map((recipe) => (
-                <Link
-                  key={recipe._id}
-                  to={`/recipes/${recipe.slug}`}
-                  className="group flex flex-col rounded-[2.5rem] overflow-hidden bg-white/60 backdrop-blur-xl border border-white/60 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
-                >
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    {recipe.image && (
-                      <img
-                        src={getOptimizedImage(recipe.image)}
-                        alt={recipe.title}
-                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#1B3B26]/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-                  </div>
-                  <div className="p-6">
-                    <div className="mb-3 flex gap-2">
-                      {recipe.labels?.slice(0, 2).map(label => (
-                        <span key={label} className="rounded-lg bg-[#EAE6DF]/60 px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider text-[#1B3B26]">
-                          {label}
-                        </span>
-                      ))}
-                    </div>
-                    <h3 className="line-clamp-2 text-xl font-[Fraunces] font-medium text-[#1B3B26] group-hover:text-[#F5B041] transition-colors leading-tight">
-                      {recipe.title}
-                    </h3>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
 
               </div>
     </main>

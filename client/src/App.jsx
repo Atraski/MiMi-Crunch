@@ -660,6 +660,7 @@ function App() {
                   discountAmount={discountAmount}
                   total={total}
                   onOrderSuccess={handleClearCart}
+                  onAddToCart={handleAddToCart}
                   appliedCoupon={appliedCoupon}
                   couponError={couponError}
                   onApplyCoupon={handleApplyCoupon}
@@ -693,6 +694,8 @@ function App() {
         onRemoveItem={handleRemoveFromCart}
         apiBase={API_BASE}
         cartLimitMessage={cartLimitMessage}
+        products={products}
+        onAddToCart={handleAddToCart}
       />
       <MobileNavbar products={products} />
 

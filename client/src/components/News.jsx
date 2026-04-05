@@ -49,8 +49,8 @@ const News = ({ news }) => {
               <span className="text-[10px] font-black uppercase tracking-widest text-brand-green">Mimi Chronicles</span>
             </div>
             <h2 className="text-4xl md:text-6xl font-black text-brand-text leading-[0.9] tracking-tighter">
-              Health & <br className="hidden md:block" />
-              <span className="text-brand-green italic font-serif font-light">Heritage.</span>
+              Health &
+              <span className="text-brand-green italic font-serif font-light"> Heritage.</span>
             </h2>
           </div>
 

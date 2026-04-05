@@ -24,6 +24,7 @@ const Checkout = ({
   discountAmount = 0,
   total = 0,
   onOrderSuccess,
+  onAddToCart,
   appliedCoupon = null,
   couponError = '',
   onApplyCoupon,
@@ -85,6 +86,19 @@ const Checkout = ({
 
   // COD default payment method rakha hai
   const [paymentMethod, setPaymentMethod] = useState('COD')
+
+  // --- Dynamic Recommendations Logic ---
+  const [recommendations, setRecommendations] = useState([])
+  useEffect(() => {
+    if (!products || products.length === 0) return
+    // Cart products ke slugs find karo
+    const cartSlugs = new Set(cart.map(item => getProductSlugFromCartItem(item)))
+    // Catalog se wo products lo jo cart mein nahi hain
+    const available = products.filter(p => !cartSlugs.has(p.slug))
+    // Shuffle karke randomly 4 pick karo
+    const shuffled = [...available].sort(() => 0.5 - Math.random())
+    setRecommendations(shuffled.slice(0, 4))
+  }, [products, cart.length]) // jab products load honge ya cart size change hogi
 
   // --- Out of stock & weight limit validation (using latest products) ---
   const { outOfStockItemIds, overLimitProductSlugs, canPlaceOrder } = useMemo(() => {
@@ -524,6 +538,62 @@ const Checkout = ({
             </div>
           </div>
         </form>
+
+        {/* You May Also Like Section */}
+        {recommendations.length > 0 && (
+          <section className="mt-20 border-t border-stone-200 pt-20">
+            <div className="mb-12 text-center md:text-left">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#F5B041]">Don't Miss Out</span>
+              <h2 className="mt-3 text-3xl font-[Fraunces] font-medium text-[#1B3B26] md:text-5xl">You may also like</h2>
+              <p className="mt-2 text-stone-500">Perfect additions to your superfood collection.</p>
+            </div>
+
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {recommendations.map((p) => (
+                <div
+                  key={p._id}
+                  className="group flex flex-col rounded-[2.5rem] overflow-hidden bg-white/60 backdrop-blur-xl border border-white/60 shadow-sm transition hover:-translate-y-2 hover:shadow-xl p-4"
+                >
+                  <Link to={`/products/${p.slug}`} className="relative aspect-square overflow-hidden rounded-[2rem] bg-stone-100">
+                    <img
+                      src={getOptimizedImage(p.image)}
+                      alt={p.name}
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-stone-900/10 to-transparent" />
+                  </Link>
+
+                  <div className="mt-5 flex-1 px-1">
+                    <div className="flex items-center justify-between gap-2">
+                       <h3 className="line-clamp-1 text-base font-[Fraunces] font-medium text-[#1B3B26]">
+                        {p.name}
+                      </h3>
+                      <span className="shrink-0 text-sm font-black text-[#1B3B26]">₹{p.price}</span>
+                    </div>
+                    {p.size && (
+                      <p className="text-[10px] font-bold text-stone-400 mt-1">{p.size}</p>
+                    )}
+                    
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                         const rect = e.currentTarget.getBoundingClientRect()
+                         const pos = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
+                         onAddToCart?.(p, pos)
+                         toast.success(`${p.name} added to cart!`, {
+                           position: 'bottom-right',
+                         })
+                      }}
+                      className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#1B3B26] py-3 text-[10px] font-black uppercase tracking-widest text-[#F5B041] transition-all hover:bg-[#2A5237] active:scale-95"
+                    >
+                      <span>+</span> Add to cart
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </main>
   )

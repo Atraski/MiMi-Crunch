@@ -76,8 +76,12 @@ const Categories = ({ collections = [] }) => {
               className="cat-card-mobile flex flex-col items-center gap-2 shrink-0 haptic-feedback tap-highlight-none"
             >
               <div className="relative p-1 rounded-full border-2 border-emerald-500/20 active:border-emerald-500 transition-colors">
-                <div className="h-20 w-20 rounded-full bg-white flex items-center justify-center text-3xl shadow-sm border border-white">
-                  {getIcon(item.title)}
+                <div className="h-20 w-20 rounded-full bg-white flex items-center justify-center text-3xl shadow-sm border border-white overflow-hidden">
+                  {item.image ? (
+                    <img src={item.image} alt={item.title || 'Collection'} className="w-full h-full object-cover" loading="lazy" />
+                  ) : (
+                    getIcon(item.title)
+                  )}
                 </div>
               </div>
               <span className="text-[11px] font-bold text-stone-700 uppercase tracking-tight text-center max-w-[80px] line-clamp-1">
@@ -106,8 +110,14 @@ const Categories = ({ collections = [] }) => {
                 to={`/${item.slug || ''}`}
                 className="cat-card group relative flex flex-col items-start overflow-hidden rounded-[2rem] border border-stone-200 bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:border-emerald-200"
               >
-                <div className="relative z-10 mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-stone-50 transition-all duration-300 group-hover:bg-emerald-600 group-hover:text-white group-hover:scale-110 shadow-sm">
-                  <span className="text-3xl">{getIcon(item.title)}</span>
+                <div className="relative z-10 mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-stone-50 transition-all duration-300 group-hover:bg-emerald-600 group-hover:text-white group-hover:scale-110 shadow-sm overflow-hidden p-[1px] border border-stone-200/50">
+                  <div className="w-full h-full rounded-[0.9rem] flex items-center justify-center bg-white overflow-hidden">
+                    {item.image ? (
+                      <img src={item.image} alt={item.title || 'Collection'} className="w-full h-full object-cover" loading="lazy" />
+                    ) : (
+                      <span className="text-3xl">{getIcon(item.title)}</span>
+                    )}
+                  </div>
                 </div>
 
                 <div className="relative z-10 w-full">

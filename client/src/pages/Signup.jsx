@@ -4,6 +4,33 @@ import { useAuth } from '../context/AuthContext'
 import BackButton from '../components/BackButton'
 import toast from 'react-hot-toast'
 
+const WELCOME_MESSAGES = [
+  {
+    title: "Yo! Welcome to the fam! 🔥",
+    text: "You just unlocked the healthy snacking club. Time to crunch different! First order? We got you with exclusive perks 💪"
+  },
+  {
+    title: "Ayee, you're in! 🎉",
+    text: "Welcome to MIMICRUNCH - where healthy meets tasty AF. Peep our flavors and cop your first order. Let's get crunching! 💚"
+  },
+  {
+    title: "LFG! You're officially part of the squad! 🚀",
+    text: "No more boring snacks, just straight fire healthy treats. Ready to fuel that hustle? First order hits different 🔥"
+  },
+  {
+    title: "Yooo, squad up! 🎨",
+    text: "You just joined the crunchiest fam on the block. Time to ditch the junk and vibe with healthy. First order? We hooking you up fr fr 💯"
+  },
+  {
+    title: "Welcome to the tribe! ⚡",
+    text: "MIMICRUNCH fam just got bigger. Healthy never tasted this good. Slide into your first order now! 🔥"
+  },
+  {
+    title: "Areee, you made it! 🎊",
+    text: "No cap, healthy snacking just got lit. Explore karo, order karo, crunch karo. First-timers get special love 💚✨"
+  }
+];
+
 const Signup = () => {
   const [email, setEmail] = useState('')
   const [otp, setOtp] = useState('')
@@ -11,6 +38,8 @@ const Signup = () => {
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [resendCooldown, setResendCooldown] = useState(0)
+  const [showWelcome, setShowWelcome] = useState(false)
+  const [welcomeMsg, setWelcomeMsg] = useState(null)
 
   const { sendEmailLoginOtp, verifyEmailLoginOtp } = useAuth()
   const navigate = useNavigate()
@@ -53,8 +82,11 @@ const Signup = () => {
     setSubmitting(true)
     try {
       await verifyEmailLoginOtp(email, otp)
-      toast.success('Account verified successfully!')
-      navigate(redirect, { replace: true })
+      
+      const randomMsg = WELCOME_MESSAGES[Math.floor(Math.random() * WELCOME_MESSAGES.length)]
+      setWelcomeMsg(randomMsg)
+      setShowWelcome(true)
+      
     } catch (err) {
       setError(err.message || 'Invalid or expired OTP.')
       toast.error(err.message || 'Invalid or expired OTP.')
@@ -187,6 +219,43 @@ const Signup = () => {
 
         </div>
       </div>
+
+      {showWelcome && welcomeMsg && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-sm">
+          <div 
+            className="bg-[#FDFBF7] rounded-[2.5rem] p-8 md:p-12 max-w-md w-full shadow-2xl relative text-center border-2 border-emerald-100 overflow-hidden"
+            style={{ animation: "popInSignup 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards" }}
+          >
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-[#F5B041] to-emerald-500"></div>
+            
+            <div className="text-6xl mb-6 animate-[bounce_2s_ease-in-out_infinite] cursor-default">
+              🎉
+            </div>
+            
+            <h2 className="text-2xl md:text-3xl font-[Fraunces] font-bold text-[#1B3B26] mb-4 tracking-tight leading-tight">
+              {welcomeMsg.title}
+            </h2>
+            <p className="text-[#4A5D4E] leading-relaxed mb-10 text-sm md:text-base font-medium">
+              {welcomeMsg.text}
+            </p>
+            
+            <button 
+              onClick={() => navigate(redirect, { replace: true })}
+              className="w-full bg-[#1B3B26] hover:bg-emerald-700 text-white font-black uppercase tracking-widest rounded-xl py-4 transition-all duration-300 shadow-[0_10px_30px_rgba(27,59,38,0.2)] hover:shadow-[0_15px_40px_rgba(27,59,38,0.3)] hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] text-sm"
+            >
+              Start Exploring
+            </button>
+            
+            <style dangerouslySetInnerHTML={{__html: `
+              @keyframes popInSignup {
+                0% { opacity: 0; transform: scale(0.8) translateY(40px); }
+                100% { opacity: 1; transform: scale(1) translateY(0); }
+              }
+            `}}/>
+          </div>
+        </div>
+      )}
+
     </main>
   )
 }

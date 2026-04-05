@@ -1,7 +1,10 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import footerBg from '../assets/MiMi footer.webp'
-import footerGif from '../assets/MIMI Mobile Footer.gif'
+// import footerBg from '../assets/MiMi footer.webp'
+// import footerGif from '../assets/MIMI Mobile Footer.gif'
+
+const footerBg = "";
+const footerGif = "";
 
 const Footer = () => {
   const { pathname } = useLocation();

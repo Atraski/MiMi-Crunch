@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import logo from '../assets/MiMi Crunch Logo.png'
+// import logo from '../assets/MiMi Crunch Logo.png'
+
+const logo = "/favicon.png"
 
 const MobileHeader = ({ cartCount, onCartToggle, wishlistCount = 0 }) => {
     const { user } = useAuth()

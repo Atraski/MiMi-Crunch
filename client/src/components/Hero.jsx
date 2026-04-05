@@ -14,13 +14,10 @@ const Hero = ({ products = [] }) => {
   const bgSwiperRef = useRef(null);
 
   const slides = useMemo(() => {
-    // List of high-quality farm background images
+    // Custom Hero Banners from Cloudinary
     const farmBgs = [
-      "https://images.unsplash.com/photo-1592910129881-892bbe239cc0?q=80&w=1400&auto=format&fit=crop", // Golden Grains
-      "https://images.unsplash.com/photo-1589923188900-85dae523342b?q=80&w=1400&auto=format&fit=crop", // Lush Green Farming
-      "https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1400&auto=format&fit=crop", // Organic Field
-      "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?q=80&w=1400&auto=format&fit=crop", // Agriculture Landscape
-      "https://images.unsplash.com/photo-1499529112087-3cb3b73cec95?q=80&w=1400&auto=format&fit=crop"  // Rural Harvest
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1775298848/Hero_Section_Banner_1_cskyfo.jpg",
+      "https://res.cloudinary.com/daovxopcn/image/upload/v1775298848/Hero_Section_Banner_1_cskyfo.jpg",
     ];
 
     if (!products || products.length === 0) {
@@ -103,7 +100,7 @@ const Hero = ({ products = [] }) => {
   };
 
   return (
-    <section className="relative w-full bg-brand-bg overflow-hidden h-auto md:h-[92vh] flex flex-col md:flex-row m-0 p-0 shadow-none border-none">
+    <section className="relative w-full bg-brand-bg md:overflow-hidden h-auto min-h-[calc(100vh-70px)] md:h-[calc(100vh-70px)] flex flex-col md:flex-row m-0 p-0 shadow-none border-none">
 
       {/* GLOBAL BACKGROUND SLIDER LAYER (FARM IMAGES) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -121,9 +118,9 @@ const Hero = ({ products = [] }) => {
               <img
                 src={product.bgImage}
                 alt=""
-                className="w-full h-full object-cover opacity-60 transition-all duration-1000 scale-[1.02]"
+                className="w-full h-full object-cover opacity-50 transition-all duration-1000 scale-[1.02]"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-brand-bg/95 via-brand-bg/60 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-brand-bg via-brand-bg/90 to-transparent md:to-brand-bg/30" />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -136,13 +133,13 @@ const Hero = ({ products = [] }) => {
           className="w-full md:w-[48%] flex flex-col justify-center px-6 py-8 md:px-24 md:py-0 relative"
         >
 
-          <div className="relative space-y-6 md:space-y-10 max-w-xl">
+          <div className="relative space-y-4 md:space-y-6 max-w-xl">
             {/* Elegant Vertical Anchor Line */}
             <div className="absolute -left-8 md:-left-12 top-0 bottom-0 w-[1px] bg-stone-200/50 hidden md:block">
               <div className="hero-line-anchor absolute top-0 left-0 w-full bg-brand-green h-full origin-top" />
             </div>
 
-            <div className="hero-brand-logo flex items-center gap-4">
+            {/* <div className="hero-brand-logo flex items-center gap-4">
               <div className="relative group">
                 <div className="absolute -inset-2 bg-brand-green/20 rounded-2xl blur-lg transition-all group-hover:blur-xl opacity-0 group-hover:opacity-100" />
                 <div className="relative w-12 h-12 bg-brand-green rounded-2xl flex items-center justify-center shadow-xl shadow-brand-green/10">
@@ -153,22 +150,22 @@ const Hero = ({ products = [] }) => {
                 <p className="text-[10px] font-black uppercase tracking-[0.5em] text-brand-green/70">Mimi Crunch</p>
                 <p className="text-[11px] font-bold text-brand-text/40">ESTD 2025</p>
               </div>
-            </div>
+            </div> */}
 
             <div className="space-y-4 md:space-y-8">
               <div className="space-y-2 md:space-y-4">
                 <div className="hero-motto inline-flex items-center gap-2 px-3 py-1 bg-brand-green/5 rounded-full border border-brand-green/10">
                   <span className="w-1.5 h-1.5 bg-brand-green rounded-full animate-pulse" />
-                  <span className="text-[9px] font-black uppercase tracking-widest text-brand-green">Ancient Indian Grains • Modern Taste</span>
+                  <span className="text-[9px] font-black uppercase tracking-widest text-brand-green">100% Millet-Based • Zero Maida • Guilt-Free</span>
                 </div>
-                <h2 className="hero-motto text-5xl md:text-7xl lg:text-8xl font-black text-brand-text leading-[0.95] tracking-tighter">
-                  Mitti Ka <br />
-                  <span className="hero-motto inline-block transform -translate-x-1 decoration-brand-yellow/40 underline-offset-4 italic font-serif font-light text-brand-green">Swad.</span>
+                <h2 className="hero-motto text-5xl md:text-6xl lg:text-7xl font-black text-brand-text leading-[0.95] tracking-tighter">
+                  Smart Snacking, <br />
+                  <span className="hero-motto inline-block transform -translate-x-1 decoration-brand-yellow/40 underline-offset-4 italic font-serif font-light text-brand-green">Super Foods.</span>
                 </h2>
               </div>
 
               <p className="hero-motto text-lg md:text-2xl text-brand-secondary/80 leading-relaxed font-medium max-w-md">
-                Experience the soul of Bharat with every crunch. Traditional wisdom meets modern vitality.
+                Discover the perfect blend of ancient Indian millets and modern flavors. Tasty, crunchy, and packed with real nutrition.
               </p>
 
               <div className="hero-motto pt-2 md:pt-4 flex flex-col md:flex-row items-start md:items-center gap-6">
@@ -194,21 +191,21 @@ const Hero = ({ products = [] }) => {
               </div>
             </div>
 
-            <div className="hero-motto mt-6 md:mt-12 border-t border-stone-200/50 pt-4 md:pt-8 max-w-sm">
+            <div className="hero-motto mt-4 md:mt-6 border-t border-stone-200/50 pt-3 md:pt-4 max-w-sm">
               <p className="italic text-brand-secondary/60 font-serif text-sm md:text-base leading-relaxed">
-                "Shuddh Aahar, <br />
-                Swasth Jeevan."
+                "Healthy habits start with <br />
+                the right crunch."
               </p>
               <div className="mt-2 md:mt-4 flex items-center gap-3">
                 <span className="w-8 h-[1px] bg-brand-yellow" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-brand-yellow">Mimi Crunch Virasat</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-brand-yellow">Mimi Crunch Promise</span>
               </div>
             </div>
           </div>
         </div>
 
         {/* RIGHT SIDE: PRODUCT SLIDER AREA */}
-        <div className="w-full md:w-[52%] relative h-[75vh] md:h-full overflow-hidden flex items-center">
+        <div className="w-full md:w-[52%] relative h-[65vh] min-h-[450px] md:min-h-0 md:h-full flex items-center shrink-0">
           {/* MAIN PRODUCT SLIDER (COVERFLOW) */}
           <Swiper
             modules={[Autoplay, EffectCoverflow, Navigation, Controller]}
@@ -224,6 +221,7 @@ const Hero = ({ products = [] }) => {
               modifier: 1.5,
               slideShadows: false,
             }}
+            navigation={{ nextEl: '.hero-next-btn', prevEl: '.hero-prev-btn' }}
             autoplay={{ delay: 5000, disableOnInteraction: false }}
             onSwiper={(swiper) => (swiperRef.current = swiper)}
             className="h-full w-full py-8 md:py-16 relative z-10"
@@ -235,15 +233,12 @@ const Hero = ({ products = [] }) => {
                 <SwiperSlide key={idx} className="relative w-[85%] md:w-[65%] h-full flex flex-col items-center justify-center">
                   <div className="relative w-full h-full flex flex-col items-center justify-center">
 
-                    {/* CENTER PRODUCT DISPLAY */}
                     <Link
                       to={`/products/${product.slug}`}
-                      className="relative z-10 flex flex-col items-center gap-6 md:gap-8 group no-underline"
+                      className="relative z-[40] flex flex-col items-center gap-2 md:gap-4 group no-underline -translate-y-4 md:-translate-y-20"
                     >
-                      <div className="relative floating-product transition-all duration-700 group-hover:scale-105">
-                        {/* Glowing Aura Removed */}
-
-                        <div className="relative w-64 h-64 md:w-80 md:h-80 lg:w-[400px] lg:h-[400px] bg-white rounded-[3.5rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.35)] border-[12px] md:border-[16px] border-white transition-all duration-500 group-hover:border-stone-50 overflow-hidden flex items-center justify-center p-6">
+                      <div className="relative floating-product transition-all duration-700 group-hover:scale-105 mt-2 md:mt-0">
+                        <div className="relative w-56 h-56 md:w-72 md:h-72 lg:w-[320px] lg:h-[320px] bg-white rounded-[2.5rem] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.25)] border-[8px] md:border-[12px] border-white transition-all duration-500 overflow-hidden flex items-center justify-center p-2">
                           <img
                             src={product.image}
                             alt={product.name}
@@ -254,11 +249,11 @@ const Hero = ({ products = [] }) => {
 
                         {/* Price Badge - Dynamic Floating */}
                         <div
-                          className="absolute -top-4 -right-4 w-15 h-15 md:w-20 md:h-24 rounded-full flex flex-col items-center justify-center text-white font-black shadow-2xl rotate-12 transition-all duration-700 group-hover:rotate-0 group-hover:scale-110"
+                          className="absolute -top-4 -right-4 w-16 h-16 md:w-20 md:h-24 rounded-full flex flex-col items-center justify-center text-white font-black shadow-2xl rotate-12 transition-all duration-700 group-hover:rotate-0 group-hover:scale-110"
                           style={{ backgroundColor: brandColor }}
                         >
-                          <span className="text-[8px] md:text-[10px] uppercase opacity-80 tracking-widest">Only</span>
-                          <span className="text-sm md:text-xl">₹{product.price}</span>
+                          <span className="text-[8px] md:text-[10px] uppercase opacity-80 tracking-widest leading-none mb-0.5 mt-0.5">Only</span>
+                          <span className="text-sm md:text-xl leading-none">₹{product.price}</span>
                         </div>
                       </div>
 
@@ -287,10 +282,11 @@ const Hero = ({ products = [] }) => {
           </Swiper>
 
           {/* Slider Navigation */}
-          <div className="absolute bottom-6 md:bottom-12 left-1/2 -translate-x-1/2 z-30 flex items-center gap-8 md:gap-12">
+          <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-8 md:gap-12 bg-white/20 backdrop-blur-sm px-6 py-2 rounded-full border border-white/30 shadow-lg">
             <button
+              type="button"
               onClick={() => swiperRef.current?.slidePrev()}
-              className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-white shadow-3xl flex items-center justify-center text-brand-text hover:bg-brand-green hover:text-white transition-all active:scale-90 border border-stone-100"
+              className="hero-prev-btn w-10 h-10 md:w-14 md:h-14 rounded-full bg-white shadow-2xl flex items-center justify-center text-brand-text hover:bg-brand-green hover:text-white transition-all active:scale-90 border border-stone-100 cursor-pointer relative z-[70]"
             >
               <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
@@ -305,8 +301,9 @@ const Hero = ({ products = [] }) => {
             </div>
 
             <button
+              type="button"
               onClick={() => swiperRef.current?.slideNext()}
-              className="w-10 h-10 md:w-14 md:h-14 rounded-full bg-white shadow-3xl flex items-center justify-center text-brand-text hover:bg-brand-green hover:text-white transition-all active:scale-90 border border-stone-100"
+              className="hero-next-btn w-10 h-10 md:w-14 md:h-14 rounded-full bg-white shadow-2xl flex items-center justify-center text-brand-text hover:bg-brand-green hover:text-white transition-all active:scale-90 border border-stone-100 cursor-pointer relative z-[70]"
             >
               <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />

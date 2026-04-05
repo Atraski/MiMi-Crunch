@@ -43,7 +43,7 @@ const Home = ({ products, collections, blogs, recipes, onAddToCart }) => {
         
         return result.size;
       })(),
-      image: col.image
+      image: col.image || getCollectionImage(col.title)
     }))
     : (() => {
       const collectionGroups = (products || []).reduce((acc, item) => {
@@ -61,6 +61,7 @@ const Home = ({ products, collections, blogs, recipes, onAddToCart }) => {
           raw: collection,
           count: items.length,
           desc: `Explore our ${collection} collection.`,
+          image: getCollectionImage(formatCollectionTitle(collection)),
         }),
       )
       return groups
@@ -171,5 +172,12 @@ const getDisplayTitle = (title) => {
   if (t === 'millet flour') return 'Flour';
   return title;
 };
+
+const getCollectionImage = (title) => {
+  const t = title?.toLowerCase().trim();
+  if (t === 'millet grain' || t === 'grains' || t === 'grain') return 'https://res.cloudinary.com/daovxopcn/image/upload/v1775298126/Grain_Collection_ssawm8.png';
+  if (t === 'millet flour' || t === 'flours' || t === 'flour') return 'https://res.cloudinary.com/daovxopcn/image/upload/v1775298120/Flour_Collection_ghb9qg.png';
+  return null;
+}
 
 export default Home

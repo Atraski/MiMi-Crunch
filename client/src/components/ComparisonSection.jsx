@@ -3,103 +3,147 @@ import React from 'react';
 const ComparisonSection = () => {
     const comparisonData = [
         {
+            feature: 'Dish',
+            traditional: 'Poha / Upma / Bread',
+            others: 'Maggi / Fries / Burgers 🍟',
+            mimi: 'Millet Power Bowl 🥣'
+        },
+        {
             feature: 'Main Ingredient',
-            traditional: 'Maida ya Chawal',
-            others: 'Refined Sugar & Maida',
-            mimi: '100% Whole Millets'
+            traditional: 'Polished Grains',
+            others: 'Refined Flour & Add-ons',
+            mimi: 'Ancient Whole Millets'
         },
         {
             feature: 'Effort',
-            traditional: 'Kitchen mein mehnat',
-            others: 'App se order karo',
-            mimi: 'Ready in 2-3 Mins'
+            traditional: 'Time + Prep Needed',
+            others: 'Zero Effort, Just Order',
+            mimi: '2-Min Smart Cooking'
         },
         {
-            feature: 'Energy Spike',
-            traditional: 'Jaldi bhook lagna',
-            others: 'Sugar Rush & Crash',
-            mimi: 'Sustained Energy (Low GI)'
+            feature: 'Energy',
+            traditional: 'Short Boost, Fades Fast',
+            others: 'Spike → Crash 🔻',
+            mimi: 'Slow Release Fuel ⚡'
         },
         {
             feature: 'Digestion',
-            traditional: 'Heavy feel hona',
-            others: 'Bloating ka khatra',
-            mimi: 'Light & Gut-Friendly'
+            traditional: 'Sometimes Heavy',
+            others: 'Feels Heavy Later',
+            mimi: 'Easy, Light & Clean'
         },
         {
-            feature: 'Protein/Fiber',
-            traditional: 'Minimal',
-            others: 'Zero (Bas Calories)',
-            mimi: 'Superfood Powered'
+            feature: 'Nutrition',
+            traditional: 'Basic, Not Enough',
+            others: 'Empty Calories',
+            mimi: 'Fiber-Rich • Naturally Nourishing'
         },
         {
             feature: 'Vibe',
-            traditional: 'Boring Purana Nashta',
-            others: 'Guilty Pleasure',
-            mimi: 'Healthy Swag'
+            traditional: 'Routine Breakfast',
+            others: 'Cravings Over Health',
+            mimi: 'Everyday Clean Eating'
         }
     ];
 
     return (
-        <section className="py-24 bg-[#FAF8F5] relative overflow-hidden font-[Manrope]">
-            {/* Background Decor */}
-            <div className="absolute top-0 right-0 w-[30%] h-[30%] bg-[#F5B041] opacity-[0.03] blur-[120px] rounded-full"></div>
-            <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-[#1B3B26] opacity-[0.04] blur-[150px] rounded-full"></div>
-
-            <div className="max-w-7xl mx-auto px-4 relative z-10">
-                <div className="text-center mb-16">
-                    <div className="inline-block bg-[#1B3B26]/5 border border-[#1B3B26]/10 px-4 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase text-[#1B3B26] mb-6">
-                        Why Mimi Crunch?
+        <section className="py-24 bg-gradient-to-br from-[#E6F0EB] to-[#FAF8F5] relative overflow-hidden font-[Manrope]">
+            <div className="max-w-5xl mx-auto px-4 relative z-10">
+                
+                {/* Desktop Version */}
+                <div className="hidden md:block relative mt-16 mb-8 transform scale-[0.95]">
+                    {/* Floating Title Badge */}
+                    <div className="absolute -top-5 left-6 bg-[#A3D95D] text-[#1B3B26] font-bold text-xl px-6 py-2 rounded-sm shadow-xl -rotate-2 z-20 uppercase tracking-wide inline-block border-2 border-[#A3D95D]">
+                        MIMI VS. THE REST
                     </div>
-                    <h2 className="text-4xl sm:text-6xl font-[Fraunces] font-medium text-[#1B3B26] mb-4">
-                        Mimi vs. <span className="text-[#F5B041]">The Rest</span>
-                    </h2>
-                    <p className="text-[#4A5D4E] max-w-2xl mx-auto opacity-70">
-                        See how our Multi-Millet Khichdi stands out against traditional methods and processed convenience foods.
-                    </p>
+
+                    {/* Outer Table Container */}
+                    <div className="border-[2px] border-[#2A5237]/80 rounded-[2.5rem] px-6 pt-8 pb-4 relative w-full overflow-visible bg-transparent z-10">
+                        
+                        {/* Center Highlight Background */}
+                        <div className="absolute -top-6 -bottom-6 left-[50%] w-[25%] bg-[#1B3B26] rounded-[2rem] shadow-2xl z-0">
+                            {/* Inner glow or styling for the highlight column */}
+                            <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent rounded-[2rem]"></div>
+                        </div>
+
+                        {/* Headers */}
+                        <div className="grid grid-cols-4 relative z-10 items-end pb-4 border-b border-[#2A5237]/15">
+                            <div></div>
+                            <div className="text-center font-black text-[#1B3B26] text-sm uppercase tracking-widest">
+                                REGULAR SNACKS
+                            </div>
+                            <div className="text-center font-[Fraunces] italic font-black text-[#F5B041] text-3xl">
+                                Mimi Crunch
+                            </div>
+                            <div className="text-center font-black text-[#1B3B26] text-sm uppercase tracking-widest">
+                                JUNK FOOD
+                            </div>
+                        </div>
+
+                        {/* Rows */}
+                        <div className="relative z-10 flex flex-col">
+                            {comparisonData.map((row, idx) => (
+                                <div key={idx} className={`grid grid-cols-4 items-center py-5 ${idx !== comparisonData.length - 1 ? 'border-b border-[#2A5237]/15' : ''}`}>
+                                    <div className="font-bold text-[#1B3B26] text-base pl-6 tracking-wide">
+                                        {row.feature}
+                                    </div>
+                                    <div className="text-center font-semibold text-[#2A5237] text-base">
+                                        {row.traditional}
+                                    </div>
+                                    <div className="text-center font-bold text-[#A3D95D] text-lg drop-shadow-md">
+                                        {row.mimi}
+                                    </div>
+                                    <div className="text-center font-semibold text-[#2A5237] text-base">
+                                        {row.others}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
-                {/* Side-by-Side Comparison (Desktop & Mobile) */}
-                <div className="overflow-x-hidden pb-8">
+                {/* Mobile Version (Kept Similar but polished) */}
+                <div className="md:hidden pb-8 mt-12">
+                    <div className="text-center mb-10 relative">
+                        <div className="inline-block bg-[#A3D95D] text-[#1B3B26] font-bold text-2xl px-6 py-2 rounded-sm shadow-md -rotate-2 z-20 uppercase tracking-widest border border-[#A3D95D]">
+                            MIMI VS. THE REST
+                        </div>
+                    </div>
                     <div className="grid grid-cols-3 gap-1.5 sm:gap-8 max-w-5xl mx-auto">
                         {/* Column 1: Ghar Ka Khaana */}
-                        <div className="bg-[#1B3B26]/5 rounded-[1.5rem] sm:rounded-[3rem] p-2 sm:p-10 flex flex-col items-center border border-[#1B3B26]/10">
-                            <h3 className="text-[#1B3B26] font-bold uppercase tracking-widest text-[7px] sm:text-xs mb-6 sm:mb-8 text-center px-1">Regular Snacks</h3>
-                            <div className="space-y-6 sm:space-y-12 w-full text-center">
+                        <div className="bg-white/60 rounded-2xl sm:rounded-[3rem] p-2 flex flex-col items-center border border-[#1B3B26]/10">
+                            <h3 className="text-[#1B3B26] font-bold uppercase tracking-widest text-[8px] sm:text-xs mb-6 sm:mb-8 text-center leading-tight">Ghar Ka Khaana</h3>
+                            <div className="space-y-4 sm:space-y-12 w-full text-center">
                                 {comparisonData.map((row, idx) => (
-                                    <div key={idx} className="space-y-2 sm:space-y-4">
-                                        <div className="bg-white/80 rounded-xl py-1 px-1 shadow-sm text-[6px] sm:text-[10px] font-bold text-stone-400 uppercase tracking-widest leading-none">{row.feature}</div>
-                                        <div className="text-[10px] sm:text-xl font-[Fraunces] text-[#1B3B26]/60 leading-tight">{row.traditional}</div>
+                                    <div key={idx} className="space-y-1.5 sm:space-y-4 flex flex-col items-center">
+                                        <div className="bg-stone-100 rounded-[0.4rem] py-1 px-1.5 shadow-sm text-[6.5px] font-bold text-stone-500 uppercase tracking-widest leading-tight mx-auto w-fit max-w-[95%]">{row.feature}</div>
+                                        <div className="text-[9.5px] sm:text-xl font-medium text-[#1B3B26] leading-snug px-0.5">{row.traditional}</div>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        {/* Column 2: Junk Food */}
-                        <div className="bg-[#F5B041]/5 rounded-[1.5rem] sm:rounded-[3rem] p-2 sm:p-10 flex flex-col items-center border border-[#F5B041]/10">
-                            <h3 className="text-[#F5B041] font-bold uppercase tracking-widest text-[7px] sm:text-xs mb-6 sm:mb-8 text-center px-1">Junk Food</h3>
-                            <div className="space-y-6 sm:space-y-12 w-full text-center">
+                        {/* Column 2: MIMI CRUNCH (The Winner) */}
+                        <div className="bg-[#1B3B26] rounded-2xl p-2 flex flex-col items-center shadow-xl shadow-[#1B3B26]/40 relative overflow-hidden scale-[1.03] sm:scale-105 z-10 border border-[#2A5237]">
+                            <h3 className="text-[#F5B041] font-[Fraunces] italic font-black uppercase text-[11px] mb-6 text-center drop-shadow-md w-full leading-tight">Mimi Crunch</h3>
+                            <div className="space-y-4 w-full text-center relative z-10">
                                 {comparisonData.map((row, idx) => (
-                                    <div key={idx} className="space-y-2 sm:space-y-4">
-                                        <div className="bg-white/80 rounded-xl py-1 px-1 shadow-sm text-[6px] sm:text-[10px] font-bold text-stone-400 uppercase tracking-widest leading-none">{row.feature}</div>
-                                        <div className="text-[10px] sm:text-xl font-[Fraunces] text-[#F5B041]/60 leading-tight">{row.others}</div>
+                                    <div key={idx} className="space-y-1.5 flex flex-col items-center">
+                                        <div className="bg-[#2A5237]/60 rounded-[0.4rem] py-1 px-1.5 text-[6.5px] font-bold text-white/60 uppercase tracking-widest leading-tight mx-auto w-fit max-w-[95%]">{row.feature}</div>
+                                        <div className="text-[10px] sm:text-2xl font-bold text-[#A3D95D] leading-snug drop-shadow-sm px-0.5">{row.mimi}</div>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        {/* Column 3: MIMI CRUNCH (The Winner) */}
-                        <div className="bg-[#1B3B26] rounded-[1.5rem] sm:rounded-[3rem] p-2 sm:p-10 flex flex-col items-center shadow-2xl shadow-[#1B3B26]/30 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-16 h-16 sm:w-32 sm:h-32 bg-[#F5B041] opacity-20 blur-[40px] sm:blur-[60px]"></div>
-                            <h3 className="text-white font-bold uppercase tracking-[0.1em] sm:tracking-[0.2em] text-[7px] sm:text-xs mb-6 sm:mb-8 z-10 flex items-center justify-center gap-1 sm:gap-2">
-                                <span className="flex h-1 w-1 sm:h-2 sm:w-2 rounded-full bg-[#F5B041]"></span>
-                                Mimi Crunch
-                            </h3>
-                            <div className="space-y-6 sm:space-y-12 w-full text-center relative z-10">
+                        {/* Column 3: Junk Food */}
+                        <div className="bg-white/60 rounded-2xl p-2 flex flex-col items-center border border-[#1B3B26]/10">
+                            <h3 className="text-[#1B3B26] font-bold uppercase tracking-widest text-[8px] sm:text-xs mb-6 sm:mb-8 text-center leading-tight">Junk Food</h3>
+                            <div className="space-y-4 w-full text-center">
                                 {comparisonData.map((row, idx) => (
-                                    <div key={idx} className="space-y-2 sm:space-y-4">
-                                        <div className="bg-[#2A5237] rounded-xl py-1 px-1 text-[6px] sm:text-[10px] font-bold text-white/40 uppercase tracking-widest leading-none">{row.feature}</div>
-                                        <div className="text-[11px] sm:text-2xl font-[Fraunces] text-[#F5B041] drop-shadow-sm leading-tight">{row.mimi}</div>
+                                    <div key={idx} className="space-y-1.5 flex flex-col items-center">
+                                        <div className="bg-stone-100 rounded-[0.4rem] py-1 px-1.5 shadow-sm text-[6.5px] font-bold text-stone-500 uppercase tracking-widest leading-tight mx-auto w-fit max-w-[95%]">{row.feature}</div>
+                                        <div className="text-[9.5px] font-medium text-[#1B3B26] leading-snug px-0.5">{row.others}</div>
                                     </div>
                                 ))}
                             </div>
@@ -107,12 +151,12 @@ const ComparisonSection = () => {
                     </div>
                 </div>
 
-                <div className="mt-16 text-center">
-                    <p className="text-sm text-[#4A5D4E] italic mb-8 opacity-60">*Based on detailed nutritional analysis of leading ready-to-eat brands.</p>
-                    <a href="/products/multi-millet-khichdi-mix" className="inline-flex items-center gap-4 bg-[#F5B041] text-white px-10 py-5 rounded-2xl text-sm font-bold uppercase tracking-[0.2em] shadow-xl hover:-translate-y-1 transition-all active:scale-95 shadow-orange-500/20">
-                        Try Multi-Millet Khichdi
+                <div className="mt-12 text-center">
+                    <p className="text-sm text-[#4A5D4E] italic mb-6 opacity-60">*Based on detailed nutritional analysis of leading ready-to-eat brands.</p>
+                    <a href="/products" className="inline-flex items-center gap-4 bg-[#F5B041] text-[#1B3B26] px-10 py-5 rounded-2xl text-sm font-black uppercase tracking-[0.2em] shadow-xl hover:-translate-y-1 transition-all active:scale-95 shadow-orange-500/20">
+                        Try Mimi Crunch
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                         </svg>
                     </a>
                 </div>

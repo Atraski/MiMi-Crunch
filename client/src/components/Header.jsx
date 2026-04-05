@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { useAuth } from '../context/AuthContext'
-import logo from '../assets/MiMi Crunch Logo.png'
 
+const logo = "/favicon.png"
 const API_BASE = import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'
 
 const Header = ({ cartCount, onCartToggle, products }) => {

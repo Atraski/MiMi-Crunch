@@ -381,7 +381,7 @@
 }
 
 .millet-bg {
-  background: url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1600&q=80') center / cover no-repeat;
+  background: url('https://res.cloudinary.com/daovxopcn/image/upload/v1775382071/Why_Millet_vlwjbk.jpg') center / cover no-repeat;
   inset: -15% 0;
   position: absolute;
   will-change: transform;

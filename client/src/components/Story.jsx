@@ -111,7 +111,7 @@ const Story = () => {
           <div className="story-image-group order-1 lg:order-2 relative max-w-md mx-auto lg:mr-0 lg:max-w-none">
             <div className="relative z-10 overflow-hidden rounded-[2.5rem] shadow-2xl">
               <img
-                src="/farmer.jpg"
+                src="https://res.cloudinary.com/daovxopcn/image/upload/v1775382070/Heart_and_Soul_ghzd51.jpg"
                 alt="Our Farmer Partner"
                 className="h-full w-full object-cover aspect-[4/4] xl:aspect-[4/4.5] transition-transform duration-700 hover:scale-105"
               />

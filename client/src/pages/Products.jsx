@@ -87,7 +87,7 @@ const Products = ({
         slug: collection.slug,
         raw: collection.slug,
         count: items.length,
-        image: collection.image || '',
+        image: collection.image || getCollectionImage(collection.title),
         desc:
           collection.description ||
           `Explore ${items.length} products in this collection.`,
@@ -110,6 +110,7 @@ const Products = ({
       slug: slugifyCollection(collection),
       raw: collection,
       count: items.length,
+      image: getCollectionImage(formatCollectionTitle(collection)),
       desc: `Explore ${items.length} products in this collection.`,
     }))
 
@@ -416,7 +417,7 @@ const CategoriesSection = ({ collections }) => (
           key={item.title}
           className="group backdrop-blur-xl bg-white/60 border border-white/50 shadow-[0_15px_40px_-15px_rgba(27,59,38,0.06)] rounded-[2rem] p-4 sm:p-6 transition-all hover:shadow-[0_24px_50px_-15px_rgba(27,59,38,0.12)] hover:-translate-y-1"
         >
-          <div className="mb-4 h-24 sm:h-36 w-full overflow-hidden rounded-[1.5rem] border border-stone-200/40 bg-[#EAE6DF]/40 relative">
+          <div className="mb-4 aspect-square w-full overflow-hidden rounded-[1.5rem] border border-stone-200/40 bg-[#EAE6DF]/40 relative">
             {item.image ? (
               <img
                 src={getOptimizedImage(item.image)}
@@ -563,6 +564,13 @@ function getDisplayTitle(title) {
   if (t === 'millet grain') return 'Grains';
   if (t === 'millet flour') return 'Flour';
   return title;
+}
+
+function getCollectionImage(title) {
+  const t = title?.toLowerCase().trim();
+  if (t === 'millet grain' || t === 'grains' || t === 'grain') return 'https://res.cloudinary.com/daovxopcn/image/upload/v1775298126/Grain_Collection_ssawm8.png';
+  if (t === 'millet flour' || t === 'flours' || t === 'flour') return 'https://res.cloudinary.com/daovxopcn/image/upload/v1775298120/Flour_Collection_ghb9qg.png';
+  return null;
 }
 
 function stripHtml(html) {

@@ -11,28 +11,28 @@ const heroHeadline = 'Reimagining Healthy Snacking with Mimi Crunch.'
 
 const journeyMilestones = [
   {
-    year: '2021',
+    year: 'Oct 2025',
     title: 'Kitchen Prototype',
     blurb:
       'A small home-kitchen experiment to make millet snacks cleaner and lighter for daily routines.',
     visual: 'Recipe Trials',
   },
   {
-    year: '2022',
+    year: 'Nov 2025',
     title: 'Farmer Network',
     blurb:
       'Direct sourcing partnerships started with millet growers to ensure freshness and fair procurement.',
     visual: 'Field Sourcing',
   },
   {
-    year: '2024',
+    year: 'Jan 2026',
     title: 'Mimi Crunch Launch',
     blurb:
       'We launched modern millet snacking blends focused on clean ingredients and trusted nutrition.',
     visual: 'Brand Debut',
   },
   {
-    year: '2025',
+    year: 'Mar 2026',
     title: 'Community Growth',
     blurb:
       'Families and fitness-first consumers adopted Mimi Crunch as a reliable everyday snack upgrade.',
@@ -45,19 +45,19 @@ const missionCards = [
     title: 'Clean Ingredients',
     icon: 'CI',
     text: 'No unnecessary fillers. Just millet-forward recipes with transparent, carefully selected inputs.',
-    img: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80',
+    img: 'https://res.cloudinary.com/daovxopcn/image/upload/v1775297827/Clean_Ingredients_jkflae.jpg',
   },
   {
     title: 'Farmer First',
     icon: 'FF',
     text: 'We build direct relationships with growers to support local agriculture and premium grain quality.',
-    img: 'https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=600&q=80',
+    img: 'https://res.cloudinary.com/daovxopcn/image/upload/v1775297829/FarmerFast_irovkj.jpg',
   },
   {
     title: 'Fit Lifestyle',
     icon: 'FL',
     text: 'Designed for modern schedules, our snacks deliver nourishment that aligns with active living.',
-    img: 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?auto=format&fit=crop&w=600&q=80',
+    img: 'https://res.cloudinary.com/daovxopcn/image/upload/v1775297829/Fit_Flifestyle_jtqvdd.jpg',
   },
 ]
 
@@ -299,7 +299,7 @@ const About = ({ recipes = [] }) => {
         <div className="hero-visual-frame" ref={heroImageRef}>
           <div className="hero-visual-glow" />
           <img
-            src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1100&q=80"
+            src="https://res.cloudinary.com/daovxopcn/image/upload/v1775386424/Healthy_Snacking_i54rqx.png"
             alt="Premium healthy millet bowl"
             className="hero-bowl-image"
             loading="lazy"
