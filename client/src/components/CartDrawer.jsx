@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getProductSlugFromCartItem } from '../utils/cartUtils'
 import { getOptimizedImage } from '../utils/imageUtils'
+import ShiprocketCheckoutButton from './ShiprocketCheckoutButton'
 import { getProductColor, getContrastColor } from '../utils/productColors'
 
 const FREE_DELIVERY_MIN = 499
@@ -292,43 +293,6 @@ const CartDrawer = ({
                 </div>
               ) : null}
 
-              {/* Free Delivery Goal */}
-              <div className="mx-6 mb-6 rounded-2xl bg-white p-5 border border-stone-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
-                <div className="flex items-center justify-between">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-800">
-                    {freeDeliveryUnlocked ? 'Shipping Unlocked' : 'Shipping goal'}
-                  </p>
-                  <p className="text-[10px] font-bold text-stone-400">
-                    Free Shipping: ₹{FREE_DELIVERY_MIN}
-                  </p>
-                </div>
-
-                <div className="relative mt-3 h-2.5 overflow-hidden rounded-full bg-stone-50">
-                  <div
-                    className={`h-full transition-all duration-700 ease-out rounded-full ${freeDeliveryUnlocked ? 'bg-gradient-to-r from-emerald-500 to-emerald-400' : 'bg-gradient-to-r from-stone-300 to-stone-200'}`}
-                    style={{ width: `${progressPercent}%` }}
-                  />
-                </div>
-
-                <div className="mt-3 flex items-center justify-between">
-                  {freeDeliveryUnlocked ? (
-                    <div className="flex items-center gap-2 text-xs font-bold text-emerald-700">
-                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100">
-                        <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      </span>
-                      You've got Free Delivery!
-                    </div>
-                  ) : (
-                    <p className="text-xs font-medium text-stone-600">
-                      Add <span className="font-bold text-stone-900">₹{moreForFreeDelivery}</span> more for free shipping
-                    </p>
-                  )}
-                  <p className="text-[10px] font-black uppercase text-stone-300">Fast Shipping</p>
-                </div>
-              </div>
-
               {/* Rewards Teaser */}
               {availableCoupons.length > 0 && !appliedCoupon && (
                 <button
@@ -479,7 +443,7 @@ const CartDrawer = ({
                   <div className="mt-4 px-4 py-2 text-[10px] font-bold text-stone-400 animate-pulse tracking-widest uppercase">Fetching best offers...</div>
                 ) : availableCoupons.length > 0 ? (
                   <div className="mt-6 space-y-3">
-                    {availableCoupons.map((coupon) => {
+                    {availableCoupons.filter(c => c.code !== 'FREESHIP').map((coupon) => {
                       const minOrder = coupon.minOrder || 0
                       const isApplicable = sub >= minOrder
                       const isApplied = appliedCoupon?.code === coupon.code
@@ -640,6 +604,16 @@ const CartDrawer = ({
             </div>
 
             <ProceedButton onClose={onClose} />
+            <div className="mt-3">
+              <ShiprocketCheckoutButton
+                cart={cart}
+                products={products}
+                apiBase={apiBase}
+                fallbackUrl="/products"
+              >
+                Shiprocket Checkout
+              </ShiprocketCheckoutButton>
+            </div>
           </div>
         )}
       </aside>

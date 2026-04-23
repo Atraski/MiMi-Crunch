@@ -1,4 +1,5 @@
 import Collection from '../models/Collection.js'
+import { notifyShiprocketCollection } from '../utils/shiprocketCatalogNotify.js'
 
 const slugify = (value = '') =>
   value
@@ -22,6 +23,11 @@ const createCollection = async (req, res) => {
       image,
       productSlugs: Array.isArray(productSlugs) ? productSlugs : [],
     })
+    notifyShiprocketCollection(
+      typeof collection.toObject === 'function' ? collection.toObject() : collection,
+    ).catch((e) =>
+      console.error('[Shiprocket Checkout] collection notify:', e?.message || e),
+    )
     return res.status(201).json(collection)
   } catch (err) {
     console.error('Collection create error:', err)
@@ -87,6 +93,9 @@ const updateCollection = async (req, res) => {
     if (!collection) {
       return res.status(404).json({ error: 'Collection not found.' })
     }
+    notifyShiprocketCollection(collection).catch((e) =>
+      console.error('[Shiprocket Checkout] collection notify:', e?.message || e),
+    )
     return res.json(collection)
   } catch (err) {
     console.error('Collection update error:', err)

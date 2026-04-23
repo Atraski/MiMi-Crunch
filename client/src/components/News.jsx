@@ -38,37 +38,37 @@ const News = ({ news }) => {
   if (items.length === 0) return null;
 
   return (
-    <section ref={sectionRef} className="py-20 overflow-hidden bg-brand-bg relative">
+    <section ref={sectionRef} className="py-20 overflow-hidden bg-brand-orinoco relative">
       <div className="mx-auto max-w-7xl px-6">
 
         {/* Header Section */}
         <div className="news-header-reveal mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-4 text-center md:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-green/5 rounded-full border border-brand-green/10">
-              <span className="w-1.5 h-1.5 bg-brand-green rounded-full animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-brand-green">Mimi Chronicles</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-brand-orange/10 rounded-full border border-brand-orange/20">
+              <span className="w-1.5 h-1.5 bg-brand-orange rounded-full animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-brand-orange">Mimi Chronicles</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-black text-brand-text leading-[0.9] tracking-tighter">
+            <h2 className="text-4xl md:text-6xl font-black text-brand-brown leading-[0.9] tracking-tighter">
               Health &
-              <span className="text-brand-green italic font-serif font-light"> Heritage.</span>
+              <span className="text-brand-verdun italic font-serif font-light"> Heritage.</span>
             </h2>
           </div>
 
           <div className="flex items-center justify-center md:justify-end gap-3 pb-2">
             <button
               onClick={() => swiperRef.current?.slidePrev()}
-              className="w-12 h-12 rounded-full border border-stone-200 flex items-center justify-center text-brand-text hover:bg-brand-green hover:text-white transition-all active:scale-90"
+              className="w-12 h-12 rounded-full border border-brand-orange/20 flex items-center justify-center text-brand-orange hover:bg-brand-orange hover:border-brand-orange hover:text-white transition-all active:scale-90 bg-brand-orinoco/10 backdrop-blur-sm"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
             <button
               onClick={() => swiperRef.current?.slideNext()}
-              className="w-12 h-12 rounded-full border border-stone-200 flex items-center justify-center text-brand-text hover:bg-brand-green hover:text-white transition-all active:scale-90"
+              className="w-12 h-12 rounded-full border border-brand-orange/20 flex items-center justify-center text-brand-orange hover:bg-brand-orange hover:border-brand-orange hover:text-white transition-all active:scale-90 bg-brand-orinoco/10 backdrop-blur-sm"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
               </svg>
             </button>
           </div>
@@ -93,10 +93,10 @@ const News = ({ news }) => {
             {items.map((item, idx) => (
               <SwiperSlide key={idx}>
                 <article
-                  className="group flex flex-col h-[500px] bg-white border border-stone-100 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-brand-green/5"
+                  className="group flex flex-col h-[500px] bg-white border border-brand-orinoco/20 rounded-[2.5rem] overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-brand-brown/5 hover:-translate-y-1"
                 >
                   {/* Image Container */}
-                  <div className="aspect-video w-full shrink-0 relative overflow-hidden bg-stone-50">
+                  <div className="aspect-video w-full shrink-0 relative overflow-hidden bg-brand-orinoco/10">
                     {item.coverImage ? (
                       <img
                         src={item.coverImage}
@@ -105,26 +105,26 @@ const News = ({ news }) => {
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-brand-green/5">
-                        <span className="text-3xl font-black text-brand-green/20">Mimi</span>
+                      <div className="w-full h-full flex items-center justify-center bg-brand-orinoco/20">
+                        <span className="text-3xl font-black text-brand-brown/10">Mimi</span>
                       </div>
                     )}
 
                     {item.date && (
-                      <div className="absolute bottom-3 right-5 z-20 px-3 py-1.5 bg-white/95 backdrop-blur-md rounded-xl shadow-sm">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-brand-green">{item.date}</span>
+                      <div className="absolute bottom-3 right-5 z-20 px-3 py-1.5 bg-white/95 backdrop-blur-sm rounded-xl shadow-sm border border-brand-orinoco/20">
+                        <span className="text-[9px] font-black uppercase tracking-widest text-brand-orange">{item.date}</span>
                       </div>
                     )}
                   </div>
 
                   {/* Content Container */}
                   <div className="flex flex-col flex-1 p-7 md:p-8">
-                    <h3 className="text-xl md:text-2xl font-black text-brand-text leading-tight line-clamp-2 group-hover:text-brand-green transition-colors mb-3">
+                    <h3 className="text-xl md:text-2xl font-black text-brand-brown leading-tight line-clamp-2 group-hover:text-brand-orange transition-colors mb-3">
                       {item.title || "Untitled Story"}
                     </h3>
 
                     {item.excerpt && (
-                      <p className="line-clamp-2 text-sm md:text-base text-brand-secondary/60 leading-relaxed font-medium">
+                      <p className="line-clamp-2 text-sm md:text-base text-brand-brown/60 leading-relaxed font-medium">
                         {item.excerpt}
                       </p>
                     )}
@@ -135,15 +135,15 @@ const News = ({ news }) => {
                           to={`/blogs/${item.slug}`}
                           className="inline-flex items-center gap-2 group/btn"
                         >
-                          <span className="text-[10px] font-black uppercase tracking-widest text-brand-text group-hover/btn:text-brand-green transition-colors">Read Full Story</span>
-                          <div className="w-8 h-8 rounded-full bg-stone-50 flex items-center justify-center transition-all group-hover/btn:bg-brand-green group-hover/btn:text-white">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-brand-brown group-hover/btn:text-brand-orange transition-colors">Read Full Story</span>
+                          <div className="w-8 h-8 rounded-full bg-brand-orange/10 flex items-center justify-center transition-all duration-300 group-hover/btn:bg-brand-orange text-brand-orange group-hover/btn:text-white">
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                             </svg>
                           </div>
                         </Link>
                       ) : (
-                        <span className="text-[10px] font-black uppercase tracking-widest text-stone-300 italic">Coming Soon</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-brand-brown/30 italic">Coming Soon</span>
                       )}
                     </div>
                   </div>
@@ -162,14 +162,14 @@ const News = ({ news }) => {
         .news-pagination .swiper-pagination-bullet {
             width: 6px;
             height: 6px;
-            background: #e2e8f0;
+            background: rgba(236, 100, 38, 0.2); /* Brand Orange */
             opacity: 1;
             transition: all 0.3s ease;
             border-radius: 4px;
         }
         .news-pagination .swiper-pagination-bullet-active {
             width: 20px;
-            background: #2E7D32;
+            background: #EC6426; /* Brand Orange */
         }
       `}} />
     </section>

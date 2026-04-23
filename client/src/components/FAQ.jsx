@@ -23,7 +23,7 @@ const faqs = [
     },
     {
         question: "What is your shipping and return policy?",
-        answer: "We offer pan-India shipping with free delivery on orders above ₹499. If you receive a damaged product, our hassle-free return policy ensures you get a replacement or refund within 7 days of delivery."
+        answer: "We offer <b>Free Pan-India shipping</b> on all orders! If you receive a damaged product, our hassle-free return policy ensures you get a replacement or refund within 7 days of delivery."
     }
 ]
 
@@ -76,16 +76,16 @@ const FAQ = () => {
     }, [])
 
     return (
-        <section ref={sectionRef} className="bg-stone-50/30 py-16 lg:py-24 border-t border-stone-100 overflow-hidden">
+        <section ref={sectionRef} className="bg-brand-verdun py-16 lg:py-24 overflow-hidden mb-0">
             <div className="mx-auto max-w-4xl px-4 lg:px-8">
                 <div className="faq-title-reveal text-center mb-12">
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full mb-3 inline-block border border-emerald-100">
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-orange bg-brand-orange/10 px-3 py-1.5 rounded-full mb-3 inline-block border border-brand-orange/20">
                         Got Questions?
                     </span>
-                    <h2 className="text-3xl lg:text-5xl font-black text-stone-900 leading-tight">
-                        Frequently Asked <span className="text-emerald-700">Questions</span>
+                    <h2 className="text-3xl lg:text-5xl font-black text-brand-eggshell leading-tight">
+                        Frequently Asked <span className="text-brand-orange">Questions</span>
                     </h2>
-                    <p className="mt-4 text-stone-500 text-base lg:text-lg">
+                    <p className="mt-4 text-brand-eggshell/70 text-base lg:text-lg font-medium">
                         Everything you need to know about our products and mission.
                     </p>
                 </div>
@@ -95,25 +95,25 @@ const FAQ = () => {
                         <div
                             key={index}
                             className={`faq-card-anim border rounded-2xl transition-all duration-300 ${openIndex === index
-                                ? "border-emerald-200 bg-white shadow-sm"
-                                : "border-stone-100 bg-white/50 hover:bg-white"
+                                ? "border-brand-orange/40 bg-brand-brown shadow-lg"
+                                : "border-brand-eggshell/10 bg-brand-brown/50 hover:bg-brand-brown hover:border-brand-orange/30"
                                 }`}
                         >
                             <button
                                 onClick={() => setOpenIndex(openIndex === index ? -1 : index)}
-                                className="w-full text-left px-6 py-5 flex items-center justify-between gap-4"
+                                className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 border-none outline-none"
                             >
                                 <div
-                                    className={`text-base lg:text-lg font-bold transition-colors prose prose-stone max-w-none prose-p:my-0 ${openIndex === index ? "text-emerald-900" : "text-stone-800"
+                                    className={`text-base lg:text-lg font-black transition-colors max-w-none ${openIndex === index ? "text-brand-orange" : "text-brand-eggshell"
                                         }`}
                                     dangerouslySetInnerHTML={{ __html: faq.question }}
                                 />
-                                <div className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center border transition-all duration-300 ${openIndex === index
-                                    ? "bg-emerald-600 border-emerald-600 text-white rotate-180"
-                                    : "bg-white border-stone-200 text-stone-400"
+                                <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center border transition-all duration-300 ${openIndex === index
+                                    ? "bg-brand-orange border-brand-orange text-brand-brown rotate-180 shadow-md shadow-brand-orange/20"
+                                    : "bg-transparent border-brand-eggshell/20 text-brand-eggshell hover:bg-brand-eggshell/10"
                                     }`}>
                                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
                                     </svg>
                                 </div>
                             </button>
@@ -123,9 +123,9 @@ const FAQ = () => {
                                     }`}
                             >
                                 <div className="px-6 pb-6 pt-0">
-                                    <div className="h-px w-full bg-emerald-100 mb-4 opacity-30" />
+                                    <div className="h-px w-full bg-brand-orange/20 mb-4 opacity-50" />
                                     <div
-                                        className="text-stone-600 text-sm lg:text-base leading-relaxed prose prose-stone max-w-none prose-p:my-0 prose-strong:text-emerald-700"
+                                        className="text-brand-eggshell/70 text-sm lg:text-base leading-relaxed max-w-none font-medium"
                                         dangerouslySetInnerHTML={{ __html: faq.answer }}
                                     />
                                 </div>
@@ -135,8 +135,8 @@ const FAQ = () => {
                 </div>
 
                 <div className="mt-12 text-center">
-                    <p className="text-stone-400 text-sm">
-                        Still have questions? <a href="/contact" className="text-emerald-700 font-bold hover:underline">Contact support team</a>
+                    <p className="text-brand-eggshell/50 text-sm">
+                        Still have questions? <a href="/contact" className="text-brand-orange font-black hover:underline decoration-brand-orange/50 underline-offset-4">Contact support team</a>
                     </p>
                 </div>
             </div>

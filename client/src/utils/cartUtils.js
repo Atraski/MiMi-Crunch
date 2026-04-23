@@ -60,3 +60,18 @@ export function wouldExceedWeightLimit(cart, productSlug, variantWeightStr, addQ
   const addKg = parseWeightToKg(variantWeightStr) * addQty
   return current + addKg > MAX_WEIGHT_PER_PRODUCT_KG
 }
+
+/**
+ * Total shipment weight for Shiprocket quotes (matches server fallback per unit when variant weight missing).
+ * @param {array} cart
+ * @param {number} fallbackUnitKg — same idea as SHIPROCKET_DEFAULT_ITEM_WEIGHT_KG on server (default 0.25)
+ */
+export function getCartTotalShippingWeightKg(cart, fallbackUnitKg = 0.25) {
+  if (!Array.isArray(cart) || cart.length === 0) return Math.max(fallbackUnitKg, 0.1)
+  const sum = cart.reduce((acc, item) => {
+    const w = parseWeightToKg(item.size || item.weight || '')
+    const unitKg = w > 0 ? w : fallbackUnitKg
+    return acc + (Number(item.qty) || 0) * unitKg
+  }, 0)
+  return Math.max(sum || fallbackUnitKg, 0.1)
+}

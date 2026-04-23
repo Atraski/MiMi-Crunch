@@ -1,12 +1,14 @@
 import React from 'react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import BackButton from '../components/BackButton';
+import { trackMetaEvent } from '../utils/metaPixel'
 
 const OrderSuccess = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const orderId = location.state?.orderId || queryParams.get('order_id');
+  const totalAmount = Number(location.state?.totalAmount || queryParams.get('amount') || 0)
   const fromRedirect = !!queryParams.get('order_id');
   const shouldVerify = location.state?.verify || fromRedirect || false;
   
@@ -41,6 +43,19 @@ const OrderSuccess = () => {
       verify();
     }
   }, [shouldVerify, orderId]);
+
+  React.useEffect(() => {
+    if (!orderId || verifying || error) return
+    const purchaseKey = `meta_purchase_${orderId}`
+    if (sessionStorage.getItem(purchaseKey)) return
+    trackMetaEvent('Purchase', {
+      content_type: 'product',
+      content_ids: [String(orderId)],
+      value: totalAmount,
+      currency: 'INR',
+    })
+    sessionStorage.setItem(purchaseKey, '1')
+  }, [orderId, verifying, error, totalAmount])
 
   // Agar koi bina order ke is page par aaye toh use home bhej do
   if (!orderId && !location.state) {

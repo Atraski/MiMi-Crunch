@@ -6,15 +6,18 @@ const orderSchema = new mongoose.Schema({
     productId: String,
     name: String,
     qty: Number,
-    price: Number
+    price: Number,
+    weight: { type: String, default: '' },
   }],
   shippingAddress: {
     fullName: String,
     phone: String,
+    email: { type: String, default: '' },
     addressLine1: String,
     city: String,
     pincode: String
   },
+  shiprocketCheckoutOrderId: { type: String, sparse: true, unique: true },
   subtotal: { type: Number, default: 0 },
   discountAmount: { type: Number, default: 0 },
   deliveryFee: { type: Number, default: 0 },

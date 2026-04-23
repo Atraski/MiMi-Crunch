@@ -39,24 +39,24 @@ const Story = () => {
   }, [])
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-brand-50/30 py-10 lg:min-h-[85vh] lg:py-0 flex items-center">
+    <section ref={sectionRef} className="relative overflow-hidden bg-brand-orinoco py-10 lg:min-h-[85vh] lg:py-0 flex items-center">
       {/* Decorative Background Elements */}
-      <div className="bg-blob absolute top-0 right-0 -z-10 h-[500px] w-[500px] rounded-full bg-emerald-50/50 blur-3xl lg:opacity-70" />
-      <div className="bg-blob absolute bottom-0 left-0 -z-10 h-[400px] w-[400px] rounded-full bg-amber-50/50 blur-3xl lg:opacity-70" />
+      <div className="bg-blob absolute top-0 right-0 -z-10 h-[500px] w-[500px] rounded-full bg-brand-verdun/5 blur-3xl lg:opacity-70" />
+      <div className="bg-blob absolute bottom-0 left-0 -z-10 h-[400px] w-[400px] rounded-full bg-brand-orinoco/20 blur-3xl lg:opacity-70" />
 
       <div className="mx-auto max-w-7xl px-4 lg:px-8 w-full">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
 
           {/* Content Side */}
           <div className="order-2 lg:order-1 lg:pr-10">
-            <span className="story-badge mb-3 inline-block rounded-full bg-emerald-100 px-4 py-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-800">
+            <span className="story-badge mb-3 inline-block rounded-full bg-brand-orange/10 px-4 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-brand-orange">
               Our Heart & Soul
             </span>
-            <h2 className="story-title text-4xl font-extrabold leading-tight text-stone-900 sm:text-5xl lg:text-5xl xl:text-6xl">
+            <h2 className="story-title text-4xl font-extrabold leading-tight text-brand-brown sm:text-5xl lg:text-5xl xl:text-6xl">
               Rooted in Nature, <br />
-              <span className="text-emerald-700">Crafted with Care.</span>
+              <span className="text-brand-verdun">Crafted with Care.</span>
             </h2>
-            <div className="story-text mt-6 space-y-4 text-base text-stone-600 leading-relaxed max-w-lg">
+            <div className="story-text mt-6 space-y-4 text-base text-brand-brown/70 leading-relaxed max-w-lg font-medium">
               <p>
                 At Mimi Crunch, we believe the best food comes straight from the soil.
                 Born from a passion for forgotten ancient grains, we bridge the gap
@@ -71,33 +71,33 @@ const Story = () => {
             {/* Feature Highlights */}
             <div className="story-features mt-8 grid grid-cols-2 gap-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm border border-stone-100">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm border border-brand-orinoco/30">
                   <span className="text-xl">🚜</span>
                 </div>
                 <div>
-                  <h4 className="font-bold text-stone-900 text-sm">Direct Sourcing</h4>
-                  <p className="text-[11px] text-stone-500">Farm to your table.</p>
+                  <h4 className="font-bold text-brand-brown text-sm">Direct Sourcing</h4>
+                  <p className="text-[11px] text-brand-brown/60">Farm to your table.</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm border border-stone-100">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm border border-brand-orinoco/30">
                   <span className="text-xl">🌱</span>
                 </div>
                 <div>
-                  <h4 className="font-bold text-stone-900 text-sm">100% Natural</h4>
-                  <p className="text-[11px] text-stone-500">No hidden chemicals.</p>
+                  <h4 className="font-bold text-brand-brown text-sm">100% Natural</h4>
+                  <p className="text-[11px] text-brand-brown/60">No hidden chemicals.</p>
                 </div>
               </div>
             </div>
 
             <div className="mt-10 flex flex-wrap items-center gap-6">
-              <Link to="/about" className="story-btn btn btn-primary hidden lg:inline-flex bg-stone-900 text-white hover:bg-stone-800 px-8 py-3 rounded-xl shadow-lg transition-all hover:-translate-y-1 font-bold text-sm">
+              <Link to="/about" className="story-btn btn btn-primary hidden lg:inline-flex px-8 py-3 rounded-xl shadow-lg transition-all hover:-translate-y-1 font-bold text-sm">
                 Read Our Story
               </Link>
-              <div className="flex items-center gap-3 text-sm font-medium text-stone-500">
+              <div className="flex items-center gap-3 text-sm font-medium text-brand-brown/60">
                 <div className="flex -space-x-2">
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="h-8 w-8 rounded-full border-2 border-white bg-stone-200 overflow-hidden">
+                    <div key={i} className="h-8 w-8 rounded-full border-2 border-brand-eggshell bg-brand-orinoco/20 overflow-hidden">
                       <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" />
                     </div>
                   ))}
@@ -109,24 +109,24 @@ const Story = () => {
 
           {/* Image Side */}
           <div className="story-image-group order-1 lg:order-2 relative max-w-md mx-auto lg:mr-0 lg:max-w-none">
-            <div className="relative z-10 overflow-hidden rounded-[2.5rem] shadow-2xl">
+            <div className="relative z-10 overflow-hidden rounded-[2.5rem] shadow-2xl shadow-brand-brown/10">
               <img
                 src="https://res.cloudinary.com/daovxopcn/image/upload/v1775382070/Heart_and_Soul_ghzd51.jpg"
                 alt="Our Farmer Partner"
                 className="h-full w-full object-cover aspect-[4/4] xl:aspect-[4/4.5] transition-transform duration-700 hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-stone-900/40 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
               {/* Floating Stat Card - Compact Version */}
-              <div className="absolute bottom-6 left-6 right-6 rounded-2xl bg-white/95 backdrop-blur-md p-4 shadow-xl border border-white/40">
+              <div className="absolute bottom-6 left-6 right-6 rounded-2xl bg-brand-eggshell/95 backdrop-blur-md p-4 shadow-xl border border-brand-orinoco/20">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-700">Since 2021</p>
-                    <p className="text-lg font-extrabold text-stone-900">500+ Farmers empowered</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-brand-orange">Since 2025</p>
+                    <p className="text-lg font-extrabold text-brand-brown">500+ Farmers empowered</p>
                   </div>
-                  <div className="h-10 w-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700">
+                  <div className="h-10 w-10 rounded-full bg-brand-orange/10 flex items-center justify-center text-brand-orange">
                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
                 </div>
@@ -134,17 +134,17 @@ const Story = () => {
             </div>
 
             {/* Decorative background element behind image */}
-            <div className="absolute -bottom-8 -right-8 -z-10 h-48 w-48 rounded-full border-[1rem] border-emerald-50 opacity-20" />
-            <div className="absolute -top-6 -left-6 -z-10 h-16 w-16 rounded-2xl bg-amber-100 rotate-12" />
+            <div className="absolute -bottom-8 -right-8 -z-10 h-48 w-48 rounded-full border-[1.5rem] border-brand-orange/5 opacity-50" />
+            <div className="absolute -top-6 -left-6 -z-10 h-16 w-16 rounded-2xl bg-brand-yellow rotate-12 shadow-inner" />
           </div>
 
         </div>
 
         {/* Mobile Only About Button */}
         <div className="mt-10 lg:hidden flex justify-center w-full relative z-20">
-          <Link to="/about" className="w-full sm:w-80 flex items-center justify-center gap-3 bg-[#1B3B26] text-[#F5B041] py-4 rounded-xl shadow-[0_10px_30px_-10px_rgba(27,59,38,0.5)] font-bold uppercase tracking-[0.2em] text-[11px] active:scale-95 transition-transform">
+          <Link to="/about" className="w-full sm:w-80 flex items-center justify-center gap-3 bg-brand-orange text-white py-4 rounded-xl shadow-[0_10px_30px_-10px_rgba(236,100,38,0.5)] font-bold uppercase tracking-[0.2em] text-[11px] active:scale-95 transition-transform">
             Read Our Story
-            <svg className="w-4 h-4 text-[#F5B041]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </Link>

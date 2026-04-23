@@ -5,7 +5,6 @@ import { Autoplay, EffectCoverflow, Navigation, Controller } from 'swiper/module
 import 'swiper/css'
 import 'swiper/css/effect-coverflow'
 import 'swiper/css/navigation'
-import { getProductColor, getContrastColor } from '../utils/productColors'
 import gsap from 'gsap'
 
 const Hero = ({ products = [] }) => {
@@ -100,7 +99,7 @@ const Hero = ({ products = [] }) => {
   };
 
   return (
-    <section className="relative w-full bg-brand-bg md:overflow-hidden h-auto min-h-[calc(100vh-70px)] md:h-[calc(100vh-70px)] flex flex-col md:flex-row m-0 p-0 shadow-none border-none">
+    <section className="relative w-full bg-brand-verdun md:overflow-hidden h-auto min-h-[calc(100vh-70px)] md:h-[calc(100vh-70px)] flex flex-col md:flex-row m-0 mb-0 p-0 shadow-none border-none">
 
       {/* GLOBAL BACKGROUND SLIDER LAYER (FARM IMAGES) */}
       <div className="absolute inset-0 z-0 pointer-events-none">
@@ -118,9 +117,9 @@ const Hero = ({ products = [] }) => {
               <img
                 src={product.bgImage}
                 alt=""
-                className="w-full h-full object-cover opacity-50 transition-all duration-1000 scale-[1.02]"
+                className="w-full h-full object-cover opacity-30 transition-all duration-1000 scale-[1.02]"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-brand-bg via-brand-bg/90 to-transparent md:to-brand-bg/30" />
+              <div className="absolute inset-0 bg-gradient-to-r from-brand-verdun via-brand-verdun/80 to-transparent md:to-brand-verdun/20" />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -136,7 +135,7 @@ const Hero = ({ products = [] }) => {
           <div className="relative space-y-4 md:space-y-6 max-w-xl">
             {/* Elegant Vertical Anchor Line */}
             <div className="absolute -left-8 md:-left-12 top-0 bottom-0 w-[1px] bg-stone-200/50 hidden md:block">
-              <div className="hero-line-anchor absolute top-0 left-0 w-full bg-brand-green h-full origin-top" />
+              <div className="hero-line-anchor absolute top-0 left-0 w-full bg-brand-verdun h-full origin-top" />
             </div>
 
             {/* <div className="hero-brand-logo flex items-center gap-4">
@@ -154,24 +153,24 @@ const Hero = ({ products = [] }) => {
 
             <div className="space-y-4 md:space-y-8">
               <div className="space-y-2 md:space-y-4">
-                <div className="hero-motto inline-flex items-center gap-2 px-3 py-1 bg-brand-green/5 rounded-full border border-brand-green/10">
-                  <span className="w-1.5 h-1.5 bg-brand-green rounded-full animate-pulse" />
-                  <span className="text-[9px] font-black uppercase tracking-widest text-brand-green">100% Millet-Based • Zero Maida • Guilt-Free</span>
+                <div className="hero-motto inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full border border-white/20">
+                  <span className="w-1.5 h-1.5 bg-brand-yellow rounded-full animate-pulse" />
+                  <span className="text-[9px] font-black uppercase tracking-widest text-brand-beige">100% Millet-Based • Zero Maida • Guilt-Free</span>
                 </div>
-                <h2 className="hero-motto text-5xl md:text-6xl lg:text-7xl font-black text-brand-text leading-[0.95] tracking-tighter">
+                <h2 className="hero-motto text-5xl md:text-6xl lg:text-7xl font-black text-brand-eggshell leading-[0.95] tracking-tighter">
                   Smart Snacking, <br />
-                  <span className="hero-motto inline-block transform -translate-x-1 decoration-brand-yellow/40 underline-offset-4 italic font-serif font-light text-brand-green">Super Foods.</span>
+                  <span className="hero-motto inline-block transform -translate-x-1 decoration-brand-yellow/40 underline-offset-4 italic font-serif font-light text-brand-yellow">Super Foods.</span>
                 </h2>
               </div>
 
-              <p className="hero-motto text-lg md:text-2xl text-brand-secondary/80 leading-relaxed font-medium max-w-md">
+              <p className="hero-motto text-lg md:text-2xl text-brand-orinoco leading-relaxed font-medium max-w-md">
                 Discover the perfect blend of ancient Indian millets and modern flavors. Tasty, crunchy, and packed with real nutrition.
               </p>
 
               <div className="hero-motto pt-2 md:pt-4 flex flex-col md:flex-row items-start md:items-center gap-6">
                 <Link
                   to="/products"
-                  className="btn-primary btn px-8 py-4 md:px-10 md:py-5 uppercase tracking-[0.25em] text-[10px] md:text-[11px] font-extrabold group haptic-feedback shadow-2xl shadow-brand-green/20 rounded-[1.5rem]"
+                  className="btn-primary btn px-8 py-4 md:px-10 md:py-5 uppercase tracking-[0.25em] text-[10px] md:text-[11px] font-extrabold text-brand-eggshell group haptic-feedback shadow-2xl shadow-black/20 rounded-[1.5rem] border-2 border-brand-orange/40"
                 >
                   Shop Collection
                   <svg className="w-5 h-5 ml-3 transition-transform group-hover:translate-x-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -191,8 +190,8 @@ const Hero = ({ products = [] }) => {
               </div>
             </div>
 
-            <div className="hero-motto mt-4 md:mt-6 border-t border-stone-200/50 pt-3 md:pt-4 max-w-sm">
-              <p className="italic text-brand-secondary/60 font-serif text-sm md:text-base leading-relaxed">
+            <div className="hero-motto mt-4 md:mt-6 border-t border-white/10 pt-3 md:pt-4 max-w-sm">
+              <p className="italic text-brand-beige/60 font-serif text-sm md:text-base leading-relaxed">
                 "Healthy habits start with <br />
                 the right crunch."
               </p>
@@ -227,8 +226,6 @@ const Hero = ({ products = [] }) => {
             className="h-full w-full py-8 md:py-16 relative z-10"
           >
             {slides.map((product, idx) => {
-              const brandColor = getProductColor(product.slug, product.name);
-
               return (
                 <SwiperSlide key={idx} className="relative w-[85%] md:w-[65%] h-full flex flex-col items-center justify-center">
                   <div className="relative w-full h-full flex flex-col items-center justify-center">
@@ -248,29 +245,26 @@ const Hero = ({ products = [] }) => {
                         </div>
 
                         {/* Price Badge - Dynamic Floating */}
-                        <div
-                          className="absolute -top-4 -right-4 w-16 h-16 md:w-20 md:h-24 rounded-full flex flex-col items-center justify-center text-white font-black shadow-2xl rotate-12 transition-all duration-700 group-hover:rotate-0 group-hover:scale-110"
-                          style={{ backgroundColor: brandColor }}
-                        >
-                          <span className="text-[8px] md:text-[10px] uppercase opacity-80 tracking-widest leading-none mb-0.5 mt-0.5">Only</span>
+                        <div className="absolute -top-4 -right-4 w-16 h-16 md:w-20 md:h-24 rounded-full flex flex-col items-center justify-center bg-brand-yellow text-brand-brown font-black shadow-2xl rotate-12 transition-all duration-700 group-hover:rotate-0 group-hover:scale-110">
+                          <span className="text-[8px] md:text-[10px] uppercase opacity-90 tracking-widest leading-none mb-0.5 mt-0.5">Only</span>
                           <span className="text-sm md:text-xl leading-none">₹{product.price}</span>
                         </div>
                       </div>
 
                       {/* Minimal Tactical Content */}
                       <div className="text-center space-y-2 md:space-y-4 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
-                        <h3 className="text-2xl md:text-5xl lg:text-6xl font-black text-brand-text tracking-tighter transition-colors leading-none">
+                        <h3 className="text-2xl md:text-5xl lg:text-6xl font-black text-brand-eggshell tracking-tighter transition-colors leading-none">
                           {product.name}
                         </h3>
                         <div className="flex justify-center gap-6">
                           <div className="flex flex-col items-center">
-                            <span className="text-[12px] md:text-[14px] font-black text-brand-green">14g</span>
-                            <span className="text-[8px] uppercase tracking-widest text-black font-bold">Protein</span>
+                            <span className="text-[12px] md:text-[14px] font-black text-brand-yellow">14g</span>
+                            <span className="text-[8px] uppercase tracking-widest text-brand-beige font-bold">Protein</span>
                           </div>
-                          <div className="w-[1px] h-6 bg-stone-200" />
+                          <div className="w-[1px] h-6 bg-white/20" />
                           <div className="flex flex-col items-center">
-                            <span className="text-[12px] md:text-[14px] font-black text-brand-green">100%</span>
-                            <span className="text-[8px] uppercase tracking-widest text-black font-bold">Natural</span>
+                            <span className="text-[12px] md:text-[14px] font-black text-brand-yellow">100%</span>
+                            <span className="text-[8px] uppercase tracking-widest text-brand-beige font-bold">Natural</span>
                           </div>
                         </div>
                       </div>
@@ -282,11 +276,11 @@ const Hero = ({ products = [] }) => {
           </Swiper>
 
           {/* Slider Navigation */}
-          <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-8 md:gap-12 bg-white/20 backdrop-blur-sm px-6 py-2 rounded-full border border-white/30 shadow-lg">
+          <div className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-[60] flex items-center gap-8 md:gap-12 bg-white/10 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20 shadow-lg">
             <button
               type="button"
               onClick={() => swiperRef.current?.slidePrev()}
-              className="hero-prev-btn w-10 h-10 md:w-14 md:h-14 rounded-full bg-white shadow-2xl flex items-center justify-center text-brand-text hover:bg-brand-green hover:text-white transition-all active:scale-90 border border-stone-100 cursor-pointer relative z-[70]"
+              className="hero-prev-btn w-10 h-10 md:w-14 md:h-14 rounded-full bg-brand-deep-green shadow-2xl flex items-center justify-center text-brand-beige hover:bg-brand-yellow hover:text-brand-deep-green transition-all active:scale-90 border border-white/10 cursor-pointer relative z-[70]"
             >
               <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
@@ -294,16 +288,16 @@ const Hero = ({ products = [] }) => {
             </button>
 
             <div className="flex flex-col items-center gap-2 md:gap-3">
-              <div className="h-1 w-24 md:w-32 bg-stone-100 rounded-full overflow-hidden">
-                <div className="h-full bg-brand-green animate-progress-line" />
+              <div className="h-1 w-24 md:w-32 bg-white/10 rounded-full overflow-hidden">
+                <div className="h-full bg-brand-yellow animate-progress-line" />
               </div>
-              <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.4em] text-brand-green">PROUDLY INDIAN</span>
+              <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.4em] text-brand-yellow">PROUDLY INDIAN</span>
             </div>
 
             <button
               type="button"
               onClick={() => swiperRef.current?.slideNext()}
-              className="hero-next-btn w-10 h-10 md:w-14 md:h-14 rounded-full bg-white shadow-2xl flex items-center justify-center text-brand-text hover:bg-brand-green hover:text-white transition-all active:scale-90 border border-stone-100 cursor-pointer relative z-[70]"
+              className="hero-next-btn w-10 h-10 md:w-14 md:h-14 rounded-full bg-brand-deep-green shadow-2xl flex items-center justify-center text-brand-beige hover:bg-brand-yellow hover:text-brand-deep-green transition-all active:scale-90 border border-white/10 cursor-pointer relative z-[70]"
             >
               <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />

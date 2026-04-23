@@ -3,6 +3,7 @@ import app from './app.js'
 import connectDB from './config/db.js'
 import mongoose from 'mongoose'
 import { closeRedis, connectRedis } from './config/redis.js'
+import { initWhatsApp } from './utils/whatsappClient.js'
 
 const PORT = Number(process.env.PORT) || 5000
 const MONGODB_URI =
@@ -13,6 +14,9 @@ const MONGODB_URI =
 const server = app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)
 })
+
+// WhatsApp client start karo — QR code terminal mein dikhega
+initWhatsApp()
 
 connectDB(MONGODB_URI)
   .then(() => connectRedis())

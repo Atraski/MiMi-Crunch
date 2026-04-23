@@ -7,7 +7,7 @@ let cachedToken = null
 let cachedTokenExpiryMs = 0
 
 const getShiprocketCredentials = () => {
-  const email = String(process.env.SHIPROCKET_EMAIL || process.env.SHIPROCKET_API_KEY || '').trim()
+  const email = String(process.env.SHIPROCKET_EMAIL || '').trim()
   const password = String(
     process.env.SHIPROCKET_PASSWORD || process.env.SHIPROCKET_API_SECRET || '',
   ).trim()
@@ -85,7 +85,11 @@ const mapOrderPayload = (order) => {
 const validateCredentials = () => {
   const { email, password } = getShiprocketCredentials()
   if (!email || !password) {
-    return 'Missing Shiprocket credentials (set SHIPROCKET_EMAIL/PASSWORD or SHIPROCKET_API_KEY/SECRET)'
+    return 'Missing Shiprocket credentials (set SHIPROCKET_EMAIL and SHIPROCKET_PASSWORD)'
+  }
+  // /auth/login expects API user email + password (Shiprocket panel → Settings → API).
+  if (!email.includes('@')) {
+    return 'Shiprocket fulfillment login needs SHIPROCKET_EMAIL (API user email), not SHIPROCKET_API_KEY — that key is reserved for Shiprocket Checkout (checkout-api.shiprocket.com).'
   }
   return null
 }
@@ -227,6 +231,95 @@ export const assignAwbToShipment = async (shipmentId) => {
     return {
       success: false,
       error: error.response?.data || error.message || 'Failed to assign AWB',
+    }
+  }
+}
+
+/**
+ * Lowest courier rate for pickup → delivery pincode (domestic GET serviceability).
+ * Uses same Bearer token as order sync.
+ */
+export const getCourierServiceabilityRates = async ({
+  pickupPostcode,
+  deliveryPostcode,
+  weightKg,
+  cod = 0,
+}) => {
+  try {
+    const credentialError = validateCredentials()
+    if (credentialError) {
+      return { success: false, error: credentialError }
+    }
+
+    const token = await getShiprocketToken()
+    if (!token) {
+      return { success: false, error: 'Shiprocket authentication failed' }
+    }
+
+    const pickup = Number(String(pickupPostcode).replace(/\D/g, '').slice(0, 6))
+    const delivery = Number(String(deliveryPostcode).replace(/\D/g, '').slice(0, 6))
+
+    const params = {
+      pickup_postcode: pickup,
+      delivery_postcode: delivery,
+      weight: String(Math.max(Number(weightKg) || 0.25, 0.1)),
+      cod: cod ? 1 : 0,
+    }
+
+    const response = await axios.get(`${SHIPROCKET_URL}/courier/serviceability/`, {
+      headers: getAuthHeaders(token),
+      params,
+      timeout: 20000,
+    })
+
+    const body = response?.data
+    const companies =
+      body?.data?.available_courier_companies ||
+      body?.available_courier_companies ||
+      []
+
+    const rows = Array.isArray(companies) ? companies : []
+    let minRate = Infinity
+    let cheapest = null
+    for (const c of rows) {
+      const r = Number(c?.rate ?? c?.freight_charge ?? c?.estimated_rate)
+      if (Number.isFinite(r) && r >= 0 && r < minRate) {
+        minRate = r
+        cheapest = c
+      }
+    }
+
+    if (!Number.isFinite(minRate)) {
+      const msg =
+        typeof body?.message === 'string' && body.message.trim()
+          ? body.message.trim()
+          : 'No courier rates for this pincode combination'
+      return {
+        success: false,
+        error: msg,
+        raw: body,
+      }
+    }
+
+    return {
+      success: true,
+      deliveryFee: Math.round(minRate * 100) / 100,
+      courierName: cheapest?.courier_name || cheapest?.courier_company_name || null,
+      estimatedDeliveryDays: cheapest?.estimated_delivery_days ?? null,
+      raw: body,
+    }
+  } catch (error) {
+    console.error(
+      'Shiprocket serviceability error:',
+      error.response?.data || error.message,
+    )
+    const apiMsg =
+      error.response?.data?.message ||
+      error.response?.data?.errors ||
+      error.response?.data
+    return {
+      success: false,
+      error: apiMsg || error.message || 'Serviceability request failed',
     }
   }
 }

@@ -6,11 +6,12 @@ import MobileHeader from './components/MobileHeader'
 import MobileNavbar from './components/MobileNavbar'
 import Loader from './components/Loader'
 import PageWrapper from './components/PageWrapper'
+import WaveDivider from './components/WaveDivider'
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import FlyToCart from './components/FlyToCart'
 import ProfileReminder from './components/ProfileReminder'
-import CustomCursor from './components/CustomCursor'
+// import CustomCursor from './components/CustomCursor'
 import About from './pages/About'
 import Contact from './pages/Contact'
 import Home from './pages/Home'
@@ -35,6 +36,7 @@ import Checkout from './pages/Checkout'
 import Lenis from 'lenis'
 import OrderSuccess from './pages/OrderSuccess'
 import { getProductSlugFromCartItem, wouldExceedWeightLimit } from './utils/cartUtils'
+import { buildMetaContentFromProduct, trackMetaEvent } from './utils/metaPixel'
 import { HelmetProvider } from 'react-helmet-async'
 import toast, { Toaster } from 'react-hot-toast'
 
@@ -382,6 +384,12 @@ function App() {
       return
     }
 
+    trackMetaEvent('AddToCart', buildMetaContentFromProduct({
+      ...product,
+      price: product.price ?? product.selectedVariant?.price,
+      size: weightStr,
+    }))
+
     // Trigger fly animation
     if (startPos) {
       setFlyingItem(product)
@@ -470,11 +478,15 @@ function App() {
     () => cart.reduce((sum, item) => sum + item.price * item.qty, 0),
     [cart],
   )
-  const DELIVERY_FEE = 49
-  const deliveryFee = useMemo(
-    () => (subtotal >= 499 || subtotal === 0 ? 0 : DELIVERY_FEE),
-    [subtotal],
-  )
+  const [deliveryFee, setDeliveryFee] = useState(0)
+
+  useEffect(() => {
+    if (location.pathname !== '/checkout') setDeliveryFee(0)
+  }, [location.pathname])
+
+  useEffect(() => {
+    if (cart.length === 0) setDeliveryFee(0)
+  }, [cart.length])
   const discountAmount = useMemo(
     () => Math.min(appliedCoupon?.discount ?? 0, subtotal),
     [appliedCoupon?.discount, subtotal],
@@ -526,7 +538,7 @@ function App() {
     <HelmetProvider>
       <div className="flex min-h-screen flex-col bg-brand-bg md:bg-white transition-colors duration-500">
       <Toaster position="bottom-center" toastOptions={{ duration: 3000, style: { background: '#1c1917', color: '#fff', borderRadius: '12px' } }} />
-      <CustomCursor />
+      {/* <CustomCursor /> */}
       {isProductsLoading && <Loader />}
       {/* Desktop Header – hide on scroll down, show on scroll up */}
       <div
@@ -550,7 +562,11 @@ function App() {
         />
       </div>
 
-      <main className="flex-1 relative overflow-hidden bg-brand-bg pb-24 md:pb-0 m-0 p-0">
+      <main
+        className={`flex-1 relative overflow-hidden pb-24 md:pb-0 m-0 p-0 ${
+          location.pathname === '/' ? 'bg-transparent' : 'bg-brand-bg'
+        }`}
+      >
         <PageWrapper>
           <Routes location={location} key={location.pathname}>
             <Route
@@ -657,6 +673,7 @@ function App() {
                   products={products}
                   subtotal={subtotal}
                   deliveryFee={deliveryFee}
+                  onDeliveryFeeChange={setDeliveryFee}
                   discountAmount={discountAmount}
                   total={total}
                   onOrderSuccess={handleClearCart}
@@ -673,6 +690,9 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </PageWrapper>
+        {location.pathname === '/' ? (
+          <WaveDivider fromColor="#48521C" toColor="#4A1A00" shape={1} />
+        ) : null}
       </main >
       <div className="hidden md:block">
         <Footer />

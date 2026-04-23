@@ -43,21 +43,21 @@ const Recipes = ({ recipes }) => {
   }, [recipes])
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-stone-50/50 mt-[10px] py-8 lg:min-h-[70vh] lg:py-0 flex items-center">
+    <section ref={sectionRef} className="relative overflow-hidden bg-brand-orinoco py-12 lg:min-h-[70vh] flex items-center">
       {/* Decorative texture background */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none lg:opacity-[0.05]"
         style={{ backgroundImage: `url("https://www.transparenttextures.com/patterns/natural-paper.png")` }} />
 
       <div className="mx-auto max-w-7xl px-4 lg:px-8 relative z-10 w-full">
         <div className="recipe-header mb-6 flex flex-col items-center text-center lg:mb-10">
-          <span className="mb-2 inline-block rounded-full bg-amber-100 px-3 py-1 text-[9px] font-bold uppercase tracking-widest text-amber-800">
+          <span className="mb-2 inline-block rounded-full bg-brand-orange/10 px-3 py-1 text-[9px] font-extrabold uppercase tracking-widest text-brand-orange">
             Mimi's Kitchen
           </span>
-          <h2 className="max-w-2xl text-3xl font-extrabold leading-tight text-stone-900 sm:text-4xl">
+          <h2 className="max-w-2xl text-3xl font-extrabold leading-tight text-brand-brown sm:text-4xl">
             From Our Kitchen <br />
-            <span className="text-emerald-700 font-black">To Yours.</span>
+            <span className="text-brand-verdun font-black">To Yours.</span>
           </h2>
-          <div className="mt-2 h-1 w-12 bg-emerald-500 rounded-full" />
+          <div className="mt-4 h-1 w-16 bg-brand-orange rounded-full" />
         </div>
 
         {recipes?.length ? (
@@ -66,10 +66,10 @@ const Recipes = ({ recipes }) => {
               <Link
                 key={item._id || item.slug || item.title}
                 to={item.slug ? `/recipes/${item.slug}` : '#'}
-                className="recipe-card group relative flex flex-col overflow-hidden rounded-[1.5rem] bg-white shadow-sm border border-stone-100 transition-all duration-500 hover:shadow-lg"
+                className="recipe-card group relative flex flex-col overflow-hidden rounded-[1.5rem] bg-white shadow-sm border border-brand-orinoco/30 transition-all duration-500 hover:shadow-2xl hover:shadow-brand-brown/10 hover:-translate-y-1"
               >
                 {/* Image Container */}
-                <div className="relative aspect-[16/9] w-full overflow-hidden">
+                <div className="relative aspect-[16/9] w-full overflow-hidden bg-brand-orinoco/10">
                   {item.coverImage ? (
                     <img
                       src={item.coverImage}
@@ -78,13 +78,13 @@ const Recipes = ({ recipes }) => {
                       loading="lazy"
                     />
                   ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-stone-100 text-stone-300">
+                    <div className="flex h-full w-full items-center justify-center text-brand-brown/20">
                       <span className="text-4xl">🥣</span>
                     </div>
                   )}
                   {/* Prep Time Highlight Overlay */}
-                  <div className="absolute bottom-2.5 left-2.5 z-10 flex items-center gap-1 rounded-lg bg-stone-900/90 backdrop-blur-sm px-2 py-1 text-[9px] font-black uppercase tracking-widest text-white shadow-lg">
-                    <svg className="h-3 w-3 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="absolute bottom-3 left-3 z-10 flex items-center gap-1.5 rounded-[0.8rem] bg-white/95 backdrop-blur-md px-3 py-1.5 text-[9px] font-black uppercase tracking-widest text-brand-brown shadow-lg border border-brand-orinoco/20">
+                    <svg className="h-3 w-3 text-brand-orange" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     {item.time || '15 Mins'}
@@ -93,41 +93,44 @@ const Recipes = ({ recipes }) => {
 
                 {/* Content */}
                 <div className="flex flex-1 flex-col p-5 pt-4">
-                  <h3 className="text-lg font-bold text-stone-900 group-hover:text-emerald-700 transition-colors line-clamp-1 leading-tight">
+                  <h3 className="text-lg font-black text-brand-brown group-hover:text-brand-orange transition-colors line-clamp-1 leading-tight">
                     {item.title}
                   </h3>
 
                   {/* Benefits & Features Grid */}
-                  <div className="mt-3 grid grid-cols-2 gap-2">
-                    <div className="rounded-lg bg-emerald-50 p-2 border border-emerald-100">
-                      <p className="text-[8px] font-bold uppercase tracking-wider text-emerald-800 opacity-60">Benefit</p>
-                      <p className="mt-0.5 text-[10px] font-bold text-emerald-900 leading-tight">
+                  <div className="mt-4 grid grid-cols-2 gap-2">
+                    <div className="rounded-xl bg-brand-orinoco/20 p-2.5 border border-brand-orinoco/40">
+                      <p className="text-[8px] font-bold uppercase tracking-widest text-brand-verdun opacity-70">Highlight</p>
+                      <p className="mt-0.5 text-[10px] font-black text-brand-brown leading-tight">
                         {item.tags?.[0] || 'High Fiber'}
                       </p>
                     </div>
-                    <div className="rounded-lg bg-amber-50 p-2 border border-amber-100">
-                      <p className="text-[8px] font-bold uppercase tracking-wider text-amber-800 opacity-60">Feature</p>
-                      <p className="mt-0.5 text-[10px] font-bold text-amber-900 leading-tight">
+                    <div className="rounded-xl bg-brand-eggshell/50 p-2.5 border border-brand-eggshell">
+                      <p className="text-[8px] font-bold uppercase tracking-widest text-brand-brown opacity-60">Feature</p>
+                      <p className="mt-0.5 text-[10px] font-black text-brand-brown leading-tight">
                         {item.tags?.[1] || 'Quick Cook'}
                       </p>
                     </div>
                   </div>
 
-                  <p className="mt-3 text-[11px] text-stone-500 line-clamp-2 leading-relaxed opacity-80">
+                  <p className="mt-4 text-[11px] text-brand-brown/60 line-clamp-2 leading-relaxed font-semibold">
                     {item.excerpt || 'A wholesome, nutritious meal prepared with premium Mimi Crunch grains.'}
                   </p>
 
-                  <div className="mt-5 flex items-center justify-between pt-3 border-t border-stone-50">
-                    <div className="flex items-center gap-1.5">
-                      <div className="flex -space-x-1">
+                  <div className="mt-5 flex items-center justify-between pt-4 border-t border-brand-orinoco/20">
+                    <div className="flex items-center gap-2">
+                      <div className="flex -space-x-1.5">
                         {[1, 2].map((i) => (
-                          <div key={i} className="h-4 w-4 rounded-full border border-white bg-stone-200" />
+                          <div key={i} className="h-5 w-5 rounded-full border-2 border-white bg-brand-orinoco/30 overflow-hidden" />
                         ))}
                       </div>
-                      <span className="text-[9px] font-bold text-stone-400">2k+ joined</span>
+                      <span className="text-[9px] font-bold text-brand-brown/40">Fav'd by 200+</span>
                     </div>
-                    <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700 group-hover:underline">
+                    <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-wider text-brand-orange group-hover:gap-2 transition-all">
                       View Recipe
+                      <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                      </svg>
                     </span>
                   </div>
                 </div>
@@ -135,19 +138,19 @@ const Recipes = ({ recipes }) => {
             ))}
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-10 bg-white/50 rounded-[1.5rem] border border-stone-100 border-dashed">
-            <span className="text-4xl mb-2">🍳</span>
-            <p className="text-lg font-bold text-stone-800">No Recipes Found Yet</p>
+          <div className="flex flex-col items-center justify-center py-12 bg-white/50 rounded-[2rem] border border-brand-orinoco/20 border-dashed">
+            <span className="text-4xl mb-3 opacity-50 grayscale">🍳</span>
+            <p className="text-sm font-bold text-brand-brown/60">Wholesome Recipes Simmering...</p>
           </div>
         )}
 
         {recipes?.length > 0 && (
-          <div className="mt-8 flex justify-center">
-            <Link to="/recipes" className="group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-stone-900 transition-colors hover:text-emerald-700">
-              Full Cookbook
-              <div className="flex h-7 w-7 items-center justify-center rounded-full border border-stone-200 group-hover:border-emerald-500 group-hover:bg-emerald-50 transition-all">
-                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          <div className="mt-10 flex justify-center">
+            <Link to="/recipes" className="group flex items-center gap-3 text-[11px] font-black uppercase tracking-[0.2em] text-brand-brown transition-colors hover:text-brand-orange">
+              Explore Cookbook
+              <div className="flex h-8 w-8 items-center justify-center rounded-full border border-brand-orange/20 group-hover:border-brand-orange group-hover:bg-brand-orange text-brand-brown group-hover:text-white transition-all shadow-sm">
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </div>
             </Link>

@@ -1,6 +1,9 @@
 import mongoose from 'mongoose'
 import Product from '../models/Product.js'
 import productEvents from '../utils/productEvents.js'
+import {
+  notifyShiprocketProduct,
+} from '../utils/shiprocketCatalogNotify.js'
 
 /**
  * On order: decrement variant-specific stock.
@@ -122,6 +125,11 @@ const createProduct = async (req, res) => {
     })
 
     productEvents.emit('updated')
+    const lean =
+      typeof product?.toObject === 'function' ? product.toObject() : product
+    notifyShiprocketProduct(lean).catch((e) =>
+      console.error('[Shiprocket Checkout] product notify:', e?.message || e),
+    )
     return res.status(201).json(product)
   } catch (err) {
     console.error('Product create error:', err)
@@ -195,6 +203,9 @@ const updateProduct = async (req, res) => {
       return res.status(404).json({ error: 'Product not found.' })
     }
     productEvents.emit('updated')
+    notifyShiprocketProduct(product).catch((e) =>
+      console.error('[Shiprocket Checkout] product notify:', e?.message || e),
+    )
     return res.json(product)
   } catch (err) {
     console.error('Product update error:', err)

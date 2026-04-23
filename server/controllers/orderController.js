@@ -4,6 +4,7 @@ import User from '../models/User.js'
 import { getNextOrderSequence } from '../models/OrderCounter.js'
 import { sendOrderConfirmationEmail } from '../utils/email.js'
 import { updateStock } from './productController.js'
+import { sendWhatsAppOrderConfirmation } from '../utils/whatsapp.js'
 
 const hasOrderEmail = (email) =>
   typeof email === 'string' && email.trim().length > 0 && email.includes('@') && email.length < 200
@@ -182,15 +183,12 @@ const createOrder = async (req, res) => {
 
     // 6. Auto-sync to Shiprocket right after order creation
     let shiprocketAutoSync = null
-    const hasEmailPassword = Boolean(
+    const shiprocketReady = Boolean(
       String(process.env.SHIPROCKET_EMAIL || '').trim() &&
-        String(process.env.SHIPROCKET_PASSWORD || '').trim(),
+        String(
+          process.env.SHIPROCKET_PASSWORD || process.env.SHIPROCKET_API_SECRET || '',
+        ).trim(),
     )
-    const hasApiKeySecret = Boolean(
-      String(process.env.SHIPROCKET_API_KEY || '').trim() &&
-        String(process.env.SHIPROCKET_API_SECRET || '').trim(),
-    )
-    const shiprocketReady = hasEmailPassword || hasApiKeySecret
     if (shiprocketReady) {
       shiprocketAutoSync = await pushOrderToShiprocket(order)
       mergeShippingPartner(order, buildShiprocketUpdate(shiprocketAutoSync))
@@ -210,7 +208,7 @@ const createOrder = async (req, res) => {
         synced: false,
         syncedAt: new Date(),
         lastError:
-          'Missing Shiprocket credentials (set SHIPROCKET_EMAIL/PASSWORD or SHIPROCKET_API_KEY/SECRET)',
+          'Missing Shiprocket fulfillment credentials (SHIPROCKET_EMAIL and SHIPROCKET_PASSWORD)',
       })
       await order.save()
     }
@@ -232,6 +230,18 @@ const createOrder = async (req, res) => {
       }
     } catch (mailErr) {
       console.error("Order confirmation email failed:", mailErr)
+    }
+
+    // 9. Order confirmation WhatsApp message
+    try {
+      await sendWhatsAppOrderConfirmation(
+        shippingAddress.phone,
+        shippingAddress.fullName || 'Customer',
+        humanOrderId,
+        safeTotal
+      )
+    } catch (waErr) {
+      console.error("Order confirmation WhatsApp failed:", waErr)
     }
 
     return res.status(201).json({
@@ -493,6 +503,18 @@ const verifyCashfreePayment = async (req, res) => {
         console.error("Order confirmation email failed:", mailErr)
       }
 
+      // Order confirmation WhatsApp – Online Payment success
+      try {
+        await sendWhatsAppOrderConfirmation(
+          order.shippingAddress?.phone || order.phone,
+          order.shippingAddress?.fullName || 'Customer',
+          order.orderId || order._id.toString(),
+          order.total
+        )
+      } catch (waErr) {
+        console.error("Order confirmation WhatsApp failed:", waErr)
+      }
+
       return res.json({ success: true, message: 'Payment verified', order });
     } else {
       return res.status(400).json({ success: false, message: 'Payment not successful yet' });
@@ -531,6 +553,18 @@ const cashfreeWebhook = async (req, res) => {
               if (shiprocketSync.success) order.status = 'Processed';
             }
             await order.save();
+
+            // Order confirmation WhatsApp – Webhook Online Payment success
+            try {
+              await sendWhatsAppOrderConfirmation(
+                order.shippingAddress?.phone || order.phone,
+                order.shippingAddress?.fullName || 'Customer',
+                order.orderId || order._id.toString(),
+                order.total
+              )
+            } catch (waErr) {
+              console.error("Order confirmation WhatsApp failed:", waErr)
+            }
           }
        }
     }

@@ -59,11 +59,11 @@ const Header = ({ cartCount, onCartToggle, products }) => {
   }, [cartCount])
 
   return (
-    <header className="sticky top-0 z-[100] border-b border-stone-200/70 bg-white/90 backdrop-blur transition-all duration-300">
+    <header className="sticky top-0 z-[100] border-b border-brand-verdun/20 bg-brand-verdun shadow-lg transition-all duration-300">
       <div className="relative mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-2 py-3 md:gap-6">
         <div className="flex items-center gap-3">
           <button
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-800 shadow-sm hover:-translate-y-0.5 hover:shadow-lg md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-eggshell/20 bg-brand-brown text-brand-eggshell shadow-sm hover:-translate-y-0.5 hover:shadow-lg md:hidden"
             onClick={() => setIsMenuOpen((prev) => !prev)}
             aria-label="Toggle navigation"
             aria-expanded={isMenuOpen}
@@ -85,7 +85,7 @@ const Header = ({ cartCount, onCartToggle, products }) => {
           </button>
           <a
             href="/"
-            className="rounded-xl bg-white p-2 shadow-md"
+            className="rounded-xl bg-brand-eggshell p-2 shadow-md"
             aria-label="Mimi Crunch"
           >
             <img className="h-9 w-9 object-contain" src={logo} alt="Mimi Crunch logo" />
@@ -94,13 +94,13 @@ const Header = ({ cartCount, onCartToggle, products }) => {
 
         <nav
           ref={navRef}
-          className="hidden flex-1 items-center justify-center gap-8 text-[13px] font-semibold uppercase tracking-[0.08em] text-stone-700 md:flex"
+          className="hidden flex-1 items-center justify-center gap-8 text-[13px] font-bold uppercase tracking-[0.08em] text-brand-eggshell md:flex"
         >
-          <a href="/products">Products</a>
-          <a href="/recipes">Recipes</a>
-          <a href="/about">About</a>
-          <a href="/blogs">Blogs</a>
-          <a href="/contact">Contact</a>
+          <a href="/products" className="hover:text-white transition-colors">Products</a>
+          <a href="/recipes" className="hover:text-white transition-colors">Recipes</a>
+          <a href="/about" className="hover:text-white transition-colors">About</a>
+          <a href="/blogs" className="hover:text-white transition-colors">Blogs</a>
+          <a href="/contact" className="hover:text-white transition-colors">Contact</a>
         </nav>
 
         <div className="hidden min-w-[200px] max-w-[320px] flex-1 items-center md:flex">
@@ -118,7 +118,7 @@ const Header = ({ cartCount, onCartToggle, products }) => {
               <path d="m21 21-3.5-3.5" />
             </svg>
             <input
-              className="w-full rounded-full border border-stone-200 bg-stone-50 py-2 pl-10 pr-3 text-sm text-stone-700 placeholder:text-stone-400 focus:border-stone-300 focus:outline-none"
+              className="w-full rounded-full border border-brand-eggshell/30 bg-brand-brown py-2 pl-10 pr-3 text-sm text-brand-eggshell placeholder:text-brand-eggshell/50 focus:border-brand-eggshell/50 focus:outline-none"
               placeholder="Search for products"
               value={query}
               onChange={(event) => {
@@ -128,7 +128,7 @@ const Header = ({ cartCount, onCartToggle, products }) => {
               onFocus={() => setIsSearchOpen(true)}
             />
             {isSearchOpen && query.trim() ? (
-              <div className="absolute left-0 top-12 w-full rounded-2xl border border-stone-200 bg-white p-3 shadow-xl">
+              <div className="absolute left-0 top-12 w-full rounded-2xl border border-brand-verdun/20 bg-brand-eggshell p-3 shadow-xl">
                 {suggestions.length === 0 ? (
                   <p className="text-xs text-stone-500">No matches found.</p>
                 ) : (
@@ -156,7 +156,7 @@ const Header = ({ cartCount, onCartToggle, products }) => {
 
         <div className="relative order-last flex shrink-0 items-center gap-2 md:order-none md:gap-3">
           <button
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-800 shadow-sm hover:-translate-y-0.5 hover:shadow-lg md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-eggshell/20 bg-brand-brown text-brand-eggshell shadow-sm hover:-translate-y-0.5 hover:shadow-lg md:hidden"
             onClick={() => setIsSearchOpen((prev) => !prev)}
             aria-label="Search products"
             type="button"
@@ -168,12 +168,12 @@ const Header = ({ cartCount, onCartToggle, products }) => {
           </button>
           <Link
             to={user ? '/profile' : '/login'}
-            className="flex flex-col items-center gap-0.5 text-[11px] font-semibold text-stone-700 md:hidden"
+            className="flex flex-col items-center gap-0.5 text-[11px] font-semibold text-brand-eggshell md:hidden"
             aria-label={user ? 'Profile' : 'Log in'}
           >
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-800 shadow-sm overflow-hidden">
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-eggshell/20 bg-brand-brown text-brand-eggshell shadow-sm overflow-hidden">
               {user?.name ? (
-                <span className="text-sm font-bold text-stone-900">{user.name.charAt(0).toUpperCase()}</span>
+                <span className="text-sm font-bold text-brand-eggshell">{user.name.charAt(0).toUpperCase()}</span>
               ) : (
                 <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="8" r="4" />
@@ -183,14 +183,14 @@ const Header = ({ cartCount, onCartToggle, products }) => {
             </span>
           </Link>
           <div className="relative hidden md:block">
-            <div className="group flex flex-col items-center gap-1 text-[11px] font-semibold text-stone-700">
+            <div className="group flex flex-col items-center gap-1 text-[11px] font-semibold text-brand-eggshell">
               <Link
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-800 shadow-sm hover:-translate-y-0.5 hover:shadow-lg"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-eggshell/20 bg-brand-brown text-brand-eggshell shadow-sm hover:-translate-y-0.5 hover:shadow-lg"
                 to={user ? '/profile' : '/login'}
                 aria-label={user ? 'Open profile' : 'Log in'}
               >
                 {user?.name ? (
-                  <span className="text-sm font-bold text-stone-900 group-hover:scale-110 transition-transform">
+                  <span className="text-sm font-bold text-brand-eggshell group-hover:scale-110 transition-transform">
                     {user.name.charAt(0).toUpperCase()}
                   </span>
                 ) : (
@@ -201,27 +201,27 @@ const Header = ({ cartCount, onCartToggle, products }) => {
                 )}
               </Link>
               <span className="hidden md:block">{user ? (user.name || 'Profile') : 'Login'}</span>
-              <div className="pointer-events-none absolute right-0 top-12 w-64 rounded-2xl border border-stone-200 bg-white p-4 text-left text-sm text-stone-700 opacity-0 shadow-xl transition group-hover:pointer-events-auto group-hover:opacity-100">
+              <div className="pointer-events-none absolute right-0 top-12 w-64 rounded-2xl border border-brand-verdun/20 bg-brand-eggshell p-4 text-left text-sm text-brand-verdun opacity-0 shadow-xl transition group-hover:pointer-events-auto group-hover:opacity-100">
                 {user ? (
                   <>
-                    <p className="text-sm font-semibold text-stone-900">Hi, {user.name || user.email || 'there'}</p>
-                    <div className="my-3 border-t border-stone-100" />
+                    <p className="text-sm font-semibold text-brand-brown">Hi, {user.name || user.email || 'there'}</p>
+                    <div className="my-3 border-t border-brand-verdun/10" />
                     <div className="space-y-2 text-sm">
-                      <Link to="/profile" className="block hover:text-brand-900">Profile</Link>
-                      <Link to="/profile#orders" className="block hover:text-brand-900">Orders</Link>
-                      <button type="button" className="block w-full text-left hover:text-brand-900" onClick={handleWishlistClick}>Wishlist</button>
+                      <Link to="/profile" className="block hover:text-brand-brown font-bold">Profile</Link>
+                      <Link to="/profile#orders" className="block hover:text-brand-brown font-bold">Orders</Link>
+                      <button type="button" className="block w-full text-left hover:text-brand-brown font-bold" onClick={handleWishlistClick}>Wishlist</button>
                     </div>
-                    <div className="mt-3 border-t border-stone-100 pt-3">
+                    <div className="mt-3 border-t border-brand-verdun/10 pt-3">
                       <button type="button" className="text-xs font-semibold text-red-600 hover:underline" onClick={() => logout()}>Log out</button>
                     </div>
                   </>
                 ) : (
                   <>
-                    <p className="text-sm font-semibold text-stone-900">Welcome</p>
-                    <p className="text-xs text-stone-500">Sign in to manage profile and wishlist.</p>
+                    <p className="text-sm font-semibold text-brand-brown">Welcome</p>
+                    <p className="text-xs text-brand-brown/60">Sign in to manage profile and wishlist.</p>
                     <div className="mt-3 flex gap-2">
-                      <Link to="/login" className="flex-1 rounded-xl border border-stone-200 px-3 py-2 text-center text-xs font-semibold text-brand-900">Log in</Link>
-                      <Link to="/signup" className="flex-1 rounded-xl bg-brand-600 px-3 py-2 text-center text-xs font-semibold text-white">Sign up</Link>
+                      <Link to="/login" className="flex-1 rounded-xl border border-brand-verdun/20 px-3 py-2 text-center text-xs font-bold text-brand-verdun">Log in</Link>
+                      <Link to="/signup" className="flex-1 rounded-xl bg-brand-verdun px-3 py-2 text-center text-xs font-bold text-brand-eggshell">Sign up</Link>
                     </div>
                   </>
                 )}
@@ -229,12 +229,12 @@ const Header = ({ cartCount, onCartToggle, products }) => {
             </div>
           </div>
           <Link
-            className="flex flex-col items-center gap-1 text-[11px] font-semibold text-stone-700"
+            className="flex flex-col items-center gap-1 text-[11px] font-semibold text-brand-eggshell"
             aria-label="Open wishlist"
             onClick={handleWishlistClick}
             to="/wishlist"
           >
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-800 shadow-sm hover:-translate-y-0.5 hover:shadow-lg">
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-eggshell/20 bg-brand-brown text-brand-eggshell shadow-sm hover:-translate-y-0.5 hover:shadow-lg">
               <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20.8 6.6a5 5 0 0 0-7.1 0L12 8.3l-1.7-1.7a5 5 0 0 0-7.1 7.1l1.7 1.7L12 21l7.1-6.6 1.7-1.7a5 5 0 0 0 0-7.1Z" />
               </svg>
@@ -243,19 +243,19 @@ const Header = ({ cartCount, onCartToggle, products }) => {
           </Link>
           <button
             id="cart-icon-desktop"
-            className="relative flex flex-col items-center gap-1 text-[11px] font-semibold text-stone-700"
+            className="relative flex flex-col items-center gap-1 text-[11px] font-semibold text-brand-eggshell"
             onClick={onCartToggle}
             aria-label="Open cart"
             type="button"
           >
-            <span className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-800 shadow-sm hover:-translate-y-0.5 hover:shadow-lg">
+            <span className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-brand-eggshell/20 bg-brand-brown text-brand-eggshell shadow-sm hover:-translate-y-0.5 hover:shadow-lg">
               <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="9" cy="20" r="1" />
                 <circle cx="17" cy="20" r="1" />
                 <path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L20 7H6" />
               </svg>
               {cartCount > 0 && (
-                <span className={`absolute -top-1 -right-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-emerald-600 px-1 text-[10px] font-semibold text-white transition-all duration-300 ${badgeAnimated ? 'scale-150 shadow-[0_0_15px_rgba(16,185,129,0.8)]' : 'scale-100'}`}>
+                <span className={`absolute -top-1 -right-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand-yellow px-1 text-[10px] font-bold text-brand-brown transition-all duration-300 ${badgeAnimated ? 'scale-150 shadow-[0_0_15px_rgba(255,215,0,0.8)]' : 'scale-100'}`}>
                   {cartCount}
                 </span>
               )}

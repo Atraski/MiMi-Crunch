@@ -6,6 +6,7 @@ import gsap from 'gsap'
 import { useAuth } from '../context/AuthContext'
 import { getOptimizedImage } from '../utils/imageUtils'
 import { getProductColor, getContrastColor } from '../utils/productColors'
+import { buildMetaContentFromProduct, trackMetaEvent } from '../utils/metaPixel'
 import toast from 'react-hot-toast'
 
 const API_BASE_FALLBACK = import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'
@@ -29,6 +30,15 @@ const ProductDetail = ({
   const [productLoading, setProductLoading] = useState(true)
   const product = fetchedProduct ?? productFromList
   const safeCart = cart ?? []
+
+  const relatedProducts = useMemo(() => {
+    if (!product || !products || products.length === 0) return []
+    const sameCollection = products.filter(
+      (p) => p.collection === product.collection && p.slug !== product.slug,
+    )
+    const shuffled = sameCollection.sort(() => 0.5 - Math.random())
+    return shuffled.slice(0, 4)
+  }, [product, products])
 
   // theme helpers
   const containerRef = useRef(null)
@@ -181,6 +191,14 @@ const ProductDetail = ({
     return () => { cancelled = true }
   }, [product?.slug, apiBase])
 
+  useEffect(() => {
+    if (!product?.slug) return
+    trackMetaEvent('ViewContent', buildMetaContentFromProduct({
+      ...product,
+      price: product.price,
+    }))
+  }, [product?.slug, product?.price])
+
   // animate entrance when slug changes
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -270,13 +288,6 @@ const ProductDetail = ({
     if (!hasMultipleImages) return
     setActiveImage((prev) => (prev + 1) % images.length)
   }
-
-  const relatedProducts = useMemo(() => {
-    if (!product || !products || products.length === 0) return [];
-    const sameCollection = products.filter(p => p.collection === product.collection && p.slug !== product.slug);
-    const shuffled = sameCollection.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 4);
-  }, [product, products]);
 
   const uploadReviewImageToCloudinary = async (file) => {
     if (!file || !apiBase) return null
@@ -493,6 +504,14 @@ const ProductDetail = ({
               ) : null}
             </div>
 
+            {product.slug === 'ragi-kodo-and-foxtail-combo' && (
+              <div className="mb-4 relative z-10 w-fit">
+                <span className="bg-[#E44D26] text-white px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider shadow-lg animate-offer-pulse inline-block">
+                  🔥 Limited Time Offer
+                </span>
+              </div>
+            )}
+
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-[Fraunces] font-normal text-[#1B3B26] leading-tight mb-3 relative z-10">
               {product.name}
             </h1>
@@ -521,9 +540,38 @@ const ProductDetail = ({
               />
             ) : null}
 
-            <p className="mt-8 text-3xl font-[Fraunces] font-medium text-[#1B3B26] relative z-10">
-              ₹{displayPrice}
-            </p>
+            <div className="mt-8 flex items-center justify-between gap-4 sm:block relative z-10">
+              <p className="text-3xl font-[Fraunces] font-medium text-[#1B3B26]">
+                ₹{displayPrice}
+              </p>
+              
+              {/* Mobile Add to Cart */}
+              <button
+                className={`flex-1 sm:hidden h-12 rounded-xl px-4 text-[11px] font-bold uppercase tracking-[0.1em] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-stone-300 disabled:text-stone-500 active:scale-[0.98] ${addedToCart ? 'ring-2 ring-emerald-500' : ''}`}
+                style={{
+                  backgroundColor: isSoldOut ? undefined : brandColor,
+                  color: isSoldOut ? undefined : contrastColor,
+                  filter: !isSoldOut ? 'brightness(1.05)' : undefined,
+                }}
+                type="button"
+                disabled={isSoldOut}
+                onClick={(e) => {
+                  if (isSoldOut) return
+                  setAddedToCart(true)
+                  const { clientX, clientY } = e;
+                  onAddToCart({
+                    ...product,
+                    selectedVariant,
+                    price: displayPrice,
+                    size: displayWeight,
+                    image: images[0],
+                  }, { x: clientX, y: clientY })
+                  setTimeout(() => setAddedToCart(false), 800)
+                }}
+              >
+                {isSoldOut ? 'Sold out' : addedToCart ? 'Added ✓' : 'Add to Cart'}
+              </button>
+            </div>
 
             {variants ? (
               <div className="mt-8 pt-6 border-t border-[#1B3B26]/10 relative z-10">
@@ -608,9 +656,9 @@ const ProductDetail = ({
                     </button>
                   </div>
 
-                  {/* Add to Cart - Full width on mobile row if needed, or flex-1 */}
+                  {/* Add to Cart - Hidden on mobile, flex on desktop */}
                   <button
-                    className={`flex-1 h-14 rounded-2xl px-4 text-[13px] sm:text-sm font-bold uppercase tracking-[0.1em] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-stone-300 disabled:text-stone-500 active:scale-[0.98] ${addedToCart ? 'ring-2 ring-emerald-500' : ''}`}
+                    className={`hidden sm:flex flex-1 h-14 items-center justify-center rounded-2xl px-4 text-[13px] sm:text-sm font-bold uppercase tracking-[0.1em] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-stone-300 disabled:text-stone-500 active:scale-[0.98] ${addedToCart ? 'ring-2 ring-emerald-500' : ''}`}
                     style={{
                       backgroundColor: isSoldOut ? undefined : brandColor,
                       color: isSoldOut ? undefined : contrastColor,
@@ -639,9 +687,9 @@ const ProductDetail = ({
                     {isSoldOut ? 'Sold out' : addedToCart ? 'Added ✓' : 'Add to Cart'}
                   </button>
 
-                  {/* Wishlist Button */}
+                  {/* Wishlist Button - flex-1 on mobile only to fill space */}
                   <button
-                    className={`inline-flex h-14 w-14 items-center justify-center flex-shrink-0 rounded-2xl border bg-white/80 shadow-sm transition-all duration-300 disabled:opacity-50 ${wishlistError ? 'text-red-500 border-red-200' : 'text-[#4A5D4E] border-white hover:bg-white hover:text-[#1B3B26] hover:scale-105'}`}
+                    className={`inline-flex h-14 w-14 sm:w-14 items-center justify-center flex-shrink-0 sm:flex-shrink-0 rounded-2xl border bg-white/80 shadow-sm transition-all duration-300 disabled:opacity-50 ${wishlistError ? 'text-red-500 border-red-200' : 'text-[#4A5D4E] border-white hover:bg-white hover:text-[#1B3B26] hover:scale-105'} flex-1 sm:flex-initial`}
                     type="button"
                     aria-label="Add to wishlist"
                     disabled={wishlistAdding}

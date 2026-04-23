@@ -1,18 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-bg: #FDFBF7;
-  --color-brand-green: #2E7D32;
-  --color-brand-yellow: #FFD700;
-  --color-brand-text: #1C1C1C;
-  --color-brand-secondary: #5C5C5C;
+  --color-brand-verdun: #48521C;
+  --color-brand-smoke: #999F54;
+  --color-brand-orinoco: #DBDAAF;
+  --color-brand-eggshell: #FCFFF5;
+  --color-brand-orange: #EC6426;
+  --color-brand-yellow: #F8A91F;
+  --color-brand-cream: #F8D5C2;
+  --color-brand-brown: #4A1A00;
+
+  /* Keep legacy variable names mapped for safety */
+  --color-brand-green: var(--color-brand-verdun);
+  --color-brand-deep-green: var(--color-brand-brown);
+  --color-brand-beige: var(--color-brand-eggshell);
+  --color-brand-tan: var(--color-brand-orinoco);
+  --color-brand-lime: var(--color-brand-smoke);
+  --color-brand-text: var(--color-brand-verdun);
 
   --font-family-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
 @layer base {
   body {
-    background-color: var(--color-brand-bg);
+    background-color: var(--color-brand-beige);
     color: var(--color-brand-text);
     font-family: var(--font-family-sans);
     -webkit-font-smoothing: antialiased;
@@ -21,6 +32,7 @@
     -webkit-tap-highlight-color: transparent;
   }
 }
+
 
 @layer components {
   .glass-morphism {
@@ -46,13 +58,27 @@
   }
 
   .btn-primary {
-    background-color: var(--color-brand-green);
-    color: white;
-    box-shadow: 0 10px 15px -3px rgba(46, 125, 50, 0.1), 0 4px 6px -2px rgba(46, 125, 50, 0.05);
+    background-color: var(--color-brand-orange);
+    color: var(--color-brand-eggshell);
+    box-shadow: 0 10px 15px -3px rgba(236, 100, 38, 0.1), 0 4px 6px -2px rgba(236, 100, 38, 0.05);
   }
 
   .btn-primary:hover {
-    filter: brightness(0.9);
+    background-color: var(--color-brand-yellow);
+    color: var(--color-brand-eggshell);
+    box-shadow: 0 10px 20px -5px rgba(248, 169, 31, 0.25);
+  }
+
+  .home-wave-divider-svg {
+    width: 100%;
+    height: 40px;
+    display: block;
+  }
+
+  @media (min-width: 768px) {
+    .home-wave-divider-svg {
+      height: 70px;
+    }
   }
 
   .btn-ghost {
@@ -111,6 +137,21 @@
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.1);
+  }
+
+  @keyframes offer-pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.05);
+    }
+  }
+
+  .animate-offer-pulse {
+    animation: offer-pulse 1.5s infinite ease-in-out;
   }
 }
 

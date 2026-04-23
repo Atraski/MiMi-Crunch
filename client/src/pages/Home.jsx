@@ -9,7 +9,18 @@ import InstagramReels from '../components/InstagramReels'
 import ComparisonSection from '../components/ComparisonSection'
 import { featured as fallbackFeatured, news as fallbackNews, recipes as fallbackRecipes } from '../data/homeData'
 
+import WaveDivider from '../components/WaveDivider'
+
+const BR = {
+  VERDUN: '#48521C',
+  SMOKE: '#999F54',
+  ORINOCO: '#DBDAAF',
+  EGGSHELL: '#FCFFF5',
+  BROWN: '#4A1A00',
+}
+
 const Home = ({ products, collections, blogs, recipes, onAddToCart }) => {
+
   // If collections data exists from backend, use it. Otherwise, fall back to deriving from products.
   const collectionCards = Array.isArray(collections) && collections.length > 0
     ? collections.map(col => ({
@@ -121,12 +132,22 @@ const Home = ({ products, collections, blogs, recipes, onAddToCart }) => {
   return (
     <>
       <Hero products={heroProducts} />
+      <WaveDivider fromColor={BR.VERDUN} toColor={BR.ORINOCO} shape={0} />
+
       <Categories collections={allCollectionCards} />
+      <WaveDivider fromColor={BR.ORINOCO} toColor={BR.SMOKE} shape={1} />
+
       <FeaturedProducts featured={featuredItems} onAddToCart={onAddToCart} />
+      <WaveDivider fromColor={BR.SMOKE} toColor={BR.EGGSHELL} shape={2} />
+
       <ComparisonSection />
+      <WaveDivider fromColor={BR.EGGSHELL} toColor={BR.ORINOCO} shape={3} />
+
       <Story />
       <Recipes recipes={homepageRecipes} />
       <News news={newsItems} />
+      <WaveDivider fromColor={BR.ORINOCO} toColor={BR.VERDUN} shape={0} />
+
       <InstagramReels />
       <FAQ />
     </>

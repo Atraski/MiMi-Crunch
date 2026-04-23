@@ -121,20 +121,20 @@ const InstagramReels = () => {
     );
 
     return (
-        <section ref={sectionRef} className="py-20 bg-[#FAF8F5] relative overflow-hidden font-[Manrope]">
-            <div className="absolute top-[-5%] left-[-5%] w-[30%] h-[30%] rounded-full bg-[#1B3B26] opacity-[0.03] blur-[100px] pointer-events-none" />
-            <div className="absolute bottom-[0%] right-[0%] w-[40%] h-[40%] rounded-full bg-[#F5B041] opacity-[0.05] blur-[120px] pointer-events-none" />
+        <section ref={sectionRef} className="py-20 bg-brand-verdun relative overflow-hidden font-[Manrope]">
+            <div className="absolute top-[-5%] left-[-5%] w-[30%] h-[30%] rounded-full bg-brand-orange/50 blur-[100px] pointer-events-none" />
+            <div className="absolute bottom-[0%] right-[0%] w-[40%] h-[40%] rounded-full bg-brand-yellow opacity-[0.05] blur-[120px] pointer-events-none" />
 
             <div className="max-w-7xl mx-auto px-4 relative z-10 text-center">
-                <div className="inline-flex items-center gap-2 mb-4 bg-white/80 border border-[#1B3B26]/10 px-4 py-1.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase text-[#1B3B26] shadow-sm">
-                    <span className="flex h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
+                <div className="inline-flex items-center gap-2 mb-4 bg-white/10 border border-white/20 px-4 py-1.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase text-brand-eggshell shadow-sm">
+                    <span className="flex h-1.5 w-1.5 rounded-full bg-brand-orange animate-pulse" />
                     Mimi Social
                 </div>
 
-                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-[Fraunces] font-medium text-[#1B3B26] leading-tight mb-4">
-                    Experience <span className="text-[#F5B041]">Mimi Crunch</span>
+                <h2 className="text-3xl sm:text-5xl lg:text-6xl font-[Fraunces] italic font-black text-brand-eggshell leading-tight mb-4">
+                    Experience <span className="text-brand-orange">Mimi Crunch</span>
                 </h2>
-                <p className="text-sm sm:text-lg text-[#4A5D4E] mb-12 max-w-2xl mx-auto opacity-80 leading-relaxed font-[Manrope]">
+                <p className="text-sm sm:text-lg text-brand-eggshell/85 mb-12 max-w-2xl mx-auto leading-relaxed font-[Manrope] font-medium">
                     Join our vibrant community as we celebrate wellness and tradition.
                 </p>
 
@@ -153,8 +153,8 @@ const InstagramReels = () => {
                                     key={url}
                                     className="w-[min(78vw,300px)] shrink-0 snap-center min-[400px]:w-[min(76vw,320px)] sm:w-[300px] md:w-[320px] lg:w-[340px]"
                                 >
-                                    <div className="w-full rounded-[1.5rem] sm:rounded-[2rem] border border-white bg-white p-2 sm:p-2.5 shadow-[0_20px_48px_-14px_rgba(27,59,38,0.14)] transition-transform duration-500 hover:-translate-y-1">
-                                        <div className="relative w-full overflow-hidden rounded-[1.15rem] sm:rounded-[1.65rem] bg-[#1B3B26]">
+                                    <div className="w-full rounded-[1.5rem] sm:rounded-[2rem] border border-brand-orinoco/10 bg-brand-orinoco/5 p-2 sm:p-2.5 shadow-2xl transition-transform duration-500 hover:-translate-y-1">
+                                        <div className="relative w-full overflow-hidden rounded-[1.15rem] sm:rounded-[1.65rem] bg-brand-brown">
                                             <div className="relative aspect-[9/16] w-full overflow-hidden">
                                                 {useNativeVideo ? (
                                                     <ReelVideo
@@ -179,7 +179,7 @@ const InstagramReels = () => {
                                                     href={url}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="absolute bottom-2 left-1/2 z-20 -translate-x-1/2 rounded-full bg-black/55 px-2.5 py-1 text-[8px] font-bold uppercase tracking-widest text-white backdrop-blur-sm hover:bg-black/75 sm:bottom-3 sm:px-3 sm:text-[9px]"
+                                                    className="absolute bottom-2 left-1/2 z-20 -translate-x-1/2 rounded-full bg-black/55 px-2.5 py-1 text-[8px] font-bold uppercase tracking-widest text-white backdrop-blur-sm hover:bg-brand-orange hover:text-white transition-all duration-300 sm:bottom-3 sm:px-3 sm:text-[9px]"
                                                 >
                                                     Open on IG
                                                 </a>
@@ -197,10 +197,10 @@ const InstagramReels = () => {
                         href="https://www.instagram.com/mimicrunch.in"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative inline-flex items-center gap-4 bg-[#1B3B26] text-[#F5B041] px-10 py-5 rounded-full text-sm font-bold tracking-widest uppercase transition-all duration-300 hover:bg-[#F5B041] hover:text-[#1B3B26] shadow-xl hover:shadow-[0_20px_40px_-10px_rgba(245,176,65,0.4)]"
+                        className="group relative inline-flex items-center gap-4 bg-brand-orange text-brand-eggshell px-10 py-5 rounded-full text-sm font-black tracking-widest uppercase transition-all duration-300 hover:scale-105 hover:bg-brand-yellow shadow-xl shadow-brand-orange/20"
                     >
                         <span className="relative z-10">Follow @mimicrunch.in</span>
-                        <div className="relative z-10 w-8 h-8 rounded-full bg-[#F5B041]/20 group-hover:bg-[#1B3B26]/10 flex items-center justify-center transition-colors">
+                        <div className="relative z-10 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center transition-colors group-hover:bg-white/30">
                             <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
                             </svg>

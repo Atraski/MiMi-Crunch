@@ -2,12 +2,20 @@ import { useState, useEffect, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import BackButton from '../components/BackButton'
 import MapSelector from '../components/MapSelector'
+import PhoneOTPVerify from '../components/PhoneOTPVerify'
 import axios from 'axios'
 import { useAuth } from '../context/AuthContext'
-import { getProductSlugFromCartItem, getCartWeightKgForProduct, parseWeightToKg, MAX_WEIGHT_PER_PRODUCT_KG } from '../utils/cartUtils'
+import {
+  getProductSlugFromCartItem,
+  getCartWeightKgForProduct,
+  getCartTotalShippingWeightKg,
+  parseWeightToKg,
+  MAX_WEIGHT_PER_PRODUCT_KG,
+} from '../utils/cartUtils'
 import { getOptimizedImage } from '../utils/imageUtils'
 import { load } from '@cashfreepayments/cashfree-js'
 import toast from 'react-hot-toast'
+import { buildMetaContentsFromCart, trackMetaEvent } from '../utils/metaPixel'
 
 const getCouponDescription = (c) => {
   const min = c.minOrder && c.minOrder > 0 ? c.minOrder : 0
@@ -21,6 +29,7 @@ const Checkout = ({
   products = [],
   subtotal = 0,
   deliveryFee = 0,
+  onDeliveryFeeChange = () => {},
   discountAmount = 0,
   total = 0,
   onOrderSuccess,
@@ -48,12 +57,40 @@ const Checkout = ({
   const [touched, setTouched] = useState({})
   const [placing, setPlacing] = useState(false)
   const [showMap, setShowMap] = useState(false)
+  const [shippingQuoteLoading, setShippingQuoteLoading] = useState(false)
+  const [shippingQuoteHint, setShippingQuoteHint] = useState('')
+
+  const shipWeightKg = useMemo(() => getCartTotalShippingWeightKg(cart), [cart])
+  const apiOrigin = useMemo(
+    () =>
+      apiBase ||
+      (import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app'),
+    [apiBase],
+  )
 
   // Coupon state
   const [couponInput, setCouponInput] = useState('')
   const [applying, setApplying] = useState(false)
   const [availableCoupons, setAvailableCoupons] = useState([])
   const [couponsLoading, setCouponsLoading] = useState(false)
+  const hasTrackedInitiateCheckout = useMemo(
+    () => `init_checkout_${cart.map((item) => `${item.id}:${item.qty}`).join('|')}`,
+    [cart],
+  )
+
+  useEffect(() => {
+    if (!cart.length) return
+    if (typeof window === 'undefined') return
+    if (sessionStorage.getItem(hasTrackedInitiateCheckout)) return
+    trackMetaEvent('InitiateCheckout', {
+      content_type: 'product',
+      contents: buildMetaContentsFromCart(cart),
+      num_items: cart.reduce((sum, item) => sum + (Number(item.qty) || 0), 0),
+      value: Number(total) || 0,
+      currency: 'INR',
+    })
+    sessionStorage.setItem(hasTrackedInitiateCheckout, '1')
+  }, [cart, total, hasTrackedInitiateCheckout])
 
   // Fetch available coupons on mount
   useEffect(() => {
@@ -84,8 +121,12 @@ const Checkout = ({
     setApplying(false)
   }
 
-  // COD default payment method rakha hai
-  const [paymentMethod, setPaymentMethod] = useState('COD')
+  // OTP phone verification state
+  const [phoneVerified, setPhoneVerified] = useState(false)
+  const [verifiedPhone, setVerifiedPhone] = useState('')
+
+  // Online payment default (COD disabled)
+  const [paymentMethod, setPaymentMethod] = useState('ONLINE')
 
   // --- Dynamic Recommendations Logic ---
   const [recommendations, setRecommendations] = useState([])
@@ -174,26 +215,82 @@ const Checkout = ({
   }
 
   // Validation Logic
-  const required = ['fullName', 'phone', 'addressLine1', 'city', 'state', 'pincode']
+  const required = ['fullName', 'addressLine1', 'city', 'state', 'pincode']
   const errors = {}
   if (!form.fullName?.trim()) errors.fullName = 'Name is required'
-  if (!form.phone?.trim()) errors.phone = 'Phone is required'
+  if (!phoneVerified) errors.phone = 'Phone verification required'
   if (!form.addressLine1?.trim()) errors.addressLine1 = 'Address is required'
   if (!form.city?.trim()) errors.city = 'City is required'
   if (!form.state?.trim()) errors.state = 'State is required'
   if (!form.pincode?.trim()) errors.pincode = 'Pincode is required'
   else if (!/^\d{6}$/.test(form.pincode.trim())) errors.pincode = 'Enter a valid 6-digit pincode'
 
-  const isValid = required.every((key) => form[key]?.trim()) && !errors.pincode
+  const isValid = required.every((key) => form[key]?.trim()) && !errors.pincode && phoneVerified
+
+  const pinTrim = form.pincode?.trim() ?? ''
+
+  useEffect(() => {
+    if (!onDeliveryFeeChange) return
+    if (!/^\d{6}$/.test(pinTrim)) {
+      onDeliveryFeeChange(0)
+      setShippingQuoteHint('')
+      setShippingQuoteLoading(false)
+      return
+    }
+
+    let cancelled = false
+    const timer = setTimeout(async () => {
+      setShippingQuoteLoading(true)
+      try {
+        const q = new URLSearchParams({
+          delivery_postcode: pinTrim,
+          weight: String(shipWeightKg),
+          cod: '0',
+        })
+        const res = await fetch(`${apiOrigin}/api/shipping/quote?${q}`)
+        const data = await res.json()
+        if (cancelled) return
+        if (data.ok && typeof data.deliveryFee === 'number') {
+          onDeliveryFeeChange(Math.round(data.deliveryFee))
+          setShippingQuoteHint(data.courierName ? `Shiprocket · ${data.courierName}` : '')
+        } else {
+          onDeliveryFeeChange(0)
+          setShippingQuoteHint(
+            data.configured === false
+              ? 'Add warehouse pincode on server for live rates.'
+              : typeof data.error === 'string'
+                ? data.error
+                : 'Could not get shipping for this pincode.',
+          )
+        }
+      } catch {
+        if (!cancelled) {
+          onDeliveryFeeChange(0)
+          setShippingQuoteHint('Could not load shipping. Try again.')
+        }
+      } finally {
+        if (!cancelled) setShippingQuoteLoading(false)
+      }
+    }, 500)
+
+    return () => {
+      cancelled = true
+      clearTimeout(timer)
+    }
+  }, [pinTrim, shipWeightKg, apiOrigin, onDeliveryFeeChange])
 
   // --- Submit Order Logic (Step 2 Implementation) ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     setTouched({ fullName: true, phone: true, email: true, addressLine1: true, city: true, state: true, pincode: true });
     
+    if (!phoneVerified) {
+      toast.error('Phone verify karo pehle order place karne ke liye.');
+      return;
+    }
     if (!isValid) {
       const missing = required.filter(k => !form[k]?.trim());
-      const labelMap = { fullName: 'Full Name', phone: 'Phone', addressLine1: 'Address', city: 'City', state: 'State', pincode: 'Pincode' };
+      const labelMap = { fullName: 'Full Name', addressLine1: 'Address', city: 'City', state: 'State', pincode: 'Pincode' };
       toast.error(`Please provide your ${labelMap[missing[0]] || 'delivery details'}.`);
       return;
     }
@@ -220,12 +317,12 @@ const Checkout = ({
         deliveryFee,
         discountAmount,
         total,
-        paymentMethod: paymentMethod
+        paymentMethod: paymentMethod,
+        phoneVerified,
+        verifiedPhone: verifiedPhone || form.phone,
       }
 
-      const API_URL = import.meta.env.DEV ? 'http://localhost:5000' : 'https://mimicrunch-33how.ondigitalocean.app';
-      
-      const response = await fetch(`${API_URL}/api/orders`, {
+      const response = await fetch(`${apiOrigin}/api/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -345,14 +442,30 @@ const Checkout = ({
 
                 <div className="grid gap-5 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1.5 block text-sm font-medium text-stone-700">Phone number *</label>
-                    <input name="phone" type="tel" value={form.phone} onChange={handleChange} onBlur={handleBlur} className={inputClass('phone')} />
-                    {touched.phone && errors.phone && <p className="mt-1 text-xs text-red-600">{errors.phone}</p>}
-                  </div>
-                  <div>
                     <label className="mb-1.5 block text-sm font-medium text-stone-700">Email (optional)</label>
                     <input name="email" type="email" value={form.email} onChange={handleChange} onBlur={handleBlur} className={inputClass('email')} />
                   </div>
+                </div>
+
+                {/* Phone OTP Verification */}
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-stone-700">
+                    Phone number *{' '}
+                    {phoneVerified && (
+                      <span className="ml-1 text-xs font-bold text-emerald-600">Verified ✅</span>
+                    )}
+                  </label>
+                  <PhoneOTPVerify
+                    apiBase={apiOrigin}
+                    onVerified={(phone) => {
+                      setPhoneVerified(true)
+                      setVerifiedPhone(phone)
+                      setForm((prev) => ({ ...prev, phone }))
+                    }}
+                  />
+                  {touched.phone && !phoneVerified && (
+                    <p className="mt-1 text-xs text-red-600">Phone verification required to place order</p>
+                  )}
                 </div>
 
                 <div>
@@ -377,11 +490,11 @@ const Checkout = ({
             <div className="mt-8 rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
               <h2 className="text-lg font-semibold text-stone-900">Payment method</h2>
               <div className="mt-4 space-y-3">
-                <label className="flex items-center gap-3 p-4 border border-stone-900 rounded-xl cursor-pointer bg-stone-50">
-                  <input type="radio" checked={paymentMethod === 'COD'} onChange={() => setPaymentMethod('COD')} className="accent-stone-900 h-4 w-4" />
-                  <div className="flex-1">
+                <label className="flex items-center gap-3 p-4 border border-stone-200 rounded-xl cursor-not-allowed bg-stone-50 opacity-60">
+                  <input type="radio" disabled checked={paymentMethod === 'COD'} className="accent-stone-900 h-4 w-4" />
+                  <div className="flex-1 text-stone-400">
                     <p className="text-sm font-bold">Cash on Delivery (COD)</p>
-                    <p className="text-xs text-stone-500">Pay when you receive the order.</p>
+                    <p className="text-xs italic">Currently Unavailable</p>
                   </div>
                 </label>
                 <label className={`flex items-center gap-3 p-4 border rounded-xl cursor-pointer transition-all ${paymentMethod === 'ONLINE' ? 'border-stone-900 bg-stone-50' : 'border-stone-200 bg-white hover:border-stone-400'}`}>
@@ -474,7 +587,7 @@ const Checkout = ({
                   <p className="mt-3 text-[10px] font-bold uppercase tracking-widest text-stone-400 animate-pulse">Fetching offers...</p>
                 ) : availableCoupons.length > 0 ? (
                   <div className="mt-4 space-y-2">
-                    {availableCoupons.map((coupon) => {
+                    {availableCoupons.filter(c => c.code !== 'FREESHIP').map((coupon) => {
                       const minOrder = coupon.minOrder || 0
                       const isApplicable = Math.round(subtotal) >= minOrder
                       const isApplied = appliedCoupon?.code === coupon.code
@@ -519,18 +632,41 @@ const Checkout = ({
 
               <div className="mt-5 space-y-3 border-t pt-5 text-sm">
                 <div className="flex justify-between text-stone-600"><span>Subtotal</span><span>₹{Math.round(subtotal)}</span></div>
-                <div className="flex justify-between text-stone-600"><span>Delivery Charges</span><span>{deliveryFee === 0 ? <span className="text-emerald-600 font-bold">Free</span> : `₹${Math.round(deliveryFee)}`}</span></div>
+                <div className="flex justify-between text-stone-600">
+                  <span>Delivery (Shiprocket)</span>
+                  <span className="text-right font-medium text-stone-800">
+                    {shippingQuoteLoading
+                      ? 'Calculating…'
+                      : deliveryFee === 0
+                        ? <span className="text-emerald-600 font-bold">Free</span>
+                        : `₹${Math.round(deliveryFee)}`}
+                  </span>
+                </div>
+                {shippingQuoteHint ? (
+                  <p className="text-[10px] leading-snug text-stone-500">{shippingQuoteHint}</p>
+                ) : null}
                 {discountAmount > 0 && <div className="flex justify-between text-emerald-600 font-bold"><span>Coupon Discount</span><span>-₹{Math.round(discountAmount)}</span></div>}
                 <div className="flex justify-between border-t border-stone-100 pt-4 text-xl font-black text-stone-900"><span>Total</span><span>₹{Math.round(total)}</span></div>
               </div>
 
               <button
                 type="submit"
-                disabled={placing || !canPlaceOrder}
+                disabled={placing || !canPlaceOrder || !phoneVerified}
                 className="mt-8 w-full rounded-xl bg-stone-900 py-4 text-sm font-bold text-white transition-all active:scale-95 disabled:opacity-50 disabled:bg-stone-400"
               >
-                {placing ? 'Processing Order...' : paymentMethod === 'COD' ? 'Confirm Order (COD)' : 'Pay Now & Confirm'}
+                {placing
+                  ? 'Processing Order...'
+                  : !phoneVerified
+                  ? 'Pehle Phone Verify Karo 📱'
+                  : paymentMethod === 'COD'
+                  ? 'Confirm Order (COD)'
+                  : 'Pay Now & Confirm'}
               </button>
+              {!phoneVerified && !placing && (
+                <p className="mt-2 text-xs text-amber-600 text-center font-medium">
+                  Phone verify karna zaroori hai order place karne ke liye
+                </p>
+              )}
               {!canPlaceOrder && (outOfStockItemIds.size > 0 || overLimitProductSlugs.size > 0) && (
                 <p className="mt-2 text-xs text-red-600 text-center">Fix cart issues above to place order.</p>
               )}

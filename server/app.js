@@ -18,9 +18,12 @@ import userRoutes from './routes/users.js'
 import authRoutes from './routes/auth.js'
 import adminRoutes from './routes/admin.js'
 import orderRoutes from './routes/orders.js'
+import shippingRoutes from './routes/shipping.js'
+import shiprocketCheckoutRoutes from './routes/shiprocketCheckout.js'
 import analyticsRoutes from './routes/analytics.js'
 import customDemandRoutes from './routes/customDemands.js'
 import seoRoutes from './routes/seo.js'
+import otpRoutes from './routes/otpRoutes.js'
 
 const app = express()
 app.set('trust proxy', 1)
@@ -41,7 +44,8 @@ const defaultAllowedOrigins = [
   'https://www.mimicrunch.com',
   'https://mimicrunch.com',
   'https://mimicrunch.netlify.app',
-  'https://mimi-control.netlify.app'
+  'https://mimi-control.netlify.app',
+  'https://mimicrunch-admin.netlify.app/'
 ]
 
 const allowedOrigins = new Set([
@@ -89,7 +93,10 @@ app.use('/api', analyticsRoutes)
 
 // Order management (guest and registered users)
 app.use('/api/orders', orderRoutes)
+app.use('/api/shipping', shippingRoutes)
+app.use('/api/shiprocket', shiprocketCheckoutRoutes)
 app.use('/api/custom-demands', customDemandRoutes)
+app.use('/api/otp', otpRoutes)
 app.use(seoRoutes)
 
 // Error handler (must be after all routes)
