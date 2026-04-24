@@ -44,8 +44,7 @@ const defaultAllowedOrigins = [
   'https://www.mimicrunch.com',
   'https://mimicrunch.com',
   'https://mimicrunch.netlify.app',
-  'https://mimi-control.netlify.app',
-  'https://mimicrunch-admin.netlify.app/'
+  'https://mimicrunch-admin.netlify.app'
 ]
 
 const allowedOrigins = new Set([
